@@ -1,0 +1,32 @@
+.gameHeader {
+    font-size: 36px;
+    color: #fdac00;
+    text-shadow: 0px 0px 5px #7f0000;
+    font-family: cursive;
+}
+
+.team1, .team2 {
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.team1 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+}
+
+.team2 {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}

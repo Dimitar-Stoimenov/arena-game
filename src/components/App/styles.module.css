@@ -1,0 +1,14 @@
+.main {
+    background: linear-gradient(90deg,
+            rgb(192, 186, 17) 0%,
+            rgba(255, 255, 255, 1) 35%,
+            rgba(255, 255, 255, 1) 65%,
+            rgba(4, 113, 113, 0.63) 100%);
+
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+}
