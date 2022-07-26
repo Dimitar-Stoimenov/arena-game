@@ -1,31 +1,66 @@
 import { Bar } from 'components';
 import styles from './styles.module.css';
+import { CharActions } from 'components';
 
-const red = '#821200';
+const red = '#ba2e25';
 const blue = '#1953cb';
 
 export const CharacterSummary = ({
   team2 = false,
   character,
+  characterString,
+  hp,
+  mp,
+  effects,
+  turn,
+  charTurn,
+  onAction
 }) => {
-  const { charClass, spec, img, maxHealth, health, maxMana, mana, attack1, special1 } = character;
+  const {
+    charClass,
+    spec,
+    img,
+    maxHealth,
+    maxMana,
+    action1,
+    action2,
+    action3,
+  } = character;
 
   return (
-    <div
-      style={{ backgroundColor: team2 ? red : blue }}
-      className={styles.main}
-    >
-      <div className={styles.imgWrapper}>
-        <img className={styles.img} src={img} alt={charClass} />
-      </div>
-      <div className={styles.charParameters}>
-        <div className={styles.info}>
-          <div className={styles.charClass}>{charClass}</div>
-          <div className={styles.spec}>{spec}</div>
+    <div className={styles.wrapper}>
+      <div
+        style={{ backgroundColor: team2 ? red : blue }}
+        className={styles.effects}
+      ></div>
+      <div
+        style={{ backgroundColor: team2 ? red : blue }}
+        className={styles.main}
+      >
+        <div className={styles.imgWrapper}>
+          <img className={styles.img} src={img} alt={charClass} />
         </div>
+        <div className={styles.charParameters}>
+          <div className={styles.info}>
+            <div className={styles.spec}>{spec}</div>
+            <div className={styles.charClass}>{charClass}</div>
+          </div>
 
-        <Bar label="HP" value={health} maxValue={maxHealth} color={red} />
-        <Bar label="MP" value={mana} maxValue={maxMana} color={blue} />
+          <Bar label="HP" value={hp} maxValue={maxHealth} color={red} />
+          <Bar label="MP" value={mp} maxValue={maxMana} color={blue} />
+        </div>
+      </div>
+      <div className={styles.actions}>
+        {charTurn === turn && (
+          <CharActions
+            backgroundColor={team2 ? red : blue}
+            action1={action1}
+            action2={action2}
+            action3={action3}
+            onAction={onAction}
+            characterString={characterString}
+          />
+        )}
       </div>
     </div>
   );

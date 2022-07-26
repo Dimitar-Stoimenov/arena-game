@@ -8,7 +8,11 @@ export const Bar = ({ label, value, maxValue, color }) => {
         <div
           className={styles.value}
           style={{ width: `${(value / maxValue) * 100}%`, backgroundColor: color }}
-        ></div>
+        >
+        </div>
+        <div className={styles.valueText}>
+          {value}/{maxValue}
+        </div>
       </div>
     </div>
   );

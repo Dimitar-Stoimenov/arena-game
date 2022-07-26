@@ -25,10 +25,27 @@
     box-sizing: border-box;
     flex: 1;
     background-color: lightgray;
+
+    position: relative;
 }
 
 .value {
     height: 100%;
 
     transition: 0.35s;
+}
+
+.valueText {
+    position: absolute;
+    color: black;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-weight: bold;
 }
