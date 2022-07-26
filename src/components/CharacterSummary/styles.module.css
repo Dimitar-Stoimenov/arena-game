@@ -1,10 +1,15 @@
-.wrapper {
+.wrapper, .disabled {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 
   width: 33vw;
   height: 25vh;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 .effects {

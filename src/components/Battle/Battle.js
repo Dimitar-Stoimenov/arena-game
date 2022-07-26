@@ -20,7 +20,26 @@ export const Battle = () => {
     setSequence({ action, attackerString, receiverString });
   };
 
-  useEffect(() => { }, []);
+  useEffect(() => {
+    if (turn === 1 && char1team1state.dead) {
+      onAction({ type: 'dead' });
+    }
+    if (turn === 2 && char1team2state.dead) {
+      onAction({ type: 'dead' });
+    }
+    if (turn === 3 && char2team1state.dead) {
+      onAction({ type: 'dead' });
+    }
+    if (turn === 4 && char2team2state.dead) {
+      onAction({ type: 'dead' });
+    }
+    if (turn === 5 && char3team1state.dead) {
+      onAction({ type: 'dead' });
+    }
+    if (turn === 6 && char3team2state.dead) {
+      onAction({ type: 'dead' });
+    }
+  }, [turn, char1team1state.dead, char1team2state.dead, char2team1state.dead, char2team2state.dead, char3team1state.dead, char3team2state.dead,]);
 
   return (
     <>
@@ -34,6 +53,7 @@ export const Battle = () => {
           turn={turn}
           charTurn={1}
           onAction={onAction}
+          dead={char1team1state.dead}
         />
         <CharacterSummary
           character={char2team1state.char}
@@ -43,6 +63,8 @@ export const Battle = () => {
           turn={turn}
           charTurn={3}
           onAction={onAction}
+          dead={char2team1state.dead}
+
         />
         <CharacterSummary
           character={char3team1state.char}
@@ -52,6 +74,8 @@ export const Battle = () => {
           turn={turn}
           charTurn={5}
           onAction={onAction}
+          dead={char3team1state.dead}
+
         />
       </div>
       <div className={styles.team2}>
@@ -64,6 +88,8 @@ export const Battle = () => {
           turn={turn}
           charTurn={2}
           onAction={onAction}
+          dead={char1team2state.dead}
+
         />
         <CharacterSummary
           team2
@@ -74,6 +100,7 @@ export const Battle = () => {
           turn={turn}
           charTurn={4}
           onAction={onAction}
+          dead={char2team2state.dead}
         />
         <CharacterSummary
           team2
@@ -84,6 +111,7 @@ export const Battle = () => {
           turn={turn}
           charTurn={6}
           onAction={onAction}
+          dead={char3team2state.dead}
         />
       </div>
     </>

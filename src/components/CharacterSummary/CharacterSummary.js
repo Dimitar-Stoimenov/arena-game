@@ -14,7 +14,8 @@ export const CharacterSummary = ({
   effects,
   turn,
   charTurn,
-  onAction
+  onAction,
+  dead,
 }) => {
   const {
     charClass,
@@ -28,7 +29,7 @@ export const CharacterSummary = ({
   } = character;
 
   return (
-    <div className={styles.wrapper}>
+    <div className={!dead ? styles.wrapper : styles.disabled}>
       <div
         style={{ backgroundColor: team2 ? red : blue }}
         className={styles.effects}
@@ -51,7 +52,7 @@ export const CharacterSummary = ({
         </div>
       </div>
       <div className={styles.actions}>
-        {charTurn === turn && (
+        {charTurn === turn && !dead && (
           <CharActions
             backgroundColor={team2 ? red : blue}
             action1={action1}

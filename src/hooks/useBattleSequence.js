@@ -58,30 +58,48 @@ export const useBattleSequence = (sequence, allPlayers) => {
 			"char3team2": setChar3team2state,
 		};
 
-		if (action) {
-			const setAttacker = setPlayerState[attackerString];
-			const setReceiver = setPlayerState[receiverString];
+		const nextTurn = () => {
+			setTurn((currentTurn) => {
+				let newTurn = currentTurn + 1;
 
+				if (newTurn === 7) {
+					return 1;
+				}
+
+				return newTurn;
+			});
+		};
+
+		const setAttacker = setPlayerState[attackerString];
+		const setReceiver = setPlayerState[receiverString];
+
+		if (action) {
 			switch (action.type) {
-				case "damage": {
+				case "damage":
 					(async () => {
 						setInSequence(true);
-						await wait(200);
+						// await wait(200);
 
 						setAttacker(prev => {
+							let newMp = prev.mp - action.manaCost;
+
 							return {
 								...prev,
-								mp: prev.mp - action.manaCost
+								mp: newMp
 							};
 						});
-						await wait(200);
+						// await wait(200);
 
 						setReceiver(prev => {
-							let newHp = prev.hp - action.damage;
+							let newHp = prev.hp - Number(action.damage);
 
 							//TODO
 							if (newHp < 0) {
-								alert('character ded');
+								return {
+									...prev,
+									hp: 0,
+									dead: true,
+								};
 							}
 
 							return {
@@ -89,30 +107,24 @@ export const useBattleSequence = (sequence, allPlayers) => {
 								hp: newHp
 							};
 						});
-						await wait(200);
+						await wait(1000);
 
-						setTurn((currentTurn) => {
-							let newTurn = currentTurn + 1;
-
-							if (newTurn === 7) {
-								return 1;
-							}
-
-							return newTurn;
-						});
+						nextTurn();
 						setInSequence(false);
 					})();
 					break;
-				};
-				case "heal": {
+
+				case "heal":
 					(async () => {
 						setInSequence(true);
 						await wait(200);
 
 						setAttacker(prev => {
+							let newMp = prev.mp - action.manaCost;
+
 							return {
 								...prev,
-								mp: prev.mp - action.manaCost
+								mp: newMp
 							};
 						});
 						await wait(200);
@@ -120,7 +132,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
 						setReceiver(prev => {
 							let newHp = prev.hp + action.healing;
 
-							//TODO
 							if (newHp > prev.maxHealth) {
 								newHp = prev.maxHealth;
 							}
@@ -144,13 +155,17 @@ export const useBattleSequence = (sequence, allPlayers) => {
 						setInSequence(false);
 					})();
 					break;
-				};
-				case "cc": {
+
+				case "cc":
 					break;
-				};
-				case "buff": {
+
+				case "buff":
 					break;
-				};
+
+				case "dead":
+					nextTurn();
+					break;
+
 				default:
 					break;
 			}

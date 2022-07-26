@@ -39,8 +39,8 @@ export const paladinRetri = {
 		name: 'basic attack',
 		type: 'damage',
 		target: 'enemy',
-		damage: 15,
-		manacost: 0,
+		damage: 152,
+		manaCost: 0,
 	},
 	action2: {
 		name: 'hammer of wrath',
