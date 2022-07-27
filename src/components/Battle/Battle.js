@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { CharacterSummary } from 'components';
-import { mageFrost, paladinRetri } from 'shared';
-import styles from './styles.module.css';
 import { useBattleSequence } from 'hooks/useBattleSequence';
+import { mageFrost, paladinRetri, priestHoly } from 'shared';
+import styles from './styles.module.css';
 
 export const Battle = () => {
   const [char1team1, setChar1team1] = useState(paladinRetri);
-  const [char2team1, setChar2team1] = useState(paladinRetri);
+  const [char2team1, setChar2team1] = useState(priestHoly);
   const [char3team1, setChar3team1] = useState(mageFrost);
   const [char1team2, setChar1team2] = useState(mageFrost);
   const [char2team2, setChar2team2] = useState(mageFrost);
@@ -14,10 +14,30 @@ export const Battle = () => {
 
   const [sequence, setSequence] = useState({});
 
-  const { turn, inSequence, char1team1state, char2team1state, char3team1state, char1team2state, char2team2state, char3team2state } = useBattleSequence(sequence, { char1team1, char2team1, char3team1, char1team2, char2team2, char3team2 });
+  const {
+    turn,
+    // inSequence,
+    char1team1state,
+    char2team1state,
+    char3team1state,
+    char1team2state,
+    char2team2state,
+    char3team2state,
+  } = useBattleSequence(sequence, {
+    char1team1,
+    char2team1,
+    char3team1,
+    char1team2,
+    char2team2,
+    char3team2,
+  });
 
-  const onAction = (action, attackerString, receiverString) => {
-    setSequence({ action, attackerString, receiverString });
+  const onAction = (action, attackerString, receivers) => {
+    setSequence({
+      action,
+      attackerString,
+      receivers,
+    });
   };
 
   useEffect(() => {
@@ -39,7 +59,15 @@ export const Battle = () => {
     if (turn === 6 && char3team2state.dead) {
       onAction({ type: 'dead' });
     }
-  }, [turn, char1team1state.dead, char1team2state.dead, char2team1state.dead, char2team2state.dead, char3team1state.dead, char3team2state.dead,]);
+  }, [
+    turn,
+    char1team1state.dead,
+    char1team2state.dead,
+    char2team1state.dead,
+    char2team2state.dead,
+    char3team1state.dead,
+    char3team2state.dead,
+  ]);
 
   return (
     <>
@@ -64,7 +92,6 @@ export const Battle = () => {
           charTurn={3}
           onAction={onAction}
           dead={char2team1state.dead}
-
         />
         <CharacterSummary
           character={char3team1state.char}
@@ -75,7 +102,6 @@ export const Battle = () => {
           charTurn={5}
           onAction={onAction}
           dead={char3team1state.dead}
-
         />
       </div>
       <div className={styles.team2}>
@@ -89,7 +115,6 @@ export const Battle = () => {
           charTurn={2}
           onAction={onAction}
           dead={char1team2state.dead}
-
         />
         <CharacterSummary
           team2
