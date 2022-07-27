@@ -15,7 +15,7 @@
   justify-content: space-around;
 }
 
-.actionButton {
+.actionButton, .disabled {
   border-radius: 5px;
   border: 1px solid white;
   font-weight: bold;

@@ -130,8 +130,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
               });
               await wait(1000);
 
-              console.log(callNextTurnBoolean);
-
               if (callNextTurnBoolean) {
                 nextTurn();
                 setInSequence(false);

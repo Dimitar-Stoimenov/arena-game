@@ -60,6 +60,8 @@ export const CharacterSummary = ({
             action3={action3}
             onAction={onAction}
             characterString={characterString}
+            hp={hp}
+            mp={mp}
           />
         )}
       </div>

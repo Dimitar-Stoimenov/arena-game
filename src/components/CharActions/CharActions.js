@@ -8,6 +8,8 @@ export const CharActions = ({
   action3,
   onAction,
   characterString,
+  hp,
+  mp
 }) => {
   const [actionState, setActionState] = useState(null);
 
@@ -22,19 +24,19 @@ export const CharActions = ({
         style={{ backgroundColor: backgroundColor }}
       >
         <button
-          className={styles.actionButton}
+          className={action1.manaCost <= mp ? styles.actionButton : styles.disabled}
           onClick={() => actionHandler(action1)}
         >
           {action1.name}
         </button>
         <button
-          className={styles.actionButton}
+          className={action2.manaCost <= mp ? styles.actionButton : styles.disabled}
           onClick={() => actionHandler(action2)}
         >
           {action2.name}
         </button>
         <button
-          className={styles.actionButton}
+          className={action3.manaCost <= mp ? styles.actionButton : styles.disabled}
           onClick={() => actionHandler(action3)}
         >
           {action3.name}
@@ -166,10 +168,10 @@ export const CharActions = ({
           {action.target === 'self'
             ? 'Target Self'
             : action.target === 'pseudoSelf'
-            ? `Confirm ${action.name}`
-            : action.target === 'enemy'
-            ? 'Target Enemy 1'
-            : 'Target Friend 1'}
+              ? `Confirm ${action.name}`
+              : action.target === 'enemy'
+                ? 'Target Enemy 1'
+                : 'Target Friend 1'}
         </button>
         {action.target !== 'self' && action.target !== 'pseudoSelf' ? (
           <>
