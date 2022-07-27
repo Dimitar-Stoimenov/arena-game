@@ -217,6 +217,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           executeAction(false);
         }
       }
+      action.type = 'damageAndHeal'; //reset to original action.type to prevent bugs on next usage of the same ability
     }
   }, [sequence]);
 
