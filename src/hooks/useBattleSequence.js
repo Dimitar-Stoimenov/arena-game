@@ -82,6 +82,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         let newTurn = currentTurn + 1;
 
         if (newTurn === 7) {
+          //TODO: check if state.dead
           return 1;
         }
 
@@ -115,7 +116,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               setReceiver(prev => {
                 let newHp = prev.hp - Number(action.damage);
 
-                if (newHp < 0) {
+                if (newHp <= 0) {
                   return {
                     ...prev,
                     hp: 0,

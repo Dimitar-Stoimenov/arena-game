@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { CharacterSummary } from 'components';
-import { useBattleSequence } from 'hooks/useBattleSequence';
+import { useBattleSequence } from 'hooks';
 import { mageFrost, paladinRetri, priestHoly } from 'shared';
 import styles from './styles.module.css';
 
-export const Battle = () => {
+export const Battle = ({ onGameEnd }) => {
   const [char1team1, setChar1team1] = useState(paladinRetri);
   const [char2team1, setChar2team1] = useState(priestHoly);
   const [char3team1, setChar3team1] = useState(mageFrost);
@@ -59,6 +59,12 @@ export const Battle = () => {
     if (turn === 6 && char3team2state.dead) {
       onAction({ type: 'dead' });
     }
+    if (char1team1state.dead && char2team1state.dead && char3team1state.dead) {
+      onGameEnd('team2');
+    }
+    if (char1team2state.dead && char2team2state.dead && char3team2state.dead) {
+      onGameEnd('team1');
+    }
   }, [
     turn,
     char1team1state.dead,
@@ -67,6 +73,7 @@ export const Battle = () => {
     char2team2state.dead,
     char3team1state.dead,
     char3team2state.dead,
+    onGameEnd
   ]);
 
   return (

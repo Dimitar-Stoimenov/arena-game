@@ -10,7 +10,7 @@ export const mageFrost = {
     type: 'damage', //damage, heal, cc, stun, buff, multiple
     target: 'enemy', //enemy, friendly, all, self, pseudoSelf(ask for confirm only)
     affectedCharacters: 1, //num
-    damage: 12,
+    damage: 120,
     manaCost: 0,
   },
   action2: {
