@@ -11,11 +11,12 @@ export const CharacterSummary = ({
   characterString,
   hp,
   mp,
-  effects,
   turn,
   charTurn,
   onAction,
   dead,
+  cooldowns,
+  effects,
 }) => {
   const {
     charClass,
@@ -62,6 +63,8 @@ export const CharacterSummary = ({
             characterString={characterString}
             hp={hp}
             mp={mp}
+            cooldowns={cooldowns}
+            // effects={effects}
           />
         )}
       </div>

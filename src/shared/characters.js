@@ -6,28 +6,34 @@ export const mageFrost = {
   maxHealth: 150,
   maxMana: 280,
   action1: {
+    ref: 'action1',
     name: 'Wand',
     type: 'damage', //damage, heal, cc, stun, buff, multiple
     target: 'enemy', //enemy, friendly, all, self, pseudoSelf(ask for confirm only)
     affectedCharacters: 1, //num
-    damage: 120,
+    damage: 12,
     manaCost: 0,
+    cooldown: 0,
   },
   action2: {
+    ref: 'action2',
     name: 'Frostbolt',
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
     damage: 28,
     manaCost: 40,
+    cooldown: 0,
   },
   action3: {
+    ref: 'action3',
     name: 'Ice Block',
     type: 'buff',
     target: 'self',
     affectedCharacters: 1,
     manaCost: 30,
     turns: 1,
+    cooldown: 2,
   },
 };
 
@@ -39,22 +45,27 @@ export const priestHoly = {
   maxHealth: 170,
   maxMana: 240,
   action1: {
+    ref: 'action1',
     name: 'Wand',
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
     damage: 10,
     manaCost: 0,
+    cooldown: 0,
   },
   action2: {
+    ref: 'action2',
     name: 'Greater Heal',
     type: 'heal',
     target: 'friendly',
     affectedCharacters: 1,
     healing: 40,
     manaCost: 50,
+    cooldown: 0,
   },
   action3: {
+    ref: 'action3',
     name: 'Holy Nova',
     type: 'damageAndHeal',
     target: 'pseudoSelf',
@@ -62,7 +73,7 @@ export const priestHoly = {
     manaCost: 60,
     damage: 14,
     healing: 18,
-    cooldownTurns: 1,
+    cooldown: 1,
   },
 };
 
@@ -74,22 +85,27 @@ export const paladinRetri = {
   maxHealth: 220,
   maxMana: 150,
   action1: {
+    ref: 'action1',
     name: 'Basic Attack',
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
     damage: 15,
     manaCost: 0,
+    cooldown: 0,
   },
   action2: {
+    ref: 'action2',
     name: 'Hammer of Wrath',
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
-    damage: 23,
+    damage: 28,
     manaCost: 40,
+    cooldown: 1,
   },
   action3: {
+    ref: 'action3',
     name: 'Hammer of Justice',
     type: 'stun',
     target: 'enemy',
@@ -98,6 +114,6 @@ export const paladinRetri = {
     manaCost: 30,
     debuff: 'stun',
     effectTurns: 1,
-    cooldownTurns: 2,
+    cooldown: 2,
   },
 };

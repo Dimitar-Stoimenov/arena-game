@@ -18,49 +18,61 @@ export const useBattleSequence = (sequence, allPlayers) => {
     char: char1team1,
     hp: char1team1.maxHealth,
     mp: char1team1.maxMana,
-    effects: [],
     maxHealth: char1team1.maxHealth,
     maxMana: char1team1.maxMana,
+    dead: false,
+    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    effects: [],
   });
   const [char2team1state, setChar2team1state] = useState({
     char: char2team1,
     hp: char2team1.maxHealth,
     mp: char2team1.maxMana,
-    effects: [],
     maxHealth: char2team1.maxHealth,
     maxMana: char2team1.maxMana,
+    dead: false,
+    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    effects: [],
   });
   const [char3team1state, setChar3team1state] = useState({
     char: char3team1,
     hp: char3team1.maxHealth,
     mp: char3team1.maxMana,
-    effects: [],
     maxHealth: char3team1.maxHealth,
     maxMana: char3team1.maxMana,
+    dead: false,
+    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    effects: [],
   });
   const [char1team2state, setChar1team2state] = useState({
     char: char1team2,
     hp: char1team2.maxHealth,
     mp: char1team2.maxMana,
-    effects: [],
     maxHealth: char1team2.maxHealth,
     maxMana: char1team2.maxMana,
+    dead: false,
+    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    effects: [],
   });
   const [char2team2state, setChar2team2state] = useState({
     char: char2team2,
     hp: char2team2.maxHealth,
     mp: char2team2.maxMana,
-    effects: [],
     maxHealth: char2team2.maxHealth,
     maxMana: char2team2.maxMana,
+    dead: false,
+    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    effects: [],
   });
   const [char3team2state, setChar3team2state] = useState({
     char: char3team2,
     hp: char3team2.maxHealth,
     mp: char3team2.maxMana,
-    effects: [],
     maxHealth: char3team2.maxHealth,
     maxMana: char3team2.maxMana,
+    dead: false,
+    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    effects: [],
   });
 
   useEffect(() => {
@@ -82,7 +94,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
         let newTurn = currentTurn + 1;
 
         if (newTurn === 7) {
-          //TODO: check if state.dead
           return 1;
         }
 
@@ -93,7 +104,19 @@ export const useBattleSequence = (sequence, allPlayers) => {
     const setAttacker = setPlayerState[attackerString];
     let setReceiver = null;
 
-    const executeAction = (callNextTurnBoolean) => {
+    const executeAction = callNextTurnBoolean => {
+      // dead activator
+      if (attackerString === 'dead') {
+        return (async () => {
+          setInSequence(true);
+          // await wait(200);
+
+          nextTurn();
+
+          setInSequence(false);
+        })();
+      }
+
       if (action) {
         switch (action.type) {
           case 'damage':
@@ -107,6 +130,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                   return {
                     ...prev,
+                    cooldowns: { ...prev.cooldowns },
                     mp: newMp,
                   };
                 });
@@ -126,6 +150,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                 return {
                   ...prev,
+                  cooldowns: { ...prev.cooldowns },
                   hp: newHp,
                 };
               });
@@ -149,6 +174,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                   return {
                     ...prev,
+                    cooldowns: { ...prev.cooldowns },
                     mp: newMp,
                   };
                 });
@@ -158,12 +184,17 @@ export const useBattleSequence = (sequence, allPlayers) => {
               setReceiver(prev => {
                 let newHp = prev.hp + Number(action.healing);
 
+                if (prev.dead) {
+                  return prev;
+                }
+
                 if (newHp > prev.maxHealth) {
                   newHp = prev.maxHealth;
                 }
 
                 return {
                   ...prev,
+                  cooldowns: { ...prev.cooldowns },
                   hp: newHp,
                 };
               });
@@ -185,13 +216,59 @@ export const useBattleSequence = (sequence, allPlayers) => {
           case 'buff':
             break;
 
-          case 'dead':
-            nextTurn();
+          case 'reduceCooldowns':
+            (async () => {
+              setInSequence(true);
+              // await wait(200);
+
+              setAttacker(prev => {
+                return {
+                  ...prev,
+                  cooldowns: {
+                    action1:
+                      prev.cooldowns.action1 === 0 ||
+                      prev.cooldowns.action1 === 'available-next-turn'
+                        ? 0
+                        : prev.cooldowns.action1 === 1
+                        ? 'available-next-turn'
+                        : prev.cooldowns.action1 - 1,
+                    action2:
+                      prev.cooldowns.action2 === 0 ||
+                      prev.cooldowns.action2 === 'available-next-turn'
+                        ? 0
+                        : prev.cooldowns.action2 === 1
+                        ? 'available-next-turn'
+                        : prev.cooldowns.action2 - 1,
+                    action3:
+                      prev.cooldowns.action3 === 0 ||
+                      prev.cooldowns.action3 === 'available-next-turn'
+                        ? 0
+                        : prev.cooldowns.action3 === 1
+                        ? 'available-next-turn'
+                        : prev.cooldowns.action3 - 1,
+                  },
+                };
+              });
+
+              setInSequence(false);
+            })();
             break;
 
           default:
             break;
         }
+      }
+
+      if (action?.cooldown) {
+        setAttacker(prev => {
+          return {
+            ...prev,
+            cooldowns: {
+              ...prev.cooldowns,
+              [action.ref]: action.cooldown,
+            },
+          };
+        });
       }
     };
 
@@ -219,6 +296,16 @@ export const useBattleSequence = (sequence, allPlayers) => {
         }
       }
       action.type = 'damageAndHeal'; //reset to original action.type to prevent bugs on next usage of the same ability
+    } else if (!receivers) {
+      if (attackerString === 'dead') {
+        // on dead
+        executeAction(true);
+      } else if (attackerString === 'stun' || attackerString === 'cc') {
+        // on stun
+        executeAction(true);
+      } else {
+        executeAction(false);
+      }
     }
   }, [sequence]);
 

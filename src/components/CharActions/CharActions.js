@@ -9,7 +9,9 @@ export const CharActions = ({
   onAction,
   characterString,
   hp,
-  mp
+  mp,
+  cooldowns,
+  // effects
 }) => {
   const [actionState, setActionState] = useState(null);
 
@@ -24,19 +26,31 @@ export const CharActions = ({
         style={{ backgroundColor: backgroundColor }}
       >
         <button
-          className={action1.manaCost <= mp ? styles.actionButton : styles.disabled}
+          className={
+            action1.manaCost <= mp && cooldowns.action1 < 1
+              ? styles.actionButton
+              : styles.disabled
+          }
           onClick={() => actionHandler(action1)}
         >
           {action1.name}
         </button>
         <button
-          className={action2.manaCost <= mp ? styles.actionButton : styles.disabled}
+          className={
+            action2.manaCost <= mp && cooldowns.action2 < 1
+              ? styles.actionButton
+              : styles.disabled
+          }
           onClick={() => actionHandler(action2)}
         >
           {action2.name}
         </button>
         <button
-          className={action3.manaCost <= mp ? styles.actionButton : styles.disabled}
+          className={
+            action3.manaCost <= mp && cooldowns.action3 < 1
+              ? styles.actionButton
+              : styles.disabled
+          }
           onClick={() => actionHandler(action3)}
         >
           {action3.name}
@@ -168,10 +182,10 @@ export const CharActions = ({
           {action.target === 'self'
             ? 'Target Self'
             : action.target === 'pseudoSelf'
-              ? `Confirm ${action.name}`
-              : action.target === 'enemy'
-                ? 'Target Enemy 1'
-                : 'Target Friend 1'}
+            ? `Confirm ${action.name}`
+            : action.target === 'enemy'
+            ? 'Target Enemy 1'
+            : 'Target Friend 1'}
         </button>
         {action.target !== 'self' && action.target !== 'pseudoSelf' ? (
           <>

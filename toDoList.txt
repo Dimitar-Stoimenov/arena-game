@@ -1,0 +1,15 @@
+* Add effects array to state and special abilities
+    - start with stun 
+    - then buffs/armor
+
+* Perhaps change Ice Block to Ice Armor?
+
+* Add mana regeneration before turn
+
+* Add hovers on ability buttons and effects
+
+* Add class pictures in the CharacterSummary component
+
+* Add character pickers - move the characterState out of Battle.js;
+
+* Add animations / use the inSequence state
