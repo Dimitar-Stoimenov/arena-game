@@ -40,50 +40,82 @@ export const Battle = ({ onGameEnd }) => {
     });
   };
 
-  //useEffect to skip turn if a character is dead and to end game if entire team is dead
   //useEffect to reduce cooldowns on turn start
+  //useEffect to reduce effects on turn start
+  //useEffect to skip turn if a character is dead
+  //useEffect to skip turn if a character is stunned/ccd
+  //useEffect to end game when all characters on a team are dead
   useEffect(() => {
     if (turn === 1) {
       if (char1team1state.dead) {
-        onAction(null, 'dead');
-      } else {
-        onAction({ type: 'reduceCooldowns' }, 'char1team1');
+        return onAction(null, 'dead');
+      } else if (char1team1state.effects.some(e => e.type === 'stun')) {
+        return onAction(null, 'stun', 'char1team1');
+      } else if (char1team1state.effects.some(e => e.type === 'cc')) {
+        return onAction(null, 'cc', 'char1team1');
       }
+
+      onAction({ type: 'reduceCooldownsAndEffects' }, 'char1team1');
     }
+
     if (turn === 2) {
       if (char1team2state.dead) {
-        onAction(null, 'dead');
-      } else {
-        onAction({ type: 'reduceCooldowns' }, 'char1team2');
+        return onAction(null, 'dead');
+      } else if (char1team2state.effects.some(e => e.type === "stun")) {
+        return onAction(null, 'stun', 'char1team2');
+      } else if (char1team2state.effects.some(e => e.type === "cc")) {
+        return onAction(null, 'cc', 'char1team2');
       }
+
+      onAction({ type: 'reduceCooldownsAndEffects' }, 'char1team2');
     }
+
     if (turn === 3) {
       if (char2team1state.dead) {
-        onAction(null, 'dead');
-      } else {
-        onAction({ type: 'reduceCooldowns' }, 'char2team1');
+        return onAction(null, 'dead');
+      } else if (char2team1state.effects.some(e => e.type === 'stun')) {
+        return onAction(null, 'stun', 'char2team1');
+      } else if (char2team1state.effects.some(e => e.type === 'cc')) {
+        return onAction(null, 'cc', 'char2team1');
       }
+
+      onAction({ type: 'reduceCooldownsAndEffects' }, 'char2team1');
     }
+
     if (turn === 4) {
       if (char2team2state.dead) {
-        onAction(null, 'dead');
-      } else {
-        onAction({ type: 'reduceCooldowns' }, 'char2team2');
+        return onAction(null, 'dead');
+      } else if (char2team2state.effects.some(e => e.type === 'stun')) {
+        return onAction(null, 'stun', 'char2team2');
+      } else if (char2team2state.effects.some(e => e.type === 'cc')) {
+        return onAction(null, 'cc', 'char2team2');
       }
+
+      onAction({ type: 'reduceCooldownsAndEffects' }, 'char2team2');
     }
+
     if (turn === 5) {
       if (char3team1state.dead) {
-        onAction(null, 'dead');
-      } else {
-        onAction({ type: 'reduceCooldowns' }, 'char3team1');
+        return onAction(null, 'dead');
+      } else if (char3team1state.effects.some(e => e.type === 'stun')) {
+        return onAction(null, 'stun', 'char3team1');
+      } else if (char3team1state.effects.some(e => e.type === 'cc')) {
+        return onAction(null, 'cc', 'char3team1');
       }
+
+      onAction({ type: 'reduceCooldownsAndEffects' }, 'char3team1');
     }
+
     if (turn === 6) {
       if (char3team2state.dead) {
-        onAction(null, 'dead');
-      } else {
-        onAction({ type: 'reduceCooldowns' }, 'char3team2');
+        return onAction(null, 'dead');
+      } else if (char3team2state.effects.some(e => e.type === 'stun')) {
+        return onAction(null, 'stun', 'char3team2');
+      } else if (char3team2state.effects.some(e => e.type === 'cc')) {
+        return onAction(null, 'cc', 'char3team2');
       }
+
+      onAction({ type: 'reduceCooldownsAndEffects' }, 'char3team2');
     }
 
     if (
@@ -108,6 +140,12 @@ export const Battle = ({ onGameEnd }) => {
     }
   }, [
     turn,
+    char1team1state.effects,
+    char1team2state.effects,
+    char2team1state.effects,
+    char2team2state.effects,
+    char3team1state.effects,
+    char3team2state.effects,
     char1team1state.dead,
     char1team2state.dead,
     char2team1state.dead,
@@ -116,8 +154,6 @@ export const Battle = ({ onGameEnd }) => {
     char3team2state.dead,
     onGameEnd,
   ]);
-
-  //TODO: add useEffect to skip turn if character is stunned, and to reduce stun effect duration
 
   return (
     <>

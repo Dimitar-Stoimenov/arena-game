@@ -105,11 +105,70 @@ export const useBattleSequence = (sequence, allPlayers) => {
     let setReceiver = null;
 
     const executeAction = callNextTurnBoolean => {
-      // dead activator
       if (attackerString === 'dead') {
+        // dead turn skipper
         return (async () => {
           setInSequence(true);
           // await wait(200);
+
+          nextTurn();
+
+          setInSequence(false);
+        })();
+      } else if (attackerString === 'stun' || attackerString === 'cc') {
+        // stun/cc turn skipper
+        return (async () => {
+          setInSequence(true);
+          // await wait(200);
+
+          setReceiver(prev => {
+            let newEffects = [];
+
+            if (prev.effects.length > 0) {
+              for (const effect of prev.effects) {
+                const newEffectTurns = effect.turns - 1;
+
+                if (newEffectTurns > 0) {
+                  newEffects.push({ ...effect, turns: newEffectTurns });
+                }
+              }
+            }
+
+            return {
+              ...prev,
+              cooldowns: {
+                action1:
+                  prev.cooldowns.action1 === 0 ||
+                    prev.cooldowns.action1 === 'available-next-turn'
+                    ? 0
+                    : prev.cooldowns.action1 === 1
+                      ? 'available-next-turn'
+                      : prev.cooldowns.action1 - 1,
+                action2:
+                  prev.cooldowns.action2 === 0 ||
+                    prev.cooldowns.action2 === 'available-next-turn'
+                    ? 0
+                    : prev.cooldowns.action2 === 1
+                      ? 'available-next-turn'
+                      : prev.cooldowns.action2 - 1,
+                action3:
+                  prev.cooldowns.action3 === 0 ||
+                    prev.cooldowns.action3 === 'available-next-turn'
+                    ? 0
+                    : prev.cooldowns.action3 === 1
+                      ? 'available-next-turn'
+                      : prev.cooldowns.action3 - 1,
+                action4:
+                  prev.cooldowns.action4 === 0 ||
+                    prev.cooldowns.action4 === 'available-next-turn'
+                    ? 0
+                    : prev.cooldowns.action4 === 1
+                      ? 'available-next-turn'
+                      : prev.cooldowns.action4 - 1,
+              },
+              effects: (prev.effects.length > 0 ? newEffects : prev.effects)
+            };
+          });
 
           nextTurn();
 
@@ -208,20 +267,68 @@ export const useBattleSequence = (sequence, allPlayers) => {
             break;
 
           case 'cc':
-            break;
-
           case 'stun':
+            (async () => {
+              setInSequence(true);
+              // await wait(200);
+
+              if (callNextTurnBoolean) {
+                setAttacker(prev => {
+                  let newMp = prev.mp - action.manaCost;
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    mp: newMp,
+                  };
+                });
+                // await wait(200);
+              }
+
+              setReceiver(prev => {
+                let newEffect = {
+                  type: action.type,
+                  turns: action.effectTurns,
+                  name: action.name,
+                  image: action.effectImage,
+                };
+
+                return {
+                  ...prev,
+                  cooldowns: { ...prev.cooldowns },
+                  effects: [...prev.effects, newEffect]
+                };
+              });
+              await wait(1000);
+
+              if (callNextTurnBoolean) {
+                nextTurn();
+                setInSequence(false);
+              }
+            })();
             break;
 
           case 'buff':
             break;
 
-          case 'reduceCooldowns':
+          case 'reduceCooldownsAndEffects':
             (async () => {
               setInSequence(true);
               // await wait(200);
 
               setAttacker(prev => {
+                let newEffects = [];
+
+                if (prev.effects.length > 0) {
+                  for (const effect of prev.effects) {
+                    const newEffectTurns = effect.turns - 1;
+
+                    if (newEffectTurns > 0) {
+                      newEffects.push({ ...effect, turns: newEffectTurns });
+                    }
+                  }
+                }
+
                 return {
                   ...prev,
                   cooldowns: {
@@ -254,9 +361,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
                           ? 'available-next-turn'
                           : prev.cooldowns.action4 - 1,
                   },
+                  effects: (prev.effects.length > 0 ? newEffects : prev.effects)
                 };
               });
-
               setInSequence(false);
             })();
             break;
@@ -279,7 +386,11 @@ export const useBattleSequence = (sequence, allPlayers) => {
       }
     };
 
-    if (typeof receivers === 'string') {
+    if (attackerString === "stun" || attackerString === "cc") {
+      receiverString = receivers;
+      setReceiver = setPlayerState[receiverString];
+      executeAction(true);
+    } else if (typeof receivers === 'string') {
       receiverString = receivers;
       setReceiver = setPlayerState[receiverString];
       executeAction(true);
@@ -307,11 +418,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
       if (attackerString === 'dead') {
         // on dead
         executeAction(true);
-      } else if (attackerString === 'stun' || attackerString === 'cc') {
-        // on stun
-        executeAction(true);
       } else {
-        executeAction(false);
+        executeAction(true);
       }
     }
   }, [sequence]);
