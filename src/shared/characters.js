@@ -134,7 +134,6 @@ export const paladinRetri = {
     affectedCharacters: 1,
     damage: 10,
     manaCost: 30,
-    debuff: 'stun',
     effectTurns: 1,
     effectImage: "",
     cooldown: 2,
