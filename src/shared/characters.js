@@ -116,7 +116,7 @@ export const paladinRetri = {
   },
   action2: {
     ref: 'action2',
-    name: 'Hammer of Wrath',
+    name: 'Crusader Strike',
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
