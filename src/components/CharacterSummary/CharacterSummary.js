@@ -64,7 +64,7 @@ export const CharacterSummary = ({
             hp={hp}
             mp={mp}
             cooldowns={cooldowns}
-          // effects={effects}
+            effects={effects}
           />
         )}
       </div>

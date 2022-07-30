@@ -12,7 +12,8 @@ export const CharActions = ({
   hp,
   mp,
   cooldowns,
-  // effects
+  effects
+  //TODO:effects
 }) => {
   const [actionState, setActionState] = useState(null);
 
