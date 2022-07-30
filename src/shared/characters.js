@@ -33,6 +33,7 @@ export const mageFrost = {
     affectedCharacters: 1,
     manaCost: 25,
     effectTurns: 1,
+    effectImage: "",
     cooldown: 3,
   },
   action4: {
@@ -43,6 +44,7 @@ export const mageFrost = {
     affectedCharacters: 1,
     manaCost: 30,
     effectTurns: 1,
+    effectImage: "",
     cooldown: 3,
   },
 };
@@ -134,6 +136,7 @@ export const paladinRetri = {
     manaCost: 30,
     debuff: 'stun',
     effectTurns: 1,
+    effectImage: "",
     cooldown: 2,
   },
   action4: {
@@ -144,6 +147,7 @@ export const paladinRetri = {
     affectedCharacters: 3,
     manaCost: 25,
     effectTurns: 2,
+    effectImage: "",
     cooldown: 1,
   },
 };
