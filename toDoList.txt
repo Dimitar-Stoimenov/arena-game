@@ -4,6 +4,8 @@
 
 * Perhaps change Ice Block to Ice Armor?
 
+* Add 4th ability
+
 * Add mana regeneration before turn
 
 * Add hovers on ability buttons and effects
