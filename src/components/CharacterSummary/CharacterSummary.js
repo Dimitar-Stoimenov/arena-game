@@ -27,6 +27,7 @@ export const CharacterSummary = ({
     action1,
     action2,
     action3,
+    action4,
   } = character;
 
   return (
@@ -59,12 +60,13 @@ export const CharacterSummary = ({
             action1={action1}
             action2={action2}
             action3={action3}
+            action4={action4}
             onAction={onAction}
             characterString={characterString}
             hp={hp}
             mp={mp}
             cooldowns={cooldowns}
-            // effects={effects}
+          // effects={effects}
           />
         )}
       </div>

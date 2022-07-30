@@ -6,6 +6,7 @@ export const CharActions = ({
   action1,
   action2,
   action3,
+  action4,
   onAction,
   characterString,
   hp,
@@ -54,6 +55,16 @@ export const CharActions = ({
           onClick={() => actionHandler(action3)}
         >
           {action3.name}
+        </button>
+        <button
+          className={
+            action4.manaCost <= mp && cooldowns.action4 < 1
+              ? styles.actionButton
+              : styles.disabled
+          }
+          onClick={() => actionHandler(action4)}
+        >
+          {action4.name}
         </button>
       </div>
     );
@@ -182,10 +193,10 @@ export const CharActions = ({
           {action.target === 'self'
             ? 'Target Self'
             : action.target === 'pseudoSelf'
-            ? `Confirm ${action.name}`
-            : action.target === 'enemy'
-            ? 'Target Enemy 1'
-            : 'Target Friend 1'}
+              ? `Confirm ${action.name}`
+              : action.target === 'enemy'
+                ? 'Target Enemy 1'
+                : 'Target Friend 1'}
         </button>
         {action.target !== 'self' && action.target !== 'pseudoSelf' ? (
           <>

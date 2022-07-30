@@ -21,7 +21,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxHealth: char1team1.maxHealth,
     maxMana: char1team1.maxMana,
     dead: false,
-    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
   const [char2team1state, setChar2team1state] = useState({
@@ -31,7 +31,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxHealth: char2team1.maxHealth,
     maxMana: char2team1.maxMana,
     dead: false,
-    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
   const [char3team1state, setChar3team1state] = useState({
@@ -41,7 +41,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxHealth: char3team1.maxHealth,
     maxMana: char3team1.maxMana,
     dead: false,
-    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
   const [char1team2state, setChar1team2state] = useState({
@@ -51,7 +51,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxHealth: char1team2.maxHealth,
     maxMana: char1team2.maxMana,
     dead: false,
-    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
   const [char2team2state, setChar2team2state] = useState({
@@ -61,7 +61,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxHealth: char2team2.maxHealth,
     maxMana: char2team2.maxMana,
     dead: false,
-    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
   const [char3team2state, setChar3team2state] = useState({
@@ -71,7 +71,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxHealth: char3team2.maxHealth,
     maxMana: char3team2.maxMana,
     dead: false,
-    cooldowns: { action1: 0, action2: 0, action3: 0 },
+    cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
 
@@ -227,25 +227,32 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   cooldowns: {
                     action1:
                       prev.cooldowns.action1 === 0 ||
-                      prev.cooldowns.action1 === 'available-next-turn'
+                        prev.cooldowns.action1 === 'available-next-turn'
                         ? 0
                         : prev.cooldowns.action1 === 1
-                        ? 'available-next-turn'
-                        : prev.cooldowns.action1 - 1,
+                          ? 'available-next-turn'
+                          : prev.cooldowns.action1 - 1,
                     action2:
                       prev.cooldowns.action2 === 0 ||
-                      prev.cooldowns.action2 === 'available-next-turn'
+                        prev.cooldowns.action2 === 'available-next-turn'
                         ? 0
                         : prev.cooldowns.action2 === 1
-                        ? 'available-next-turn'
-                        : prev.cooldowns.action2 - 1,
+                          ? 'available-next-turn'
+                          : prev.cooldowns.action2 - 1,
                     action3:
                       prev.cooldowns.action3 === 0 ||
-                      prev.cooldowns.action3 === 'available-next-turn'
+                        prev.cooldowns.action3 === 'available-next-turn'
                         ? 0
                         : prev.cooldowns.action3 === 1
-                        ? 'available-next-turn'
-                        : prev.cooldowns.action3 - 1,
+                          ? 'available-next-turn'
+                          : prev.cooldowns.action3 - 1,
+                    action4:
+                      prev.cooldowns.action4 === 0 ||
+                        prev.cooldowns.action4 === 'available-next-turn'
+                        ? 0
+                        : prev.cooldowns.action4 === 1
+                          ? 'available-next-turn'
+                          : prev.cooldowns.action4 - 1,
                   },
                 };
               });
