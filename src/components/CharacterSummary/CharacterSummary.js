@@ -1,9 +1,9 @@
 import { Bar } from 'components';
 import styles from './styles.module.css';
-import { CharActions } from 'components';
+import { CharActions, EffectsList } from 'components';
 
-const red = '#ba2e25';
-const blue = '#1953cb';
+const red = "#ba2e25";
+const blue = "#1953cb";
 
 export const CharacterSummary = ({
   team2 = false,
@@ -32,10 +32,8 @@ export const CharacterSummary = ({
 
   return (
     <div className={!dead ? styles.wrapper : styles.disabled}>
-      <div
-        style={{ backgroundColor: team2 ? red : blue }}
-        className={styles.effects}
-      ></div>
+      <EffectsList effects={effects} backgroundColor={team2 ? red : blue} />
+
       <div
         style={{ backgroundColor: team2 ? red : blue }}
         className={styles.main}
