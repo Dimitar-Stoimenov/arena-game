@@ -1,17 +1,22 @@
+--- gameplay
+
 * Add effects array to state and special abilities
     - start with stun 
     - then buffs/armor
 
-* Perhaps change Ice Block to Ice Armor?
-
-* Add 4th ability
+* Add a skip turn as 5th ability (for when youre oom and cant do shit)
 
 * Add mana regeneration before turn
+
+* Add character pickers - move the characterState out of Battle.js;
+
+* Replace mana with rage and energy for warriors and rogues (maybe feral druids?) /pseudo mana/;
+
+
+--- visuals
 
 * Add hovers on ability buttons and effects
 
 * Add class pictures in the CharacterSummary component
-
-* Add character pickers - move the characterState out of Battle.js;
 
 * Add animations / use the inSequence state
