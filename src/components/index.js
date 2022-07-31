@@ -6,3 +6,4 @@ export * from './CharacterSummary';
 export * from './CharActions';
 export * from './EndMenu';
 export * from './EffectsList';
+export * from './Effect';

@@ -44,7 +44,7 @@ export const mageFrost = {
     affectedCharacters: 1,
     manaCost: 30,
     effectTurns: 1,
-    effectImage: "",
+    effectImage: "/assets/polymorph.png",
     cooldown: 3,
   },
 };
@@ -135,7 +135,7 @@ export const paladinRetri = {
     damage: 10,
     manaCost: 30,
     effectTurns: 1,
-    effectImage: "",
+    effectImage: "/assets/hoj-temporary.png",
     cooldown: 2,
   },
   action4: {
