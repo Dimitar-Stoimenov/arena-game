@@ -203,6 +203,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   return {
                     ...prev,
                     hp: 0,
+                    mp: 0,
                     dead: true,
                   };
                 }
