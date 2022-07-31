@@ -1,8 +1,6 @@
 --- gameplay
 
-* Add effects array to state and special abilities
-    - start with stun 
-    - then buffs/armor
+* Add  more effects - armor/invulnerability/dot/manaburn
 
 * Add a skip turn as 5th ability (for when youre oom and cant do shit)
 
