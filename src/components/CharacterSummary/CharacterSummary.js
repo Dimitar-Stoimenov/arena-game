@@ -17,6 +17,7 @@ export const CharacterSummary = ({
   dead,
   cooldowns,
   effects,
+  characterNamesObject
 }) => {
   const {
     charClass,
@@ -65,6 +66,7 @@ export const CharacterSummary = ({
             mp={mp}
             cooldowns={cooldowns}
             effects={effects}
+            characterNamesObject={characterNamesObject}
           />
         )}
       </div>

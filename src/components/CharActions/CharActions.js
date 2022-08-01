@@ -12,6 +12,7 @@ export const CharActions = ({
   hp,
   mp,
   cooldowns,
+  characterNamesObject,
   effects,
   //TODO:add effects if neccessary
 }) => {
@@ -180,6 +181,8 @@ export const CharActions = ({
       }
     };
 
+    console.log(characterNamesObject);
+
     return (
       <div
         className={styles.main}
@@ -205,16 +208,16 @@ export const CharActions = ({
           }}
         >
           {action.target === 'self'
-            ? 'Target Self'
+            ? 'Self'
             : action.target === 'pseudoSelf' || action.target === 'confirm'
-            ? `Confirm ${action.name}`
-            : action.target === 'enemy'
-            ? 'Target Enemy 1'
-            : 'Target Friend 1'}
+              ? `Confirm ${action.name}`
+              : action.target === 'enemy'
+                ? `${characterNamesObject[target1String]}`
+                : `${characterNamesObject[target1String]}`}
         </button>
         {action.target !== 'self' &&
-        action.target !== 'pseudoSelf' &&
-        action.target !== 'confirm' ? (
+          action.target !== 'pseudoSelf' &&
+          action.target !== 'confirm' ? (
           <>
             <button
               className={styles.actionButton}
@@ -240,8 +243,8 @@ export const CharActions = ({
               }}
             >
               {action.target === 'enemy'
-                ? 'Target Enemy 2'
-                : 'Target Friend 2'}
+                ? `${characterNamesObject[target2String]}`
+                : `${characterNamesObject[target2String]}`}
             </button>
             <button
               className={styles.actionButton}
@@ -267,8 +270,8 @@ export const CharActions = ({
               }}
             >
               {action.target === 'enemy'
-                ? 'Target Enemy 3'
-                : 'Target Friend 3'}
+                ? `${characterNamesObject[target3String]}`
+                : `${characterNamesObject[target3String]}`}
             </button>
           </>
         ) : (
@@ -299,7 +302,7 @@ export const CharActions = ({
                 }
               }}
             >
-              Target Enemy 1
+              {characterNamesObject[target1String]}
             </button>
             <button
               className={styles.actionButton}
@@ -324,7 +327,7 @@ export const CharActions = ({
                 }
               }}
             >
-              Target Enemy 2
+              {characterNamesObject[target2String]}
             </button>
             <button
               className={styles.actionButton}
@@ -349,7 +352,7 @@ export const CharActions = ({
                 }
               }}
             >
-              Target Enemy 3
+              {characterNamesObject[target3String]}
             </button>
           </>
         ) : (

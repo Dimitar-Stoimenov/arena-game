@@ -8,9 +8,9 @@ export const Battle = ({ onGameEnd }) => {
   const [char1team1, setChar1team1] = useState(paladinRetri);
   const [char2team1, setChar2team1] = useState(mageFrost);
   const [char3team1, setChar3team1] = useState(priestHoly);
-  const [char1team2, setChar1team2] = useState(priestHoly);
+  const [char1team2, setChar1team2] = useState(paladinRetri);
   const [char2team2, setChar2team2] = useState(mageFrost);
-  const [char3team2, setChar3team2] = useState(paladinRetri);
+  const [char3team2, setChar3team2] = useState(priestHoly);
 
   const [sequence, setSequence] = useState({});
 
@@ -38,6 +38,15 @@ export const Battle = ({ onGameEnd }) => {
       attackerString,
       receivers,
     });
+  };
+
+  const characterNamesObject = {
+    char1team1: `${char1team1.spec} ${char1team1.charClass}`,
+    char2team1: `${char2team1.spec} ${char2team1.charClass}`,
+    char3team1: `${char3team1.spec} ${char3team1.charClass}`,
+    char1team2: `${char1team2.spec} ${char1team2.charClass}`,
+    char2team2: `${char2team2.spec} ${char2team2.charClass}`,
+    char3team2: `${char3team2.spec} ${char3team2.charClass}`,
   };
 
   //useEffect to reduce cooldowns on turn start
@@ -170,6 +179,7 @@ export const Battle = ({ onGameEnd }) => {
           dead={char1team1state.dead}
           effects={char1team1state.effects}
           cooldowns={char1team1state.cooldowns}
+          characterNamesObject={characterNamesObject}
         />
         <CharacterSummary
           character={char2team1state.char}
@@ -182,6 +192,7 @@ export const Battle = ({ onGameEnd }) => {
           dead={char2team1state.dead}
           effects={char2team1state.effects}
           cooldowns={char2team1state.cooldowns}
+          characterNamesObject={characterNamesObject}
         />
         <CharacterSummary
           character={char3team1state.char}
@@ -194,6 +205,7 @@ export const Battle = ({ onGameEnd }) => {
           dead={char3team1state.dead}
           effects={char3team1state.effects}
           cooldowns={char3team1state.cooldowns}
+          characterNamesObject={characterNamesObject}
         />
       </div>
       <div className={styles.team2}>
@@ -209,6 +221,7 @@ export const Battle = ({ onGameEnd }) => {
           dead={char1team2state.dead}
           effects={char1team2state.effects}
           cooldowns={char1team2state.cooldowns}
+          characterNamesObject={characterNamesObject}
         />
         <CharacterSummary
           team2
@@ -222,6 +235,7 @@ export const Battle = ({ onGameEnd }) => {
           dead={char2team2state.dead}
           effects={char2team2state.effects}
           cooldowns={char2team2state.cooldowns}
+          characterNamesObject={characterNamesObject}
         />
         <CharacterSummary
           team2
@@ -235,6 +249,7 @@ export const Battle = ({ onGameEnd }) => {
           dead={char3team2state.dead}
           effects={char3team2state.effects}
           cooldowns={char3team2state.cooldowns}
+          characterNamesObject={characterNamesObject}
         />
       </div>
     </>
