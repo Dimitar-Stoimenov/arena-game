@@ -111,7 +111,7 @@ export const priestHoly = {
 
 export const paladinRetri = {
   charClass: 'Paladin',
-  spec: 'Retribution',
+  spec: 'Retri',
   img: '/assets/paladin.png',
 
   maxHealth: 220,
