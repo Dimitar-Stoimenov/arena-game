@@ -141,32 +141,32 @@ export const useBattleSequence = (sequence, allPlayers) => {
       let newCooldowns = {
         action1:
           prev.cooldowns.action1 === 0 ||
-          prev.cooldowns.action1 === 'available-next-turn'
+            prev.cooldowns.action1 === 'available-next-turn'
             ? 0
             : prev.cooldowns.action1 === 1
-            ? 'available-next-turn'
-            : prev.cooldowns.action1 - 1,
+              ? 'available-next-turn'
+              : prev.cooldowns.action1 - 1,
         action2:
           prev.cooldowns.action2 === 0 ||
-          prev.cooldowns.action2 === 'available-next-turn'
+            prev.cooldowns.action2 === 'available-next-turn'
             ? 0
             : prev.cooldowns.action2 === 1
-            ? 'available-next-turn'
-            : prev.cooldowns.action2 - 1,
+              ? 'available-next-turn'
+              : prev.cooldowns.action2 - 1,
         action3:
           prev.cooldowns.action3 === 0 ||
-          prev.cooldowns.action3 === 'available-next-turn'
+            prev.cooldowns.action3 === 'available-next-turn'
             ? 0
             : prev.cooldowns.action3 === 1
-            ? 'available-next-turn'
-            : prev.cooldowns.action3 - 1,
+              ? 'available-next-turn'
+              : prev.cooldowns.action3 - 1,
         action4:
           prev.cooldowns.action4 === 0 ||
-          prev.cooldowns.action4 === 'available-next-turn'
+            prev.cooldowns.action4 === 'available-next-turn'
             ? 0
             : prev.cooldowns.action4 === 1
-            ? 'available-next-turn'
-            : prev.cooldowns.action4 - 1,
+              ? 'available-next-turn'
+              : prev.cooldowns.action4 - 1,
       };
 
       return {
@@ -350,57 +350,221 @@ export const useBattleSequence = (sequence, allPlayers) => {
             break;
 
           case 'dispel':
-            //TODO: check if dispel, cleanse or purge
-            (async () => {
-              setInSequence(true);
-              // await wait(200);
+            let attackerTeam = null;
+            let receiverTeam = null;
 
-              if (callNextTurnBoolean) {
-                setAttacker(prev => {
-                  let newMp = prev.mp - action.manaCost;
+            if (attackerString === "char1team1" || attackerString === "char2team1" || attackerString === "char3team1") {
+              attackerTeam = 1;
+            } else if (attackerString === "char1team2" || attackerString === "char2team2" || attackerString === "char3team2") {
+              attackerTeam = 2;
+            }
 
-                  return {
-                    ...prev,
-                    cooldowns: { ...prev.cooldowns },
-                    mp: newMp,
-                  };
-                });
-                // await wait(200);
+            if (receiverString === "char1team1" || receiverString === "char2team1" || receiverString === "char3team1") {
+              receiverTeam = 1;
+            } else if (receiverString === "char1team2" || receiverString === "char2team2" || receiverString === "char3team2") {
+              receiverTeam = 2;
+            }
+
+            if (action.name === "Dispel") {
+              if (attackerTeam === receiverTeam) {
+                (async () => {
+                  setInSequence(true);
+                  // await wait(200);
+
+                  if (callNextTurnBoolean) {
+                    setAttacker(prev => {
+                      let newMp = prev.mp - action.manaCost;
+
+                      return {
+                        ...prev,
+                        cooldowns: { ...prev.cooldowns },
+                        mp: newMp,
+                      };
+                    });
+                    // await wait(200);
+                  }
+
+                  //TODO: check if ability is buff or debuff accordingly
+                  setReceiver(prev => {
+                    let newEffects = [];
+                    if (prev.effects.some(e => e.dispellable && e.debuff)) {
+                      const shuffledArray = prev.effects.sort(
+                        () => 0.5 - Math.random(),
+                      );
+                      let effectToBeRemoved = shuffledArray.find(
+                        e => e.dispellable && e.debuff,
+                      );
+
+                      newEffects = prev.effects.filter(
+                        e => e !== effectToBeRemoved,
+                      );
+                    } else {
+                      newEffects = prev.effects;
+                    }
+
+                    return {
+                      ...prev,
+                      cooldowns: { ...prev.cooldowns },
+                      effects: newEffects,
+                    };
+                  });
+                })();
+              } else {
+                (async () => {
+                  setInSequence(true);
+                  // await wait(200);
+
+                  if (callNextTurnBoolean) {
+                    setAttacker(prev => {
+                      let newMp = prev.mp - action.manaCost;
+
+                      return {
+                        ...prev,
+                        cooldowns: { ...prev.cooldowns },
+                        mp: newMp,
+                      };
+                    });
+                    // await wait(200);
+                  }
+
+                  //TODO: check if ability is buff or debuff accordingly
+                  setReceiver(prev => {
+                    let newEffects = [];
+                    if (prev.effects.some(e => e.dispellable && e.buff)) {
+                      const shuffledArray = prev.effects.sort(
+                        () => 0.5 - Math.random(),
+                      );
+                      let effectToBeRemoved = shuffledArray.find(
+                        e => e.dispellable && e.buff,
+                      );
+
+                      newEffects = prev.effects.filter(
+                        e => e !== effectToBeRemoved,
+                      );
+                    } else {
+                      newEffects = prev.effects;
+                    }
+
+                    return {
+                      ...prev,
+                      cooldowns: { ...prev.cooldowns },
+                      effects: newEffects,
+                    };
+                  });
+                })();
               }
-
-              //TODO: check if receiver is friend or enemy
-              //TODO: check if ability is buff or debuff accordingly
-              setReceiver(prev => {
-                let newEffects = [];
-                if (prev.effects.some(e => e.dispellable === true)) {
-                  const shuffledArray = prev.effects.sort(
-                    () => 0.5 - Math.random(),
-                  );
-                  let effectToBeRemoved = shuffledArray.find(
-                    e => e.dispellable === true,
-                  );
-
-                  newEffects = prev.effects.filter(
-                    e => e !== effectToBeRemoved,
-                  );
-                } else {
-                  newEffects = prev.effects;
-                }
-
-                return {
-                  ...prev,
-                  cooldowns: { ...prev.cooldowns },
-                  effects: newEffects,
-                };
-              });
-
-              await wait(1000);
 
               if (callNextTurnBoolean) {
                 nextTurn();
                 setInSequence(false);
               }
-            })();
+            } else if (action.name === "Cleanse") {
+              if (attackerTeam === receiverTeam) {
+                (async () => {
+                  setInSequence(true);
+                  // await wait(200);
+
+                  if (callNextTurnBoolean) {
+                    setAttacker(prev => {
+                      let newMp = prev.mp - action.manaCost;
+
+                      return {
+                        ...prev,
+                        cooldowns: { ...prev.cooldowns },
+                        mp: newMp,
+                      };
+                    });
+                    // await wait(200);
+                  }
+
+                  //TODO: check if ability is buff or debuff accordingly
+                  setReceiver(prev => {
+                    let newEffects = [];
+                    if (prev.effects.some(e => e.dispellable && e.debuff)) {
+                      const shuffledArray = prev.effects.sort(
+                        () => 0.5 - Math.random(),
+                      );
+                      let effectToBeRemoved = shuffledArray.find(
+                        e => e.dispellable && e.debuff,
+                      );
+
+                      newEffects = prev.effects.filter(
+                        e => e !== effectToBeRemoved,
+                      );
+                    } else {
+                      newEffects = prev.effects;
+                    }
+
+                    return {
+                      ...prev,
+                      cooldowns: { ...prev.cooldowns },
+                      effects: newEffects,
+                    };
+                  });
+                })();
+              }
+
+              if (callNextTurnBoolean) {
+                nextTurn();
+                setInSequence(false);
+              }
+            } else if (action.name === "Purge") {
+              if (attackerTeam !== receiverTeam) {
+                (async () => {
+                  setInSequence(true);
+                  // await wait(200);
+
+                  if (callNextTurnBoolean) {
+                    setAttacker(prev => {
+                      let newMp = prev.mp - action.manaCost;
+
+                      return {
+                        ...prev,
+                        cooldowns: { ...prev.cooldowns },
+                        mp: newMp,
+                      };
+                    });
+                    // await wait(200);
+                  }
+
+                  //TODO: check if ability is buff or debuff accordingly
+                  setReceiver(prev => {
+                    let newEffects = [];
+                    if (prev.effects.some(e => e.dispellable && e.buff)) {
+                      const shuffledArray = prev.effects.sort(
+                        () => 0.5 - Math.random(),
+                      );
+                      let effectToBeRemoved = shuffledArray.find(
+                        e => e.dispellable && e.buff,
+                      );
+
+                      newEffects = prev.effects.filter(
+                        e => e !== effectToBeRemoved,
+                      );
+                    } else {
+                      newEffects = prev.effects;
+                    }
+
+                    return {
+                      ...prev,
+                      cooldowns: { ...prev.cooldowns },
+                      effects: newEffects,
+                    };
+                  });
+                })();
+              }
+
+              if (callNextTurnBoolean) {
+                nextTurn();
+                setInSequence(false);
+              }
+            }
+
+
+
+
+
+
             break;
 
           case 'skip':
