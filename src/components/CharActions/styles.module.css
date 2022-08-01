@@ -26,3 +26,10 @@
   pointer-events: none;
   opacity: 0.4;
 }
+
+@media (max-width: 1600px) {
+  .actionButton, .disabled {
+    font-size: 0.77em;
+    margin-top: 2.5px;
+  }
+}

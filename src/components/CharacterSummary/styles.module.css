@@ -74,3 +74,16 @@
   font-size: 20px;
   width: 6vw;
 }
+
+@media (max-width: 1600px) {
+  .main {
+    width: 22vw;
+  }
+
+  .actions {
+    overflow: hidden;
+    border-radius: 10px;
+
+    width: 6.5vw;
+  }
+}
