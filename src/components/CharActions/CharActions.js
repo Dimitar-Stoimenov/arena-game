@@ -17,6 +17,8 @@ export const CharActions = ({
   //TODO:add effects if neccessary
 }) => {
   const [actionState, setActionState] = useState(null);
+  const red = "#ba2e25";
+  const blue = "#1953cb";
 
   const actionHandler = action => {
     setActionState(() => action);
@@ -279,6 +281,7 @@ export const CharActions = ({
           <>
             <button
               className={styles.actionButton}
+              style={{ backgroundColor: backgroundColor === red ? blue : red }}
               onClick={() => {
                 if (actionState.affectedCharacters === 1) {
                   onActionHandler(target4String);
@@ -304,6 +307,7 @@ export const CharActions = ({
             </button>
             <button
               className={styles.actionButton}
+              style={{ backgroundColor: backgroundColor === red ? blue : red }}
               onClick={() => {
                 if (actionState.affectedCharacters === 1) {
                   onActionHandler(target5String);
@@ -329,6 +333,7 @@ export const CharActions = ({
             </button>
             <button
               className={styles.actionButton}
+              style={{ backgroundColor: backgroundColor === red ? blue : red }}
               onClick={() => {
                 if (actionState.affectedCharacters === 1) {
                   onActionHandler(target6String);

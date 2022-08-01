@@ -1,7 +1,6 @@
 --- gameplay
 * Add more effects:
     -armor
-    -dispel
     -invulnerability
     -dot
     -manaburn
