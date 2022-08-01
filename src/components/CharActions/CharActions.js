@@ -181,8 +181,6 @@ export const CharActions = ({
       }
     };
 
-    console.log(characterNamesObject);
-
     return (
       <div
         className={styles.main}
