@@ -12,8 +12,8 @@ export const CharActions = ({
   hp,
   mp,
   cooldowns,
-  effects
-  //TODO:effects
+  effects,
+  //TODO:add effects if neccessary
 }) => {
   const [actionState, setActionState] = useState(null);
 
@@ -66,6 +66,19 @@ export const CharActions = ({
           onClick={() => actionHandler(action4)}
         >
           {action4.name}
+        </button>
+        <button
+          className={styles.actionButton}
+          onClick={() =>
+            actionHandler({
+              target: 'confirm',
+              affectedCharacters: 1,
+              type: 'skip',
+              name: 'Skip Turn',
+            })
+          }
+        >
+          Skip Turn
         </button>
       </div>
     );
@@ -131,7 +144,7 @@ export const CharActions = ({
           setTarget5String('char2team1');
           setTarget6String('char3team1');
         }
-      } else if (action.target === 'self') {
+      } else if (action.target === 'self' || action.target === 'confirm') {
         setTarget1String(characterString);
       }
     }, [action]);
@@ -193,13 +206,15 @@ export const CharActions = ({
         >
           {action.target === 'self'
             ? 'Target Self'
-            : action.target === 'pseudoSelf'
-              ? `Confirm ${action.name}`
-              : action.target === 'enemy'
-                ? 'Target Enemy 1'
-                : 'Target Friend 1'}
+            : action.target === 'pseudoSelf' || action.target === 'confirm'
+            ? `Confirm ${action.name}`
+            : action.target === 'enemy'
+            ? 'Target Enemy 1'
+            : 'Target Friend 1'}
         </button>
-        {action.target !== 'self' && action.target !== 'pseudoSelf' ? (
+        {action.target !== 'self' &&
+        action.target !== 'pseudoSelf' &&
+        action.target !== 'confirm' ? (
           <>
             <button
               className={styles.actionButton}
