@@ -5,6 +5,7 @@ export const mageFrost = {
 
   maxHealth: 150,
   maxMana: 280,
+  baseManaRegen: 20,
   action1: {
     ref: 'action1',
     name: 'Wand',
@@ -18,12 +19,17 @@ export const mageFrost = {
   action2: {
     ref: 'action2',
     name: 'Frostbolt',
-    type: 'damage',
+    type: 'damage', //TODO: change to damageAndDebuff
     target: 'enemy',
     affectedCharacters: 1,
     damage: 28,
     manaCost: 40,
     cooldown: 0,
+    //TODO: add damage reducing effect to melee attacks (maybe effect: 'slow' property)?
+    effect: 'slow',
+    effectTurns: 2,
+    effectImage: '/assets/frostbolt.png',
+    dispellable: true,
   },
   action3: {
     ref: 'action3',
@@ -32,9 +38,11 @@ export const mageFrost = {
     target: 'self',
     affectedCharacters: 1,
     manaCost: 25,
-    effectTurns: 1,
-    effectImage: "",
     cooldown: 3,
+    effect: 'invulnerability',
+    effectTurns: 1,
+    effectImage: '/assets/iceblock.png',
+    dispellable: false,
   },
   action4: {
     ref: 'action4',
@@ -44,8 +52,9 @@ export const mageFrost = {
     affectedCharacters: 1,
     manaCost: 30,
     effectTurns: 1,
-    effectImage: "/assets/polymorph.png",
+    effectImage: '/assets/polymorph.png',
     cooldown: 3,
+    dispellable: true,
   },
 };
 
@@ -56,6 +65,7 @@ export const priestHoly = {
 
   maxHealth: 170,
   maxMana: 240,
+  baseManaRegen: 15,
   action1: {
     ref: 'action1',
     name: 'Wand',
@@ -106,6 +116,7 @@ export const paladinRetri = {
 
   maxHealth: 220,
   maxMana: 150,
+  baseManaRegen: 10,
   action1: {
     ref: 'action1',
     name: 'Basic Attack',
@@ -135,8 +146,9 @@ export const paladinRetri = {
     damage: 10,
     manaCost: 30,
     effectTurns: 1,
-    effectImage: "/assets/hoj-temporary.png",
+    effectImage: '/assets/hoj-temporary.png',
     cooldown: 2,
+    dispellable: true,
   },
   action4: {
     ref: 'action4',
@@ -146,7 +158,8 @@ export const paladinRetri = {
     affectedCharacters: 3,
     manaCost: 25,
     effectTurns: 2,
-    effectImage: "",
+    effectImage: '',
     cooldown: 1,
+    dispellable: true,
   },
 };

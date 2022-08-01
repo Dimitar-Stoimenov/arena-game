@@ -1,10 +1,10 @@
 --- gameplay
-
-* Add  more effects - armor/invulnerability/dot/manaburn
-
-* Add a skip turn as 5th ability (for when youre oom and cant do shit)
-
-* Add mana regeneration before turn
+* Add more effects:
+    -armor
+    -dispel
+    -invulnerability
+    -dot
+    -manaburn
 
 * Add character pickers - move the characterState out of Battle.js;
 
@@ -12,9 +12,6 @@
 
 
 --- visuals
-
-* Add effect images
-
 * Add hovers on ability buttons and effects
 
 * Add class pictures in the CharacterSummary component
