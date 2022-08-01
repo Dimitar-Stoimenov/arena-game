@@ -41,7 +41,7 @@ export const mageFrost = {
     cooldown: 3,
     effect: 'invulnerability',
     effectTurns: 1,
-    effectImage: '/assets/iceblock.png',
+    effectImage: '/assets/iceblock-temporary.png',
     dispellable: false,
   },
   action4: {
