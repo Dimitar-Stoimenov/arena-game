@@ -20,6 +20,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     mp: char1team1.maxMana,
     maxHealth: char1team1.maxHealth,
     maxMana: char1team1.maxMana,
+    baseManaRegen: char1team1.baseManaRegen,
     dead: false,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
@@ -30,6 +31,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     mp: char2team1.maxMana,
     maxHealth: char2team1.maxHealth,
     maxMana: char2team1.maxMana,
+    baseManaRegen: char2team1.baseManaRegen,
     dead: false,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
@@ -40,6 +42,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     mp: char3team1.maxMana,
     maxHealth: char3team1.maxHealth,
     maxMana: char3team1.maxMana,
+    baseManaRegen: char3team1.baseManaRegen,
     dead: false,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
@@ -50,6 +53,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     mp: char1team2.maxMana,
     maxHealth: char1team2.maxHealth,
     maxMana: char1team2.maxMana,
+    baseManaRegen: char1team2.baseManaRegen,
     dead: false,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
@@ -60,6 +64,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     mp: char2team2.maxMana,
     maxHealth: char2team2.maxHealth,
     maxMana: char2team2.maxMana,
+    baseManaRegen: char2team2.baseManaRegen,
     dead: false,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
@@ -70,6 +75,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     mp: char3team2.maxMana,
     maxHealth: char3team2.maxHealth,
     maxMana: char3team2.maxMana,
+    baseManaRegen: char3team2.baseManaRegen,
     dead: false,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
@@ -104,6 +110,73 @@ export const useBattleSequence = (sequence, allPlayers) => {
     const setAttacker = setPlayerState[attackerString];
     let setReceiver = null;
 
+    const startOfTurnSequence = prev => {
+      //reduce effect turns
+      let newEffects = [];
+
+      if (prev.effects.length > 0) {
+        for (const effect of prev.effects) {
+          const newEffectTurns = effect.turns - 1;
+
+          if (newEffectTurns > 0) {
+            newEffects.push({ ...effect, turns: newEffectTurns });
+          }
+        }
+      }
+
+      //mana regen
+      let newMp = Number;
+
+      if (prev.mp === prev.maxMana) {
+        newMp = prev.mp;
+      } else {
+        newMp = prev.mp + prev.baseManaRegen;
+
+        if (newMp > prev.maxMana) {
+          newMp = prev.maxMana;
+        }
+      }
+
+      //reduce cooldown turns
+      let newCooldowns = {
+        action1:
+          prev.cooldowns.action1 === 0 ||
+          prev.cooldowns.action1 === 'available-next-turn'
+            ? 0
+            : prev.cooldowns.action1 === 1
+            ? 'available-next-turn'
+            : prev.cooldowns.action1 - 1,
+        action2:
+          prev.cooldowns.action2 === 0 ||
+          prev.cooldowns.action2 === 'available-next-turn'
+            ? 0
+            : prev.cooldowns.action2 === 1
+            ? 'available-next-turn'
+            : prev.cooldowns.action2 - 1,
+        action3:
+          prev.cooldowns.action3 === 0 ||
+          prev.cooldowns.action3 === 'available-next-turn'
+            ? 0
+            : prev.cooldowns.action3 === 1
+            ? 'available-next-turn'
+            : prev.cooldowns.action3 - 1,
+        action4:
+          prev.cooldowns.action4 === 0 ||
+          prev.cooldowns.action4 === 'available-next-turn'
+            ? 0
+            : prev.cooldowns.action4 === 1
+            ? 'available-next-turn'
+            : prev.cooldowns.action4 - 1,
+      };
+
+      return {
+        ...prev,
+        mp: newMp,
+        cooldowns: newCooldowns,
+        effects: prev.effects.length > 0 ? newEffects : prev.effects,
+      };
+    };
+
     const executeAction = callNextTurnBoolean => {
       if (attackerString === 'dead') {
         // dead turn skipper
@@ -121,54 +194,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           setInSequence(true);
           // await wait(200);
 
-          setReceiver(prev => {
-            let newEffects = [];
-
-            if (prev.effects.length > 0) {
-              for (const effect of prev.effects) {
-                const newEffectTurns = effect.turns - 1;
-
-                if (newEffectTurns > 0) {
-                  newEffects.push({ ...effect, turns: newEffectTurns });
-                }
-              }
-            }
-
-            return {
-              ...prev,
-              cooldowns: {
-                action1:
-                  prev.cooldowns.action1 === 0 ||
-                    prev.cooldowns.action1 === 'available-next-turn'
-                    ? 0
-                    : prev.cooldowns.action1 === 1
-                      ? 'available-next-turn'
-                      : prev.cooldowns.action1 - 1,
-                action2:
-                  prev.cooldowns.action2 === 0 ||
-                    prev.cooldowns.action2 === 'available-next-turn'
-                    ? 0
-                    : prev.cooldowns.action2 === 1
-                      ? 'available-next-turn'
-                      : prev.cooldowns.action2 - 1,
-                action3:
-                  prev.cooldowns.action3 === 0 ||
-                    prev.cooldowns.action3 === 'available-next-turn'
-                    ? 0
-                    : prev.cooldowns.action3 === 1
-                      ? 'available-next-turn'
-                      : prev.cooldowns.action3 - 1,
-                action4:
-                  prev.cooldowns.action4 === 0 ||
-                    prev.cooldowns.action4 === 'available-next-turn'
-                    ? 0
-                    : prev.cooldowns.action4 === 1
-                      ? 'available-next-turn'
-                      : prev.cooldowns.action4 - 1,
-              },
-              effects: (prev.effects.length > 0 ? newEffects : prev.effects)
-            };
-          });
+          setReceiver(prev => startOfTurnSequence(prev));
 
           nextTurn();
 
@@ -208,10 +234,18 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   };
                 }
 
+                let newEffects = [];
+                if (prev.effects.some(e => e.type === 'cc')) {
+                  newEffects = prev.effects.filter(e => e.type !== 'cc');
+                } else {
+                  newEffects = prev.effects;
+                }
+
                 return {
                   ...prev,
                   cooldowns: { ...prev.cooldowns },
                   hp: newHp,
+                  effects: newEffects,
                 };
               });
               await wait(1000);
@@ -292,12 +326,15 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   turns: action.effectTurns,
                   name: action.name,
                   image: action.effectImage,
+                  buff: Boolean(action.type === 'buff'),
+                  debuff: Boolean(action.type !== 'buff'),
+                  dispellable: action.dispellable,
                 };
 
                 return {
                   ...prev,
                   cooldowns: { ...prev.cooldowns },
-                  effects: [...prev.effects, newEffect]
+                  effects: [...prev.effects, newEffect],
                 };
               });
               await wait(1000);
@@ -312,59 +349,78 @@ export const useBattleSequence = (sequence, allPlayers) => {
           case 'buff':
             break;
 
-          case 'reduceCooldownsAndEffects':
+          case 'dispel':
+            //TODO: check if dispel, cleanse or purge
             (async () => {
               setInSequence(true);
               // await wait(200);
 
-              setAttacker(prev => {
+              if (callNextTurnBoolean) {
+                setAttacker(prev => {
+                  let newMp = prev.mp - action.manaCost;
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    mp: newMp,
+                  };
+                });
+                // await wait(200);
+              }
+
+              //TODO: check if receiver is friend or enemy
+              //TODO: check if ability is buff or debuff accordingly
+              setReceiver(prev => {
                 let newEffects = [];
+                if (prev.effects.some(e => e.dispellable === true)) {
+                  const shuffledArray = prev.effects.sort(
+                    () => 0.5 - Math.random(),
+                  );
+                  let effectToBeRemoved = shuffledArray.find(
+                    e => e.dispellable === true,
+                  );
 
-                if (prev.effects.length > 0) {
-                  for (const effect of prev.effects) {
-                    const newEffectTurns = effect.turns - 1;
-
-                    if (newEffectTurns > 0) {
-                      newEffects.push({ ...effect, turns: newEffectTurns });
-                    }
-                  }
+                  newEffects = prev.effects.filter(
+                    e => e !== effectToBeRemoved,
+                  );
+                } else {
+                  newEffects = prev.effects;
                 }
 
                 return {
                   ...prev,
-                  cooldowns: {
-                    action1:
-                      prev.cooldowns.action1 === 0 ||
-                        prev.cooldowns.action1 === 'available-next-turn'
-                        ? 0
-                        : prev.cooldowns.action1 === 1
-                          ? 'available-next-turn'
-                          : prev.cooldowns.action1 - 1,
-                    action2:
-                      prev.cooldowns.action2 === 0 ||
-                        prev.cooldowns.action2 === 'available-next-turn'
-                        ? 0
-                        : prev.cooldowns.action2 === 1
-                          ? 'available-next-turn'
-                          : prev.cooldowns.action2 - 1,
-                    action3:
-                      prev.cooldowns.action3 === 0 ||
-                        prev.cooldowns.action3 === 'available-next-turn'
-                        ? 0
-                        : prev.cooldowns.action3 === 1
-                          ? 'available-next-turn'
-                          : prev.cooldowns.action3 - 1,
-                    action4:
-                      prev.cooldowns.action4 === 0 ||
-                        prev.cooldowns.action4 === 'available-next-turn'
-                        ? 0
-                        : prev.cooldowns.action4 === 1
-                          ? 'available-next-turn'
-                          : prev.cooldowns.action4 - 1,
-                  },
-                  effects: (prev.effects.length > 0 ? newEffects : prev.effects)
+                  cooldowns: { ...prev.cooldowns },
+                  effects: newEffects,
                 };
               });
+
+              await wait(1000);
+
+              if (callNextTurnBoolean) {
+                nextTurn();
+                setInSequence(false);
+              }
+            })();
+            break;
+
+          case 'skip':
+            (async () => {
+              setInSequence(true);
+              // await wait(200);
+
+              if (callNextTurnBoolean) {
+                nextTurn();
+                setInSequence(false);
+              }
+            })();
+            break;
+
+          case 'turnStartSequence':
+            (async () => {
+              setInSequence(true);
+              // await wait(200);
+
+              setAttacker(prev => startOfTurnSequence(prev));
               setInSequence(false);
             })();
             break;
@@ -387,7 +443,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       }
     };
 
-    if (attackerString === "stun" || attackerString === "cc") {
+    if (attackerString === 'stun' || attackerString === 'cc') {
       receiverString = receivers;
       setReceiver = setPlayerState[receiverString];
       executeAction(true);

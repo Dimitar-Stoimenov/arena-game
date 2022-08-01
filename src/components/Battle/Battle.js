@@ -55,19 +55,19 @@ export const Battle = ({ onGameEnd }) => {
         return onAction(null, 'cc', 'char1team1');
       }
 
-      onAction({ type: 'reduceCooldownsAndEffects' }, 'char1team1');
+      onAction({ type: 'turnStartSequence' }, 'char1team1');
     }
 
     if (turn === 2) {
       if (char1team2state.dead) {
         return onAction(null, 'dead');
-      } else if (char1team2state.effects.some(e => e.type === "stun")) {
-        return onAction(null, 'stun', 'char1team2');
-      } else if (char1team2state.effects.some(e => e.type === "cc")) {
-        return onAction(null, 'cc', 'char1team2');
+      } else if (char1team2state.effects.some(e => e.type === 'stun')) {
+        return onAction(null, 'stun', 'char1team2'); //activates turnStartSequence inside this
+      } else if (char1team2state.effects.some(e => e.type === 'cc')) {
+        return onAction(null, 'cc', 'char1team2'); //activates turnStartSequence inside this
       }
 
-      onAction({ type: 'reduceCooldownsAndEffects' }, 'char1team2');
+      onAction({ type: 'turnStartSequence' }, 'char1team2');
     }
 
     if (turn === 3) {
@@ -79,7 +79,7 @@ export const Battle = ({ onGameEnd }) => {
         return onAction(null, 'cc', 'char2team1');
       }
 
-      onAction({ type: 'reduceCooldownsAndEffects' }, 'char2team1');
+      onAction({ type: 'turnStartSequence' }, 'char2team1');
     }
 
     if (turn === 4) {
@@ -91,7 +91,7 @@ export const Battle = ({ onGameEnd }) => {
         return onAction(null, 'cc', 'char2team2');
       }
 
-      onAction({ type: 'reduceCooldownsAndEffects' }, 'char2team2');
+      onAction({ type: 'turnStartSequence' }, 'char2team2');
     }
 
     if (turn === 5) {
@@ -103,7 +103,7 @@ export const Battle = ({ onGameEnd }) => {
         return onAction(null, 'cc', 'char3team1');
       }
 
-      onAction({ type: 'reduceCooldownsAndEffects' }, 'char3team1');
+      onAction({ type: 'turnStartSequence' }, 'char3team1');
     }
 
     if (turn === 6) {
@@ -115,7 +115,7 @@ export const Battle = ({ onGameEnd }) => {
         return onAction(null, 'cc', 'char3team2');
       }
 
-      onAction({ type: 'reduceCooldownsAndEffects' }, 'char3team2');
+      onAction({ type: 'turnStartSequence' }, 'char3team2');
     }
 
     if (
