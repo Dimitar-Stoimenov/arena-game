@@ -145,7 +145,7 @@ export const paladinRetri = {
     affectedCharacters: 1,
     damage: 10,
     manaCost: 30,
-    effectTurns: 3,
+    effectTurns: 1,
     effectImage: '/assets/hoj-temporary.png',
     cooldown: 2,
     dispellable: true,
