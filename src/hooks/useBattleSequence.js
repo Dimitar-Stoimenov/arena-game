@@ -172,7 +172,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       //check for damage reduce effect
       let damageReduceEffectCheck = null;
       if (prev.damageReduceEffect) {
-        damageReduceEffectCheck = prev.effects.some(e => e.damageReduceEffect);
+        damageReduceEffectCheck = prev.effects.some(e => e.damageReduceRating);
       }
 
       return {
