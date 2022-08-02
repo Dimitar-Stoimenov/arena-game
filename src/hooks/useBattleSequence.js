@@ -169,11 +169,18 @@ export const useBattleSequence = (sequence, allPlayers) => {
               : prev.cooldowns.action4 - 1,
       };
 
+      //check for damage reduce effect
+      let damageReduceEffectCheck = null;
+      if (prev.damageReduceEffect) {
+        damageReduceEffectCheck = prev.effects.some(e => e.damageReduceEffect);
+      }
+
       return {
         ...prev,
         mp: newMp,
         cooldowns: newCooldowns,
         effects: prev.effects.length > 0 ? newEffects : prev.effects,
+        damageReduceEffect: damageReduceEffectCheck ? prev.damageReduceEffect : false
       };
     };
 
@@ -223,7 +230,12 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
 
               setReceiver(prev => {
-                let newHp = prev.hp - Number(action.damage);
+                let damage = action.damage;
+                if (prev.damageReduceEffect) {
+                  damage = Math.floor(action.damage * (1 - prev.damageReduceEffect));
+                }
+
+                let newHp = prev.hp - Number(damage);
 
                 if (newHp <= 0) {
                   return {
@@ -347,6 +359,50 @@ export const useBattleSequence = (sequence, allPlayers) => {
             break;
 
           case 'buff':
+            (async () => {
+              setInSequence(true);
+              // await wait(200);
+
+              if (callNextTurnBoolean) {
+                setAttacker(prev => {
+                  let newMp = prev.mp - action.manaCost;
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    mp: newMp,
+                  };
+                });
+                // await wait(200);
+              }
+
+              setReceiver(prev => {
+                let newEffect = {
+                  type: action.type,
+                  turns: action.effectTurns,
+                  name: action.name,
+                  image: action.effectImage,
+                  buff: Boolean(action.type === 'buff'),
+                  debuff: Boolean(action.type !== 'buff'),
+                  dispellable: action.dispellable,
+                  damageReduceRating: action.damageReduceRating
+                };
+
+                return {
+                  ...prev,
+                  cooldowns: { ...prev.cooldowns },
+                  effects: [...prev.effects, newEffect],
+                  damageReduceEffect: action.damageReduceRating
+                };
+              });
+
+              await wait(1000);
+            })();
+
+            if (callNextTurnBoolean) {
+              nextTurn();
+              setInSequence(false);
+            }
             break;
 
           case 'dispel':
@@ -427,7 +483,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  //TODO: check if ability is buff or debuff accordingly
                   setReceiver(prev => {
                     let newEffects = [];
                     if (prev.effects.some(e => e.dispellable && e.buff)) {
@@ -445,10 +500,16 @@ export const useBattleSequence = (sequence, allPlayers) => {
                       newEffects = prev.effects;
                     }
 
+                    let damageReduceEffectCheck = null;
+                    if (prev.damageReduceEffect) {
+                      damageReduceEffectCheck = prev.effects.some(e => e.damageReduceEffect);
+                    }
+
                     return {
                       ...prev,
                       cooldowns: { ...prev.cooldowns },
                       effects: newEffects,
+                      damageReduceEffect: damageReduceEffectCheck ? prev.damageReduceEffect : false
                     };
                   });
                 })();
@@ -560,11 +621,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
             }
 
-
-
-
-
-
             break;
 
           case 'skip':
@@ -634,7 +690,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           executeAction(false);
         }
       }
-      action.type = 'damageAndHeal'; //reset to original action.type to prevent bugs on next usage of the same ability
+      action.type = originalType; //reset to original action.type to prevent bugs on next usage of the same ability
     } else if (!receivers) {
       if (attackerString === 'dead') {
         // on dead
