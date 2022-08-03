@@ -289,6 +289,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                 let newShieldAmount = null;
 
                 if (prev.shield) {
+                  newShieldAmount = prev.shield;
                   damage = action.damage - Number(prev.shield);
 
                   if (damage >= 0) {
@@ -477,6 +478,11 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     action.effect === 'invulnerability' ? true : false,
                 };
 
+                let newShieldAmount = action.shieldAmount;
+                if (prev.shield) {
+                  newShieldAmount += prev.shield;
+                }
+
                 return {
                   ...prev,
                   cooldowns: { ...prev.cooldowns },
@@ -484,7 +490,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   damageReduceEffect: action?.damageReduceRating,
                   invulnerable:
                     action.effect === 'invulnerability' ? true : false,
-                  shield: action.effect === 'shield' ? action.shieldAmount : false,
+                  shield: newShieldAmount,
                 };
               });
 
@@ -822,6 +828,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   let newShieldAmount = null;
 
                   if (prev.shield) {
+                    newShieldAmount = prev.shield;
                     damage = action.damage - Number(prev.shield);
 
                     if (damage > 0) {
