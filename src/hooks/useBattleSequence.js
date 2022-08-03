@@ -278,7 +278,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
                     mp: newMp,
-                    effects: [...prev.effects]
                   };
                 });
                 // await wait(200);
@@ -286,19 +285,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
               setReceiver(prev => {
                 let damage = action.damage;
-                let newShieldAmount = null;
-
-                if (prev.shield) {
-                  newShieldAmount = prev.shield;
-                  damage = action.damage - Number(prev.shield);
-
-                  if (damage >= 0) {
-                    newShieldAmount = 0;
-                  } else {
-                    damage = 0;
-                    newShieldAmount = prev.shield - action.damage;
-                  }
-                }
 
                 if (prev.damageReduceEffect && action.physical) {
                   damage = Math.floor(
@@ -328,16 +314,11 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   newEffects = prev.effects;
                 }
 
-                if (newShieldAmount <= 0) {
-                  newEffects = newEffects.filter(e => e.effect !== 'shield');
-                }
-
                 return {
                   ...prev,
                   cooldowns: { ...prev.cooldowns },
                   hp: newHp,
                   effects: newEffects,
-                  shield: newShieldAmount
                 };
               });
               await wait(1000);
@@ -362,7 +343,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
                     mp: newMp,
-                    effects: [...prev.effects]
                   };
                 });
                 // await wait(200);
@@ -409,7 +389,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
                     mp: newMp,
-                    effects: [...prev.effects]
                   };
                 });
                 // await wait(200);
@@ -424,7 +403,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   buff: Boolean(action.type === 'buff'),
                   debuff: Boolean(action.type !== 'buff'),
                   dispellable: action.dispellable,
-                  effect: action.effect,
                 };
 
                 return {
@@ -455,7 +433,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
                     mp: newMp,
-                    effects: [...prev.effects]
                   };
                 });
                 // await wait(200);
@@ -470,17 +447,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   buff: Boolean(action.type === 'buff'),
                   debuff: Boolean(action.type !== 'buff'),
                   dispellable: action.dispellable,
-                  shieldAmount: action?.shieldAmount,
-                  effect: action.effect,
                   damageReduceRating: action?.damageReduceRating,
                   invulnerable:
                     action.effect === 'invulnerability' ? true : false,
                 };
-
-                let newShieldAmount = action.shieldAmount;
-                if (prev.shield) {
-                  newShieldAmount += prev.shield;
-                }
 
                 return {
                   ...prev,
@@ -489,7 +459,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   damageReduceEffect: action?.damageReduceRating,
                   invulnerable:
                     action.effect === 'invulnerability' ? true : false,
-                  shield: newShieldAmount,
                 };
               });
 
@@ -571,8 +540,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                   setReceiver(prev => {
                     let newEffects = [];
-                    let newShieldAmount = prev.shield;
-
                     if (prev.effects.some(e => e.dispellable && e.buff)) {
                       const shuffledArray = prev.effects.sort(
                         () => 0.5 - Math.random(),
@@ -580,14 +547,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                       let effectToBeRemoved = shuffledArray.find(
                         e => e.dispellable && e.buff,
                       );
-
-                      if (effectToBeRemoved.effect === 'shield') {
-                        newShieldAmount -= effectToBeRemoved.shieldAmount;
-
-                        if (newShieldAmount < 0) {
-                          newShieldAmount = 0;
-                        }
-                      }
 
                       newEffects = prev.effects.filter(
                         e => e !== effectToBeRemoved,
@@ -607,7 +566,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                       ...prev,
                       cooldowns: { ...prev.cooldowns },
                       effects: newEffects,
-                      shield: newShieldAmount,
                       damageReduceEffect: damageReduceEffectCheck
                         ? prev.damageReduceEffect
                         : false,
@@ -640,6 +598,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
+                  //TODO: check if ability is buff or debuff accordingly
                   setReceiver(prev => {
                     let newEffects = [];
                     if (
@@ -692,10 +651,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
+                  //TODO: check if ability is buff or debuff accordingly
                   setReceiver(prev => {
                     let newEffects = [];
-                    let newShieldAmount = prev.shield;
-
                     if (prev.effects.some(e => e.dispellable && e.buff)) {
                       const shuffledArray = prev.effects.sort(
                         () => 0.5 - Math.random(),
@@ -703,14 +661,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                       let effectToBeRemoved = shuffledArray.find(
                         e => e.dispellable && e.buff,
                       );
-
-                      if (effectToBeRemoved.effect === 'shield') {
-                        newShieldAmount -= effectToBeRemoved.shieldAmount;
-
-                        if (newShieldAmount < 0) {
-                          newShieldAmount = 0;
-                        }
-                      }
 
                       newEffects = prev.effects.filter(
                         e => e !== effectToBeRemoved,
@@ -722,7 +672,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     return {
                       ...prev,
                       cooldowns: { ...prev.cooldowns },
-                      shield: newShieldAmount,
                       effects: newEffects,
                     };
                   });
@@ -750,7 +699,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
                     mp: newMp,
-                    effects: [...prev.effects]
                   };
                 });
                 // await wait(200);
@@ -844,19 +792,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   };
                 } else {
                   let damage = action.damage;
-                  let newShieldAmount = null;
-
-                  if (prev.shield) {
-                    newShieldAmount = prev.shield;
-                    damage = action.damage - Number(prev.shield);
-
-                    if (damage > 0) {
-                      newShieldAmount = 0;
-                    } else {
-                      damage = 0;
-                      newShieldAmount = prev.shield - action.damage;
-                    }
-                  }
 
                   if (prev.damageReduceEffect && action.physical) {
                     damage = Math.floor(
@@ -886,20 +821,14 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     newEffects = prev.effects;
                   }
 
-                  if (newShieldAmount <= 0) {
-                    newEffects = newEffects.filter(e => e.effect !== 'shield');
-                  }
-
                   return {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
                     hp: newHp,
                     effects: newEffects,
-                    shield: newShieldAmount
                   };
                 }
               });
-              await wait(1000);
             })();
 
             if (callNextTurnBoolean) {
