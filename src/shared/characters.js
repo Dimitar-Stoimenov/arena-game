@@ -161,6 +161,7 @@ export const priestDisc = {
     type: 'buff',
     effect: 'shield',
     effectTurns: 3,
+    effectImage: '/assets/pw-shield.png',
     target: 'friendly',
     shieldAmount: baseSpells.midSpellDamage,
     affectedCharacters: 1,

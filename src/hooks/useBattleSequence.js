@@ -572,6 +572,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                   setReceiver(prev => {
                     let newEffects = [];
+                    let newShieldAmount = prev.shield;
+
                     if (prev.effects.some(e => e.dispellable && e.buff)) {
                       const shuffledArray = prev.effects.sort(
                         () => 0.5 - Math.random(),
@@ -579,6 +581,14 @@ export const useBattleSequence = (sequence, allPlayers) => {
                       let effectToBeRemoved = shuffledArray.find(
                         e => e.dispellable && e.buff,
                       );
+
+                      if (effectToBeRemoved.effect === 'shield') {
+                        newShieldAmount -= effectToBeRemoved.shieldAmount;
+
+                        if (newShieldAmount < 0) {
+                          newShieldAmount = 0;
+                        }
+                      }
 
                       newEffects = prev.effects.filter(
                         e => e !== effectToBeRemoved,
@@ -598,6 +608,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                       ...prev,
                       cooldowns: { ...prev.cooldowns },
                       effects: newEffects,
+                      shield: newShieldAmount,
                       damageReduceEffect: damageReduceEffectCheck
                         ? prev.damageReduceEffect
                         : false,
@@ -630,7 +641,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  //TODO: check if ability is buff or debuff accordingly
                   setReceiver(prev => {
                     let newEffects = [];
                     if (
@@ -683,9 +693,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  //TODO: check if ability is buff or debuff accordingly
                   setReceiver(prev => {
                     let newEffects = [];
+                    let newShieldAmount = prev.shield;
+
                     if (prev.effects.some(e => e.dispellable && e.buff)) {
                       const shuffledArray = prev.effects.sort(
                         () => 0.5 - Math.random(),
@@ -693,6 +704,14 @@ export const useBattleSequence = (sequence, allPlayers) => {
                       let effectToBeRemoved = shuffledArray.find(
                         e => e.dispellable && e.buff,
                       );
+
+                      if (effectToBeRemoved.effect === 'shield') {
+                        newShieldAmount -= effectToBeRemoved.shieldAmount;
+
+                        if (newShieldAmount < 0) {
+                          newShieldAmount = 0;
+                        }
+                      }
 
                       newEffects = prev.effects.filter(
                         e => e !== effectToBeRemoved,
@@ -704,6 +723,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     return {
                       ...prev,
                       cooldowns: { ...prev.cooldowns },
+                      shield: newShieldAmount,
                       effects: newEffects,
                     };
                   });
