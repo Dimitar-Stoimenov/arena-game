@@ -233,6 +233,37 @@ export const useBattleSequence = (sequence, allPlayers) => {
       }
 
       if (action) {
+        let attackerTeam = null;
+        let receiverTeam = null;
+
+        if (
+          attackerString === 'char1team1' ||
+          attackerString === 'char2team1' ||
+          attackerString === 'char3team1'
+        ) {
+          attackerTeam = 1;
+        } else if (
+          attackerString === 'char1team2' ||
+          attackerString === 'char2team2' ||
+          attackerString === 'char3team2'
+        ) {
+          attackerTeam = 2;
+        }
+
+        if (
+          receiverString === 'char1team1' ||
+          receiverString === 'char2team1' ||
+          receiverString === 'char3team1'
+        ) {
+          receiverTeam = 1;
+        } else if (
+          receiverString === 'char1team2' ||
+          receiverString === 'char2team2' ||
+          receiverString === 'char3team2'
+        ) {
+          receiverTeam = 2;
+        }
+
         switch (action.type) {
           case 'damage':
             (async () => {
@@ -332,6 +363,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   ...prev,
                   cooldowns: { ...prev.cooldowns },
                   hp: newHp,
+                  effects: [...prev.effects]
                 };
               });
               await wait(1000);
@@ -440,37 +472,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
             break;
 
           case 'dispel':
-            let attackerTeam = null;
-            let receiverTeam = null;
-
-            if (
-              attackerString === 'char1team1' ||
-              attackerString === 'char2team1' ||
-              attackerString === 'char3team1'
-            ) {
-              attackerTeam = 1;
-            } else if (
-              attackerString === 'char1team2' ||
-              attackerString === 'char2team2' ||
-              attackerString === 'char3team2'
-            ) {
-              attackerTeam = 2;
-            }
-
-            if (
-              receiverString === 'char1team1' ||
-              receiverString === 'char2team1' ||
-              receiverString === 'char3team1'
-            ) {
-              receiverTeam = 1;
-            } else if (
-              receiverString === 'char1team2' ||
-              receiverString === 'char2team2' ||
-              receiverString === 'char3team2'
-            ) {
-              receiverTeam = 2;
-            }
-
             if (action.name === 'Dispel') {
               if (attackerTeam === receiverTeam) {
                 (async () => {
@@ -485,6 +486,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                         ...prev,
                         cooldowns: { ...prev.cooldowns },
                         mp: newMp,
+                        effects: [...prev.effects]
                       };
                     });
                     // await wait(200);
@@ -530,6 +532,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                         ...prev,
                         cooldowns: { ...prev.cooldowns },
                         mp: newMp,
+                        effects: [...prev.effects]
                       };
                     });
                     // await wait(200);
@@ -589,6 +592,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                         ...prev,
                         cooldowns: { ...prev.cooldowns },
                         mp: newMp,
+                        effects: [...prev.effects]
                       };
                     });
                     // await wait(200);
@@ -641,6 +645,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                         ...prev,
                         cooldowns: { ...prev.cooldowns },
                         mp: newMp,
+                        effects: [...prev.effects]
                       };
                     });
                     // await wait(200);
@@ -746,6 +751,90 @@ export const useBattleSequence = (sequence, allPlayers) => {
                 setInSequence(false);
               }
             })();
+            break;
+
+          case 'damageOrHeal':
+            (async () => {
+              setInSequence(true);
+              // await wait(200);
+
+              if (callNextTurnBoolean) {
+                setAttacker(prev => {
+                  let newMp = prev.mp - action.manaCost;
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    mp: newMp,
+                    effects: [...prev.effects]
+                  };
+                });
+                // await wait(200);
+              }
+
+              setReceiver(prev => {
+                if (attackerTeam === receiverTeam) {
+                  let newHp = prev.hp + Number(action.healing);
+
+                  if (prev.dead) {
+                    return prev;
+                  }
+
+                  if (newHp > prev.maxHealth) {
+                    newHp = prev.maxHealth;
+                  }
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    hp: newHp,
+                    effects: [...prev.effects]
+                  };
+                } else {
+                  let damage = action.damage;
+
+                  if (prev.damageReduceEffect && action.physical) {
+                    damage = Math.floor(
+                      action.damage * (1 - prev.damageReduceEffect),
+                    );
+                  }
+
+                  if (prev.invulnerable === true) {
+                    damage = 0;
+                  }
+
+                  let newHp = prev.hp - Number(damage);
+
+                  if (newHp <= 0) {
+                    return {
+                      ...prev,
+                      hp: 0,
+                      mp: 0,
+                      dead: true,
+                    };
+                  }
+
+                  let newEffects = [];
+                  if (prev.effects.some(e => e.type === 'cc')) {
+                    newEffects = prev.effects.filter(e => e.type !== 'cc');
+                  } else {
+                    newEffects = prev.effects;
+                  }
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    hp: newHp,
+                    effects: newEffects,
+                  };
+                }
+              });
+            })();
+
+            if (callNextTurnBoolean) {
+              endTurnSequence(setAttacker);
+              setInSequence(false);
+            }
             break;
 
           case 'skip':

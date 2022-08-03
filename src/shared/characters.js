@@ -28,7 +28,7 @@ const baseMana = {
 const baseManaCost = {
   lowManaCost: 20,
   midManaCost: 35,
-  bigManaCost: 50,
+  bigManaCost: 52,
 }; //15 diff
 
 export const mageFrost = {
@@ -56,8 +56,8 @@ export const mageFrost = {
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
-    damage: baseSpells.midSpellDamage + 3,
-    manaCost: baseManaCost.bigManaCost - 3,
+    damage: baseSpells.midSpellDamage + 2,
+    manaCost: baseManaCost.bigManaCost - 5,
     cooldown: 0,
     //TODO: add damage reducing effect to melee attacks (maybe effect: 'slow' property)?
     // effect: 'slow',
@@ -168,8 +168,8 @@ export const priestDisc = {
     type: 'heal',
     target: 'friendly',
     affectedCharacters: 1,
-    healing: baseHeals.midHeal,
-    manaCost: baseManaCost.midManaCost,
+    healing: baseHeals.midHeal + 5,
+    manaCost: baseManaCost.midManaCost + 3,
     cooldown: 0,
   },
   action3: {
@@ -231,7 +231,6 @@ export const paladinRetri = {
     type: 'stun',
     target: 'enemy',
     affectedCharacters: 1,
-    damage: 10,
     manaCost: baseManaCost.midManaCost - 5,
     effectTurns: 1,
     effectImage: '/assets/hoj.png',
@@ -250,5 +249,56 @@ export const paladinRetri = {
     damageReduceRating: 0.2,
     cooldown: 1,
     dispellable: true,
+  },
+};
+
+export const paladinHoly = {
+  charClass: 'Paladin',
+  img: '/assets/paladin.png',
+  spec: 'Holy',
+  specImg: '/assets/holy-paladin.png',
+
+  maxHealth: baseHealth.highHealth - 20,
+  maxMana: baseMana.midMana,
+  baseManaRegen: baseManaRegen - 1,
+  action1: {
+    ref: 'action1',
+    name: 'Flash Heal',
+    type: 'heal',
+    target: 'friendly',
+    affectedCharacters: 1,
+    healing: baseHeals.midHeal + 2,
+    manaCost: baseManaCost.midManaCost,
+    cooldown: 0,
+  },
+  action2: {
+    ref: 'action2',
+    name: 'Greater Heal',
+    type: 'heal',
+    target: 'friendly',
+    affectedCharacters: 1,
+    healing: baseHeals.bigHeal,
+    manaCost: baseManaCost.bigManaCost,
+    cooldown: 0,
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Holy Shock',
+    // type: 'stun',
+    target: 'all',
+    affectedCharacters: 1,
+    damage: baseSpells.lowSpellDamage,
+    healing: baseHeals.midHeal - 2,
+    manaCost: baseManaCost.lowManaCost,
+    cooldown: 1,
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Cleanse',
+    type: 'dispel',
+    target: 'friendly',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.lowManaCost,
+    cooldown: 1,
   },
 };
