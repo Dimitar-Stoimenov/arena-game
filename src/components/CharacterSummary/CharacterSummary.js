@@ -1,9 +1,8 @@
-import { Bar } from 'components';
+import { CharActions, EffectsList, Bar } from 'components';
 import styles from './styles.module.css';
-import { CharActions, EffectsList } from 'components';
 
-const red = "#ba2e25";
-const blue = "#1953cb";
+const red = '#ba2e25';
+const blue = '#1953cb';
 
 export const CharacterSummary = ({
   team2 = false,
@@ -17,12 +16,13 @@ export const CharacterSummary = ({
   dead,
   cooldowns,
   effects,
-  characterNamesObject
+  characterNamesObject,
 }) => {
   const {
     charClass,
     spec,
     img,
+    specImg,
     maxHealth,
     maxMana,
     action1,
@@ -33,7 +33,10 @@ export const CharacterSummary = ({
 
   return (
     <div className={!dead ? styles.wrapper : styles.disabled}>
-      <EffectsList effects={effects} backgroundColor={team2 ? red : blue} />
+      <EffectsList
+        effects={effects}
+        backgroundColor={team2 ? red : blue}
+      />
 
       <div
         style={{ backgroundColor: team2 ? red : blue }}
@@ -44,8 +47,12 @@ export const CharacterSummary = ({
         </div>
         <div className={styles.charParameters}>
           <div className={styles.info}>
-            <div className={styles.spec}>{spec}</div>
-            <div className={styles.charClass}>{charClass}</div>
+            <div className={styles.spec}>
+              <img className={styles.specImg} src={specImg} alt={spec} />
+            </div>
+            <div
+              className={styles.charClassSpecText}
+            >{`${spec} ${charClass}`}</div>
           </div>
 
           <Bar label="HP" value={hp} maxValue={maxHealth} color={red} />

@@ -1,6 +1,5 @@
-import { wait } from 'shared';
-
 import { useEffect, useState } from 'react';
+import { wait } from 'shared';
 
 export const useBattleSequence = (sequence, allPlayers) => {
   const [turn, setTurn] = useState((sequence.turn = 1));
@@ -95,7 +94,33 @@ export const useBattleSequence = (sequence, allPlayers) => {
       char3team2: setChar3team2state,
     };
 
-    const nextTurn = () => {
+    const endTurnSequence = stateSetter => {
+      if (stateSetter !== 'dead') {
+        stateSetter(prev => {
+          let newEffects = [];
+          let invulnerabilityCheck = null;
+
+          if (prev.effects.length > 0) {
+            for (const effect of prev.effects) {
+              const newEffectTurns = effect.turns - 1;
+
+              if (newEffectTurns > 0) {
+                newEffects.push({ ...effect, turns: newEffectTurns });
+              }
+            }
+
+            invulnerabilityCheck = newEffects.some(e => e.invulnerable);
+          }
+
+          return {
+            ...prev,
+            cooldowns: { ...prev.cooldowns },
+            effects: [...newEffects],
+            invulnerable: invulnerabilityCheck ? prev.invulnerable : false,
+          };
+        });
+      }
+
       setTurn(currentTurn => {
         let newTurn = currentTurn + 1;
 
@@ -111,19 +136,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
     let setReceiver = null;
 
     const startOfTurnSequence = prev => {
-      //reduce effect turns
-      let newEffects = [];
-
-      if (prev.effects.length > 0) {
-        for (const effect of prev.effects) {
-          const newEffectTurns = effect.turns - 1;
-
-          if (newEffectTurns > 0) {
-            newEffects.push({ ...effect, turns: newEffectTurns });
-          }
-        }
-      }
-
       //mana regen
       let newMp = Number;
 
@@ -141,46 +153,57 @@ export const useBattleSequence = (sequence, allPlayers) => {
       let newCooldowns = {
         action1:
           prev.cooldowns.action1 === 0 ||
-            prev.cooldowns.action1 === 'available-next-turn'
+          prev.cooldowns.action1 === 'available-next-turn'
             ? 0
             : prev.cooldowns.action1 === 1
-              ? 'available-next-turn'
-              : prev.cooldowns.action1 - 1,
+            ? 'available-next-turn'
+            : prev.cooldowns.action1 - 1,
         action2:
           prev.cooldowns.action2 === 0 ||
-            prev.cooldowns.action2 === 'available-next-turn'
+          prev.cooldowns.action2 === 'available-next-turn'
             ? 0
             : prev.cooldowns.action2 === 1
-              ? 'available-next-turn'
-              : prev.cooldowns.action2 - 1,
+            ? 'available-next-turn'
+            : prev.cooldowns.action2 - 1,
         action3:
           prev.cooldowns.action3 === 0 ||
-            prev.cooldowns.action3 === 'available-next-turn'
+          prev.cooldowns.action3 === 'available-next-turn'
             ? 0
             : prev.cooldowns.action3 === 1
-              ? 'available-next-turn'
-              : prev.cooldowns.action3 - 1,
+            ? 'available-next-turn'
+            : prev.cooldowns.action3 - 1,
         action4:
           prev.cooldowns.action4 === 0 ||
-            prev.cooldowns.action4 === 'available-next-turn'
+          prev.cooldowns.action4 === 'available-next-turn'
             ? 0
             : prev.cooldowns.action4 === 1
-              ? 'available-next-turn'
-              : prev.cooldowns.action4 - 1,
+            ? 'available-next-turn'
+            : prev.cooldowns.action4 - 1,
       };
 
       //check for damage reduce effect
       let damageReduceEffectCheck = null;
       if (prev.damageReduceEffect) {
-        damageReduceEffectCheck = prev.effects.some(e => e.damageReduceRating);
+        damageReduceEffectCheck = prev.effects.some(
+          e => e.damageReduceRating,
+        );
+      }
+
+      //check for invulnerability
+      let invulnerabilityCheck = null;
+      if (prev.invulnerable) {
+        invulnerabilityCheck = prev.effects.some(e => e.invulnerable);
       }
 
       return {
         ...prev,
         mp: newMp,
         cooldowns: newCooldowns,
-        effects: prev.effects.length > 0 ? newEffects : prev.effects,
-        damageReduceEffect: damageReduceEffectCheck ? prev.damageReduceEffect : false
+        effects: prev.effects,
+        damageReduceEffect: damageReduceEffectCheck
+          ? prev.damageReduceEffect
+          : false,
+        invulnerable: invulnerabilityCheck ? prev.invulnerable : false,
       };
     };
 
@@ -191,7 +214,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           setInSequence(true);
           // await wait(200);
 
-          nextTurn();
+          endTurnSequence('dead');
 
           setInSequence(false);
         })();
@@ -203,7 +226,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
           setReceiver(prev => startOfTurnSequence(prev));
 
-          nextTurn();
+          endTurnSequence(setReceiver);
 
           setInSequence(false);
         })();
@@ -231,8 +254,15 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
               setReceiver(prev => {
                 let damage = action.damage;
-                if (prev.damageReduceEffect) {
-                  damage = Math.floor(action.damage * (1 - prev.damageReduceEffect));
+
+                if (prev.damageReduceEffect && action.physical) {
+                  damage = Math.floor(
+                    action.damage * (1 - prev.damageReduceEffect),
+                  );
+                }
+
+                if (prev.invulnerable === true) {
+                  damage = 0;
                 }
 
                 let newHp = prev.hp - Number(damage);
@@ -263,7 +293,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               await wait(1000);
 
               if (callNextTurnBoolean) {
-                nextTurn();
+                endTurnSequence(setAttacker);
                 setInSequence(false);
               }
             })();
@@ -307,7 +337,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               await wait(1000);
 
               if (callNextTurnBoolean) {
-                nextTurn();
+                endTurnSequence(setAttacker);
                 setInSequence(false);
               }
             })();
@@ -352,7 +382,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               await wait(1000);
 
               if (callNextTurnBoolean) {
-                nextTurn();
+                endTurnSequence(setAttacker);
                 setInSequence(false);
               }
             })();
@@ -385,14 +415,18 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   buff: Boolean(action.type === 'buff'),
                   debuff: Boolean(action.type !== 'buff'),
                   dispellable: action.dispellable,
-                  damageReduceRating: action.damageReduceRating
+                  damageReduceRating: action?.damageReduceRating,
+                  invulnerable:
+                    action.effect === 'invulnerability' ? true : false,
                 };
 
                 return {
                   ...prev,
                   cooldowns: { ...prev.cooldowns },
                   effects: [...prev.effects, newEffect],
-                  damageReduceEffect: action.damageReduceRating
+                  damageReduceEffect: action?.damageReduceRating,
+                  invulnerable:
+                    action.effect === 'invulnerability' ? true : false,
                 };
               });
 
@@ -400,7 +434,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
             })();
 
             if (callNextTurnBoolean) {
-              nextTurn();
+              endTurnSequence(setAttacker);
               setInSequence(false);
             }
             break;
@@ -409,19 +443,35 @@ export const useBattleSequence = (sequence, allPlayers) => {
             let attackerTeam = null;
             let receiverTeam = null;
 
-            if (attackerString === "char1team1" || attackerString === "char2team1" || attackerString === "char3team1") {
+            if (
+              attackerString === 'char1team1' ||
+              attackerString === 'char2team1' ||
+              attackerString === 'char3team1'
+            ) {
               attackerTeam = 1;
-            } else if (attackerString === "char1team2" || attackerString === "char2team2" || attackerString === "char3team2") {
+            } else if (
+              attackerString === 'char1team2' ||
+              attackerString === 'char2team2' ||
+              attackerString === 'char3team2'
+            ) {
               attackerTeam = 2;
             }
 
-            if (receiverString === "char1team1" || receiverString === "char2team1" || receiverString === "char3team1") {
+            if (
+              receiverString === 'char1team1' ||
+              receiverString === 'char2team1' ||
+              receiverString === 'char3team1'
+            ) {
               receiverTeam = 1;
-            } else if (receiverString === "char1team2" || receiverString === "char2team2" || receiverString === "char3team2") {
+            } else if (
+              receiverString === 'char1team2' ||
+              receiverString === 'char2team2' ||
+              receiverString === 'char3team2'
+            ) {
               receiverTeam = 2;
             }
 
-            if (action.name === "Dispel") {
+            if (action.name === 'Dispel') {
               if (attackerTeam === receiverTeam) {
                 (async () => {
                   setInSequence(true);
@@ -443,7 +493,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   //TODO: check if ability is buff or debuff accordingly
                   setReceiver(prev => {
                     let newEffects = [];
-                    if (prev.effects.some(e => e.dispellable && e.debuff)) {
+                    if (
+                      prev.effects.some(e => e.dispellable && e.debuff)
+                    ) {
                       const shuffledArray = prev.effects.sort(
                         () => 0.5 - Math.random(),
                       );
@@ -502,24 +554,28 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                     let damageReduceEffectCheck = null;
                     if (prev.damageReduceEffect) {
-                      damageReduceEffectCheck = prev.effects.some(e => e.damageReduceEffect);
+                      damageReduceEffectCheck = prev.effects.some(
+                        e => e.damageReduceEffect,
+                      );
                     }
 
                     return {
                       ...prev,
                       cooldowns: { ...prev.cooldowns },
                       effects: newEffects,
-                      damageReduceEffect: damageReduceEffectCheck ? prev.damageReduceEffect : false
+                      damageReduceEffect: damageReduceEffectCheck
+                        ? prev.damageReduceEffect
+                        : false,
                     };
                   });
                 })();
               }
 
               if (callNextTurnBoolean) {
-                nextTurn();
+                endTurnSequence(setAttacker);
                 setInSequence(false);
               }
-            } else if (action.name === "Cleanse") {
+            } else if (action.name === 'Cleanse') {
               if (attackerTeam === receiverTeam) {
                 (async () => {
                   setInSequence(true);
@@ -541,7 +597,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   //TODO: check if ability is buff or debuff accordingly
                   setReceiver(prev => {
                     let newEffects = [];
-                    if (prev.effects.some(e => e.dispellable && e.debuff)) {
+                    if (
+                      prev.effects.some(e => e.dispellable && e.debuff)
+                    ) {
                       const shuffledArray = prev.effects.sort(
                         () => 0.5 - Math.random(),
                       );
@@ -566,10 +624,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
 
               if (callNextTurnBoolean) {
-                nextTurn();
+                endTurnSequence(setAttacker);
                 setInSequence(false);
               }
-            } else if (action.name === "Purge") {
+            } else if (action.name === 'Purge') {
               if (attackerTeam !== receiverTeam) {
                 (async () => {
                   setInSequence(true);
@@ -616,11 +674,78 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
 
               if (callNextTurnBoolean) {
-                nextTurn();
+                endTurnSequence(setAttacker);
                 setInSequence(false);
               }
             }
 
+            break;
+
+          case 'manaburn':
+            (async () => {
+              setInSequence(true);
+              // await wait(200);
+
+              if (callNextTurnBoolean) {
+                setAttacker(prev => {
+                  let newMp = prev.mp - action.manaCost;
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    mp: newMp,
+                  };
+                });
+                // await wait(200);
+              }
+
+              setReceiver(prev => {
+                let damage = action.damage;
+                let manaBurned = action.manaburn;
+
+                if (prev.invulnerable === true) {
+                  damage = 0;
+                  manaBurned = 0;
+                }
+
+                let newMp = prev.mp - Number(manaBurned);
+
+                if (newMp < 0) {
+                  newMp = 0;
+                }
+
+                let newHp = prev.hp - Number(damage);
+                if (newHp <= 0) {
+                  return {
+                    ...prev,
+                    hp: 0,
+                    mp: 0,
+                    dead: true,
+                  };
+                }
+
+                let newEffects = [];
+                if (prev.effects.some(e => e.type === 'cc')) {
+                  newEffects = prev.effects.filter(e => e.type !== 'cc');
+                } else {
+                  newEffects = prev.effects;
+                }
+
+                return {
+                  ...prev,
+                  cooldowns: { ...prev.cooldowns },
+                  hp: newHp,
+                  mp: newMp,
+                  effects: newEffects,
+                };
+              });
+              await wait(1000);
+
+              if (callNextTurnBoolean) {
+                endTurnSequence(setAttacker);
+                setInSequence(false);
+              }
+            })();
             break;
 
           case 'skip':
@@ -629,7 +754,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               // await wait(200);
 
               if (callNextTurnBoolean) {
-                nextTurn();
+                endTurnSequence(setAttacker);
                 setInSequence(false);
               }
             })();

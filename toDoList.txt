@@ -1,18 +1,20 @@
 --- gameplay
 * Add more effects:
-    -armor
-    -invulnerability
     -dot
-    -manaburn
+    -heal reduce
 
 * Add character pickers - move the characterState out of Battle.js;
 
 * Replace mana with rage and energy for warriors and rogues (maybe feral druids?) /pseudo mana/;
 
+* Add surrender button when you have less characters alive 
+
 
 --- visuals
 * Add hovers on ability buttons and effects
 
-* Add class pictures in the CharacterSummary component
-
 * Add animations / use the inSequence state
+
+
+--- AI
+* Add AI for single player...
