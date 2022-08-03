@@ -158,8 +158,8 @@ export const priestDisc = {
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
-    damage: baseSpells.midSpellDamage - 3,
-    manaCost: baseManaCost.midManaCost - 4,
+    damage: baseSpells.midSpellDamage - 5,
+    manaCost: baseManaCost.midManaCost - 5,
     cooldown: 2,
   },
   action2: {
