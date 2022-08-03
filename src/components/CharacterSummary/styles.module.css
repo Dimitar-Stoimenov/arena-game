@@ -67,13 +67,27 @@
   flex: 0.8;
   display: flex;
   gap: 10px;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
+  align-items: center;
 }
 
 .charClassSpecText,
 .spec {
   font-size: 20px;
   width: 6vw;
+}
+
+.charClassSpecText {
+  flex: 2
+}
+
+.spec {
+  flex: 1;
+}
+
+.specImg {
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 @media (max-width: 1600px) {
