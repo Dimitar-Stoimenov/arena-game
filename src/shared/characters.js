@@ -35,7 +35,7 @@ export const mageFrost = {
   charClass: 'Mage',
   img: '/assets/mage.png',
   spec: 'Frost',
-  specImg: '/assets/frost-mage-temporary.png',
+  specImg: '/assets/frost-mage.png',
 
   maxHealth: baseHealth.lowHealth,
   maxMana: baseMana.highMana,
@@ -75,7 +75,7 @@ export const mageFrost = {
     cooldown: 4,
     effect: 'invulnerability',
     effectTurns: 2,
-    effectImage: '/assets/iceblock-temporary.png',
+    effectImage: '/assets/iceblock.png',
     dispellable: false,
   },
   action4: {
@@ -96,7 +96,7 @@ export const priestHoly = {
   charClass: 'Priest',
   img: '/assets/priest.png',
   spec: 'Holy',
-  specImg: '/assets/holy-priest-temporary.png',
+  specImg: '/assets/holy-priest.png',
 
   maxHealth: baseHealth.lowHealth + 10,
   maxMana: baseMana.midMana + 20,
@@ -147,7 +147,7 @@ export const priestDisc = {
   charClass: 'Priest',
   img: '/assets/priest.png',
   spec: 'Discipline',
-  specImg: '/assets/disc-priest-temporary.png',
+  specImg: '/assets/disc-priest.png',
 
   maxHealth: baseHealth.midHealth - 10,
   maxMana: baseMana.midMana + 10,
@@ -198,7 +198,7 @@ export const paladinRetri = {
   charClass: 'Paladin',
   img: '/assets/paladin.png',
   spec: 'Retri',
-  specImg: '/assets/retri-paladin-temporary.png',
+  specImg: '/assets/retri-paladin.png',
 
   maxHealth: baseHealth.highHealth - 10,
   maxMana: baseMana.lowMana,
@@ -234,7 +234,7 @@ export const paladinRetri = {
     damage: 10,
     manaCost: baseManaCost.midManaCost - 5,
     effectTurns: 1,
-    effectImage: '/assets/hoj-temporary.png',
+    effectImage: '/assets/hoj.png',
     cooldown: 2,
     dispellable: true,
   },
