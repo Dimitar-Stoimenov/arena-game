@@ -303,7 +303,7 @@ export const CharActions = ({
                 }
               }}
             >
-              {characterNamesObject[target1String]}
+              {characterNamesObject[target4String]}
             </button>
             <button
               className={styles.actionButton}
@@ -329,7 +329,7 @@ export const CharActions = ({
                 }
               }}
             >
-              {characterNamesObject[target2String]}
+              {characterNamesObject[target5String]}
             </button>
             <button
               className={styles.actionButton}
@@ -355,7 +355,7 @@ export const CharActions = ({
                 }
               }}
             >
-              {characterNamesObject[target3String]}
+              {characterNamesObject[target6String]}
             </button>
           </>
         ) : (

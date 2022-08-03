@@ -291,7 +291,7 @@ export const paladinHoly = {
   action3: {
     ref: 'action3',
     name: 'Holy Shock',
-    // type: 'stun',
+    type: 'damageOrHeal',
     target: 'all',
     affectedCharacters: 1,
     damage: baseSpells.lowSpellDamage,
