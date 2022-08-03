@@ -329,7 +329,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                 }
 
                 if (newShieldAmount <= 0) {
-                  console.log(newEffects);
                   newEffects = newEffects.filter(e => e.effect !== 'shield');
                 }
 
@@ -888,7 +887,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   }
 
                   if (newShieldAmount <= 0) {
-                    console.log(newEffects);
                     newEffects = newEffects.filter(e => e.effect !== 'shield');
                   }
 

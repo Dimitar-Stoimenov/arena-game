@@ -29,7 +29,7 @@ const baseManaCost = {
   lowManaCost: 20,
   midManaCost: 35,
   bigManaCost: 52,
-}; //15 diff
+}; //15 diff ++
 
 export const mageFrost = {
   charClass: 'Mage',
