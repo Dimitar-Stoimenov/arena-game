@@ -264,6 +264,64 @@ export const useBattleSequence = (sequence, allPlayers) => {
           receiverTeam = 2;
         }
 
+        const damageCaseReceiverSequence = prev => {
+          let damage = action.damage;
+          let newShieldAmount = null;
+
+          if (prev.shield) {
+            newShieldAmount = prev.shield;
+            damage = action.damage - Number(prev.shield);
+
+            if (damage >= 0) {
+              newShieldAmount = 0;
+            } else {
+              damage = 0;
+              newShieldAmount = prev.shield - action.damage;
+            }
+          }
+
+          if (prev.damageReduceEffect && action.physical) {
+            damage = Math.floor(
+              action.damage * (1 - prev.damageReduceEffect),
+            );
+          }
+
+          if (prev.invulnerable === true) {
+            damage = 0;
+            newShieldAmount = prev.shield;
+          }
+
+          let newHp = prev.hp - Number(damage);
+
+          if (newHp <= 0) {
+            return {
+              ...prev,
+              hp: 0,
+              mp: 0,
+              dead: true,
+            };
+          }
+
+          let newEffects = [];
+          if (prev.effects.some(e => e.type === 'cc')) {
+            newEffects = prev.effects.filter(e => e.type !== 'cc');
+          } else {
+            newEffects = prev.effects;
+          }
+
+          if (newShieldAmount <= 0 && newShieldAmount !== null) {
+            newEffects = newEffects.filter(e => e.effect !== 'shield');
+          }
+
+          return {
+            ...prev,
+            cooldowns: { ...prev.cooldowns },
+            hp: newHp,
+            effects: newEffects,
+            shield: newShieldAmount
+          };
+        };
+
         switch (action.type) {
           case 'damage':
             (async () => {
@@ -284,62 +342,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                 // await wait(200);
               }
 
-              setReceiver(prev => {
-                let damage = action.damage;
-                let newShieldAmount = null;
-
-                if (prev.shield) {
-                  newShieldAmount = prev.shield;
-                  damage = action.damage - Number(prev.shield);
-
-                  if (damage >= 0) {
-                    newShieldAmount = 0;
-                  } else {
-                    damage = 0;
-                    newShieldAmount = prev.shield - action.damage;
-                  }
-                }
-
-                if (prev.damageReduceEffect && action.physical) {
-                  damage = Math.floor(
-                    action.damage * (1 - prev.damageReduceEffect),
-                  );
-                }
-
-                if (prev.invulnerable === true) {
-                  damage = 0;
-                }
-
-                let newHp = prev.hp - Number(damage);
-
-                if (newHp <= 0) {
-                  return {
-                    ...prev,
-                    hp: 0,
-                    mp: 0,
-                    dead: true,
-                  };
-                }
-
-                let newEffects = [];
-                if (prev.effects.some(e => e.type === 'cc')) {
-                  newEffects = prev.effects.filter(e => e.type !== 'cc');
-                } else {
-                  newEffects = prev.effects;
-                }
-
-                if (newShieldAmount <= 0 && newShieldAmount !== null) {
-                  newEffects = newEffects.filter(e => e.effect !== 'shield');
-                }
-
-                return {
-                  ...prev,
-                  cooldowns: { ...prev.cooldowns },
-                  hp: newHp,
-                  effects: newEffects,
-                  shield: newShieldAmount
-                };
-              });
+              setReceiver(prev => damageCaseReceiverSequence(prev));
               await wait(1000);
 
               if (callNextTurnBoolean) {
@@ -477,7 +480,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     action.effect === 'invulnerability' ? true : false,
                 };
 
-                let newShieldAmount = action.shieldAmount;
+                let newShieldAmount = action.shieldAmount ? action.shieldAmount : 0;
                 if (prev.shield) {
                   newShieldAmount += prev.shield;
                 }

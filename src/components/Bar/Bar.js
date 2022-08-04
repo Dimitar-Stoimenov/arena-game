@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 
-export const Bar = ({ label, value, maxValue, color }) => {
+export const Bar = ({ label, value, maxValue, color, hideSlash = false }) => {
   return (
     <div className={styles.main}>
       <div className={styles.label}>{label}</div>
@@ -11,7 +11,7 @@ export const Bar = ({ label, value, maxValue, color }) => {
         >
         </div>
         <div className={styles.valueText}>
-          {value}/{maxValue}
+          {value}{!hideSlash ? '/' : ''}{maxValue}
         </div>
       </div>
     </div>

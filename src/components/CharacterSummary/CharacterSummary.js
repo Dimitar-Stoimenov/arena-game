@@ -17,6 +17,7 @@ export const CharacterSummary = ({
   cooldowns,
   effects,
   characterNamesObject,
+  shield
 }) => {
   const {
     charClass,
@@ -42,6 +43,9 @@ export const CharacterSummary = ({
         style={{ backgroundColor: team2 ? red : blue }}
         className={styles.main}
       >
+
+        {shield > 0 && <div className={styles.shieldBar}><Bar label="shield" value={shield} color={"#DCDCDC"} hideSlash={true} /></div>}
+
         <div className={styles.imgWrapper}>
           <img className={styles.img} src={img} alt={charClass} />
         </div>

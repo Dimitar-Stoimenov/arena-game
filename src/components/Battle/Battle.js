@@ -15,9 +15,9 @@ export const Battle = ({ onGameEnd }) => {
   const [char1team1, setChar1team1] = useState(paladinRetri);
   const [char2team1, setChar2team1] = useState(mageFrost);
   const [char3team1, setChar3team1] = useState(priestHoly);
-  const [char1team2, setChar1team2] = useState(priestDisc);
+  const [char1team2, setChar1team2] = useState(paladinHoly);
   const [char2team2, setChar2team2] = useState(mageFrost);
-  const [char3team2, setChar3team2] = useState(paladinHoly);
+  const [char3team2, setChar3team2] = useState(priestDisc);
 
   const [sequence, setSequence] = useState({});
 
@@ -180,6 +180,7 @@ export const Battle = ({ onGameEnd }) => {
           characterString={'char1team1'}
           hp={char1team1state.hp}
           mp={char1team1state.mp}
+          shield={char1team1state.shield}
           turn={turn}
           charTurn={1}
           onAction={onAction}
@@ -193,6 +194,7 @@ export const Battle = ({ onGameEnd }) => {
           characterString={'char2team1'}
           hp={char2team1state.hp}
           mp={char2team1state.mp}
+          shield={char2team1state.shield}
           turn={turn}
           charTurn={3}
           onAction={onAction}
@@ -206,6 +208,7 @@ export const Battle = ({ onGameEnd }) => {
           characterString={'char3team1'}
           hp={char3team1state.hp}
           mp={char3team1state.mp}
+          shield={char3team1state.shield}
           turn={turn}
           charTurn={5}
           onAction={onAction}
@@ -222,6 +225,7 @@ export const Battle = ({ onGameEnd }) => {
           characterString={'char1team2'}
           hp={char1team2state.hp}
           mp={char1team2state.mp}
+          shield={char1team2state.shield}
           turn={turn}
           charTurn={2}
           onAction={onAction}
@@ -236,6 +240,7 @@ export const Battle = ({ onGameEnd }) => {
           characterString={'char2team2'}
           hp={char2team2state.hp}
           mp={char2team2state.mp}
+          shield={char2team2state.shield}
           turn={turn}
           charTurn={4}
           onAction={onAction}
@@ -250,6 +255,7 @@ export const Battle = ({ onGameEnd }) => {
           characterString={'char3team2'}
           hp={char3team2state.hp}
           mp={char3team2state.mp}
+          shield={char3team2state.shield}
           turn={turn}
           charTurn={6}
           onAction={onAction}
