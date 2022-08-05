@@ -1,6 +1,14 @@
+---bugs:
+
+
+
+
+
+
 --- gameplay
 * Add more effects:
     -dot
+    -hot
     -heal reduce
 
 * Add character pickers - move the characterState out of Battle.js;
@@ -14,6 +22,10 @@
 * Add hovers on ability buttons and effects
 
 * Add animations / use the inSequence state
+
+
+--- game info
+* page with character information and abilities
 
 
 --- AI

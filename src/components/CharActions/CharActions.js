@@ -13,8 +13,7 @@ export const CharActions = ({
   mp,
   cooldowns,
   characterNamesObject,
-  effects,
-  //TODO:add effects if neccessary
+  effects
 }) => {
   const [actionState, setActionState] = useState(null);
   const red = "#ba2e25";

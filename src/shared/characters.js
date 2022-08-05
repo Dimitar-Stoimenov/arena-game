@@ -107,6 +107,7 @@ export const priestHoly = {
     type: 'buff',
     effect: 'shield',
     effectTurns: 3,
+    effectImg: '/assets/pw-shield.png',
     target: 'friendly',
     shieldAmount: baseSpells.midSpellDamage,
     affectedCharacters: 1,
