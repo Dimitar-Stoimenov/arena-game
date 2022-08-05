@@ -322,6 +322,25 @@ export const useBattleSequence = (sequence, allPlayers) => {
           };
         };
 
+        const healCaseReceiverSequence = prev => {
+          let newHp = prev.hp + Number(action.healing);
+
+          if (prev.dead) {
+            return prev;
+          }
+
+          if (newHp > prev.maxHealth) {
+            newHp = prev.maxHealth;
+          }
+
+          return {
+            ...prev,
+            cooldowns: { ...prev.cooldowns },
+            hp: newHp,
+            // effects: [...prev.effects]
+          };
+        };
+
         switch (action.type) {
           case 'damage':
             (async () => {
@@ -365,30 +384,13 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
                     mp: newMp,
-                    effects: [...prev.effects]
+                    // effects: [...prev.effects]
                   };
                 });
                 // await wait(200);
               }
 
-              setReceiver(prev => {
-                let newHp = prev.hp + Number(action.healing);
-
-                if (prev.dead) {
-                  return prev;
-                }
-
-                if (newHp > prev.maxHealth) {
-                  newHp = prev.maxHealth;
-                }
-
-                return {
-                  ...prev,
-                  cooldowns: { ...prev.cooldowns },
-                  hp: newHp,
-                  effects: [...prev.effects]
-                };
-              });
+              setReceiver(prev => healCaseReceiverSequence(prev));
               await wait(1000);
 
               if (callNextTurnBoolean) {
@@ -759,22 +761,18 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
 
               setReceiver(prev => {
-                let damage = action.damage;
-                let manaBurned = action.manaburn;
-
-                if (prev.invulnerable === true) {
-                  damage = 0;
+                let newStateAfterDamage = damageCaseReceiverSequence(prev);
+                let manaBurned = action.manaburn;                
+                if (newStateAfterDamage.invulnerable === true) {
                   manaBurned = 0;
                 }
 
-                let newMp = prev.mp - Number(manaBurned);
-
+                let newMp = newStateAfterDamage.mp - Number(manaBurned);
                 if (newMp < 0) {
                   newMp = 0;
                 }
 
-                let newHp = prev.hp - Number(damage);
-                if (newHp <= 0) {
+                if (newStateAfterDamage.dead) {
                   return {
                     ...prev,
                     hp: 0,
@@ -783,19 +781,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   };
                 }
 
-                let newEffects = [];
-                if (prev.effects.some(e => e.type === 'cc')) {
-                  newEffects = prev.effects.filter(e => e.type !== 'cc');
-                } else {
-                  newEffects = prev.effects;
-                }
-
                 return {
-                  ...prev,
-                  cooldowns: { ...prev.cooldowns },
-                  hp: newHp,
-                  mp: newMp,
-                  effects: newEffects,
+                  ...newStateAfterDamage,
+                  mp: newMp
                 };
               });
               await wait(1000);
@@ -828,77 +816,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
               setReceiver(prev => {
                 if (attackerTeam === receiverTeam) {
-                  let newHp = prev.hp + Number(action.healing);
-
-                  if (prev.dead) {
-                    return prev;
-                  }
-
-                  if (newHp > prev.maxHealth) {
-                    newHp = prev.maxHealth;
-                  }
-
-                  return {
-                    ...prev,
-                    cooldowns: { ...prev.cooldowns },
-                    hp: newHp,
-                    effects: [...prev.effects]
-                  };
+                  return healCaseReceiverSequence(prev);
                 } else {
-                  let damage = action.damage;
-                  let newShieldAmount = null;
-
-                  if (prev.shield) {
-                    newShieldAmount = prev.shield;
-                    damage = action.damage - Number(prev.shield);
-
-                    if (damage > 0) {
-                      newShieldAmount = 0;
-                    } else {
-                      damage = 0;
-                      newShieldAmount = prev.shield - action.damage;
-                    }
-                  }
-
-                  if (prev.damageReduceEffect && action.physical) {
-                    damage = Math.floor(
-                      action.damage * (1 - prev.damageReduceEffect),
-                    );
-                  }
-
-                  if (prev.invulnerable === true) {
-                    damage = 0;
-                  }
-
-                  let newHp = prev.hp - Number(damage);
-
-                  if (newHp <= 0) {
-                    return {
-                      ...prev,
-                      hp: 0,
-                      mp: 0,
-                      dead: true,
-                    };
-                  }
-
-                  let newEffects = [];
-                  if (prev.effects.some(e => e.type === 'cc')) {
-                    newEffects = prev.effects.filter(e => e.type !== 'cc');
-                  } else {
-                    newEffects = prev.effects;
-                  }
-
-                  if (newShieldAmount <= 0 && newShieldAmount !== null) {
-                    newEffects = newEffects.filter(e => e.effect !== 'shield');
-                  }
-
-                  return {
-                    ...prev,
-                    cooldowns: { ...prev.cooldowns },
-                    hp: newHp,
-                    effects: newEffects,
-                    shield: newShieldAmount
-                  };
+                  return damageCaseReceiverSequence(prev);
                 }
               });
               await wait(1000);
