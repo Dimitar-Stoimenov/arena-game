@@ -239,7 +239,7 @@ export const paladinRetri = {
     type: 'stun',
     target: 'enemy',
     affectedCharacters: 1,
-    manaCost: baseManaCost.midManaCost - 5,
+    manaCost: baseManaCost.midManaCost - 2,
     effectTurns: 1,
     effectImage: '/assets/hoj.png',
     cooldown: 2,

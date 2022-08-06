@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { wait } from 'shared';
 
 export const useBattleSequence = (sequence, allPlayers) => {
@@ -80,6 +80,41 @@ export const useBattleSequence = (sequence, allPlayers) => {
     effects: [],
   });
 
+  const reduceCooldowns = useCallback((prev) => {
+    console.log('trigger');
+
+    return {
+      action1:
+        prev.cooldowns.action1 === 0 ||
+          prev.cooldowns.action1 === 'available-next-turn'
+          ? 0
+          : prev.cooldowns.action1 === 1
+            ? 'available-next-turn'
+            : prev.cooldowns.action1 - 1,
+      action2:
+        prev.cooldowns.action2 === 0 ||
+          prev.cooldowns.action2 === 'available-next-turn'
+          ? 0
+          : prev.cooldowns.action2 === 1
+            ? 'available-next-turn'
+            : prev.cooldowns.action2 - 1,
+      action3:
+        prev.cooldowns.action3 === 0 ||
+          prev.cooldowns.action3 === 'available-next-turn'
+          ? 0
+          : prev.cooldowns.action3 === 1
+            ? 'available-next-turn'
+            : prev.cooldowns.action3 - 1,
+      action4:
+        prev.cooldowns.action4 === 0 ||
+          prev.cooldowns.action4 === 'available-next-turn'
+          ? 0
+          : prev.cooldowns.action4 === 1
+            ? 'available-next-turn'
+            : prev.cooldowns.action4 - 1,
+    };
+  }, []);
+
   useEffect(() => {
     const { action, attackerString, receivers } = sequence;
 
@@ -150,36 +185,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       }
 
       //reduce cooldown turns
-      let newCooldowns = {
-        action1:
-          prev.cooldowns.action1 === 0 ||
-            prev.cooldowns.action1 === 'available-next-turn'
-            ? 0
-            : prev.cooldowns.action1 === 1
-              ? 'available-next-turn'
-              : prev.cooldowns.action1 - 1,
-        action2:
-          prev.cooldowns.action2 === 0 ||
-            prev.cooldowns.action2 === 'available-next-turn'
-            ? 0
-            : prev.cooldowns.action2 === 1
-              ? 'available-next-turn'
-              : prev.cooldowns.action2 - 1,
-        action3:
-          prev.cooldowns.action3 === 0 ||
-            prev.cooldowns.action3 === 'available-next-turn'
-            ? 0
-            : prev.cooldowns.action3 === 1
-              ? 'available-next-turn'
-              : prev.cooldowns.action3 - 1,
-        action4:
-          prev.cooldowns.action4 === 0 ||
-            prev.cooldowns.action4 === 'available-next-turn'
-            ? 0
-            : prev.cooldowns.action4 === 1
-              ? 'available-next-turn'
-              : prev.cooldowns.action4 - 1,
-      };
+      const newCooldowns = reduceCooldowns(prev);
 
       //check for damage reduce effect
       let damageReduceEffectCheck = null;
@@ -906,7 +912,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         executeAction(true);
       }
     }
-  }, [sequence]);
+  }, [sequence, reduceCooldowns]);
 
   return {
     turn,
