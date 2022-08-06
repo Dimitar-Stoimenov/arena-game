@@ -7,6 +7,7 @@ export const CharActions = ({
   action2,
   action3,
   action4,
+  sendPet,
   onAction,
   characterString,
   hp,
@@ -29,6 +30,13 @@ export const CharActions = ({
         className={styles.main}
         style={{ backgroundColor: backgroundColor }}
       >
+        {sendPet &&
+          <button
+            className={styles.actionButton}
+            onClick={() => actionHandler(sendPet)}
+          >
+            {sendPet.name}
+          </button>}
         <button
           className={
             action1.manaCost <= mp && cooldowns.action1 < 1

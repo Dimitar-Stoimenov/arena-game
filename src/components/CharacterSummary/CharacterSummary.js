@@ -31,6 +31,7 @@ export const CharacterSummaryWithoutMemo = ({
     action2,
     action3,
     action4,
+    sendPet,
   } = character;
 
   return (
@@ -72,6 +73,7 @@ export const CharacterSummaryWithoutMemo = ({
             action2={action2}
             action3={action3}
             action4={action4}
+            sendPet={sendPet}
             onAction={onAction}
             characterString={characterString}
             hp={hp}

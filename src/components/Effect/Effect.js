@@ -5,6 +5,6 @@ export const Effect = ({ effect }) => {
         <div className={styles.effectImageWrapper}>
             <img className={styles.effectImage} src={effect.image} alt={effect.name} />
         </div>
-        <div className={styles.turnsLeft}>{effect.turns}</div>
+        {effect.turns < 50 && <div className={styles.turnsLeft}>{effect.turns}</div>}
     </div>);
 };

@@ -556,6 +556,55 @@ export const useBattleSequence = (sequence, allPlayers) => {
             }
             break;
 
+          case 'debuff':
+            (async () => {
+              setInSequence(true);
+              // await wait(200);
+
+              if (callNextTurnBoolean) {
+                setAttacker(prev => {
+                  let newMp = prev.mp - action.manaCost;
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    mp: newMp,
+                    effects: [...prev.effects],
+                    petTarget: action.name === 'Send Pet' ? receiverString : null,
+                    //SETTING PET TARGET
+                  };
+                });
+                // await wait(200);
+              }
+
+              setReceiver(prev => {
+                let newEffect = {
+                  type: action.type,
+                  turns: action.effectTurns,
+                  name: action.name,
+                  image: action.effectImage,
+                  buff: Boolean(action.type === 'buff'),
+                  debuff: Boolean(action.type !== 'buff'),
+                  dispellable: action.dispellable,
+                  effect: action.effect,
+                };
+
+                return {
+                  ...prev,
+                  cooldowns: { ...prev.cooldowns },
+                  effects: [...prev.effects, newEffect],
+                };
+              });
+
+              await wait(1000);
+            })();
+
+            if (callNextTurnBoolean) {
+              endTurnSequence(setAttacker);
+              setInSequence(false);
+            }
+            break;
+
           case 'dispel':
             if (action.name === 'Dispel') {
               if (attackerTeam === receiverTeam) {
