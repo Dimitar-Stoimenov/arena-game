@@ -199,8 +199,28 @@ export const useBattleSequence = (sequence, allPlayers) => {
         invulnerabilityCheck = prev.effects.some(e => e.invulnerable);
       }
 
+      //do pet damage
+      let newHp = Number;
+      let petCheck = prev.effects.some(e => e.effect === 'pet');
+
+      if (petCheck) {
+        if (!invulnerabilityCheck) {
+          let petEffect = prev.effects.filter(e => e.effect === 'pet')[0];
+
+          if (damageReduceEffectCheck) {
+            newHp = prev.hp - (petEffect.damage * (1 - prev.damageReduceEffect));
+          } else {
+            newHp = prev.hp - petEffect.damage;
+          }
+
+        } else {
+          newHp = prev.hp;
+        }
+      }
+
       return {
         ...prev,
+        hp: petCheck ? newHp : prev.hp,
         mp: newMp,
         cooldowns: { ...prev.cooldowns },
         effects: prev.effects,
@@ -587,6 +607,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   debuff: Boolean(action.type !== 'buff'),
                   dispellable: action.dispellable,
                   effect: action.effect,
+                  damage: action.damage,
                 };
 
                 return {
