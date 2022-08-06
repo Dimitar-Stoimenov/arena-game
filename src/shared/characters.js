@@ -316,7 +316,7 @@ export const hunterBeast = {
   charClass: 'Hunter',
   img: '/assets/hunter.png',
   spec: 'Beast',
-  specImg: '/assets/beast-paladin.png',
+  specImg: '/assets/beast-hunter.png',
 
   maxHealth: baseHealth.midHealth,
   maxMana: baseMana.lowMana + 10,
