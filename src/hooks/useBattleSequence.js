@@ -762,7 +762,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
               setReceiver(prev => {
                 let newStateAfterDamage = damageCaseReceiverSequence(prev);
-                let manaBurned = action.manaburn;                
+                let manaBurned = action.manaburn;
                 if (newStateAfterDamage.invulnerable === true) {
                   manaBurned = 0;
                 }

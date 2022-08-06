@@ -33,8 +33,6 @@ export const CharacterSummaryWithoutMemo = ({
     action4,
   } = character;
 
-  console.log(characterString);
-
   return (
     <div className={!dead ? styles.wrapper : styles.disabled}>
       <EffectsList

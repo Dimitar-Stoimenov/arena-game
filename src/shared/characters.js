@@ -107,7 +107,7 @@ export const priestHoly = {
     type: 'buff',
     effect: 'shield',
     effectTurns: 3,
-    effectImg: '/assets/pw-shield.png',
+    effectImage: '/assets/pw-shield.png',
     target: 'friendly',
     shieldAmount: baseSpells.midSpellDamage,
     affectedCharacters: 1,
@@ -231,7 +231,7 @@ export const paladinRetri = {
     damage: basePhysical.physicalAbilityDamage + 4,
     physical: true,
     manaCost: baseManaCost.midManaCost + 5,
-    cooldown: 1,
+    cooldown: 5,
   },
   action3: {
     ref: 'action3',
