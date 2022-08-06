@@ -11,7 +11,8 @@ const baseHeals = {
   bigHeal: 40,
 };
 const basePhysical = {
-  physicalDamage: 15,
+  oneHandPhysicalDamage: 13, //one-handed and ranged
+  physicalDamage: 16, //two-handed
   physicalAbilityDamage: 25,
   physicalBigAbilityDamage: 35,
 }; //10 diff
@@ -309,4 +310,73 @@ export const paladinHoly = {
     manaCost: baseManaCost.lowManaCost,
     cooldown: 1,
   },
+};
+
+export const hunterBeast = {
+  charClass: 'Hunter',
+  img: '/assets/hunter.png',
+  spec: 'Beast',
+  specImg: '/assets/beast-paladin.png',
+
+  maxHealth: baseHealth.midHealth,
+  maxMana: baseMana.lowMana + 10,
+  baseManaRegen: baseManaRegen - 3,
+  action1: {
+    ref: 'action1',
+    name: 'Ranged Attack',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: basePhysical.oneHandPhysicalDamage,
+    physical: true,
+    manaCost: 0,
+    cooldown: 0,
+  },
+  action2: {
+    ref: 'action2',
+    name: 'Arcane Shot',
+    type: 'damageAndPurge',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: baseSpells.lowSpellDamage,
+    physical: false,
+    manaCost: baseManaCost.lowManaCost - 2,
+    cooldown: 1,
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Intimidation',
+    type: 'stun',
+    target: 'pseudoSelf',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.lowManaCost + 5,
+    effectTurns: 1,
+    effectImage: '/assets/intimidation.png',
+    cooldown: 2,
+    dispellable: false,
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Kill Command',
+    type: 'damage',
+    target: 'pseudoSelf',
+    affectedCharacters: 1,
+    physical: true,
+    damage: basePhysical.physicalAbilityDamage - 3,
+    manaCost: baseManaCost.midManaCost - 6,
+    cooldown: 1,
+  },
+  sendPet: {
+    ref: 'sendPet',
+    name: "Send Pet",
+    type: 'debuff',
+    target: 'enemy',
+    damage: basePhysical.physicalDamage + 1,
+    physical: true,
+    affectedCharacters: 1,
+    manaCost: 0,
+    effectTurns: 9999,
+    effectImage: '/assets/beast-hunter-pet.png',
+    dispellable: false,
+  }
 };

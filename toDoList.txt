@@ -10,6 +10,8 @@
     -dot
     -hot
     -heal reduce
+    //add case "damageAndPurge"
+    //add case "debuff" - send pet, add state to sender and effect to receiver
 
 * Add character pickers - move the characterState out of Battle.js;
 
