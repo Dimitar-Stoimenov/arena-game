@@ -211,6 +211,51 @@ export const useBattleSequence = (sequence, allPlayers) => {
       };
     };
 
+    const purgeReceiver = prev => {
+      let newEffects = [];
+      let newShieldAmount = prev.shield;
+
+      if (prev.effects.some(e => e.dispellable && e.buff)) {
+        const shuffledArray = prev.effects.sort(
+          () => 0.5 - Math.random(),
+        );
+        let effectToBeRemoved = shuffledArray.find(
+          e => e.dispellable && e.buff,
+        );
+
+        if (effectToBeRemoved.effect === 'shield') {
+          newShieldAmount -= effectToBeRemoved.shieldAmount;
+
+          if (newShieldAmount < 0) {
+            newShieldAmount = 0;
+          }
+        }
+
+        newEffects = prev.effects.filter(
+          e => e !== effectToBeRemoved,
+        );
+      } else {
+        newEffects = prev.effects;
+      }
+
+      let damageReduceEffectCheck = null;
+      if (prev.damageReduceEffect) {
+        damageReduceEffectCheck = prev.effects.some(
+          e => e.damageReduceEffect,
+        );
+      }
+
+      return {
+        ...prev,
+        cooldowns: { ...prev.cooldowns },
+        effects: newEffects,
+        shield: newShieldAmount,
+        damageReduceEffect: damageReduceEffectCheck
+          ? prev.damageReduceEffect
+          : false,
+      };
+    };
+
     const executeAction = callNextTurnBoolean => {
       if (attackerString === 'dead') {
         // dead turn skipper
@@ -577,50 +622,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  setReceiver(prev => {
-                    let newEffects = [];
-                    let newShieldAmount = prev.shield;
-
-                    if (prev.effects.some(e => e.dispellable && e.buff)) {
-                      const shuffledArray = prev.effects.sort(
-                        () => 0.5 - Math.random(),
-                      );
-                      let effectToBeRemoved = shuffledArray.find(
-                        e => e.dispellable && e.buff,
-                      );
-
-                      if (effectToBeRemoved.effect === 'shield') {
-                        newShieldAmount -= effectToBeRemoved.shieldAmount;
-
-                        if (newShieldAmount < 0) {
-                          newShieldAmount = 0;
-                        }
-                      }
-
-                      newEffects = prev.effects.filter(
-                        e => e !== effectToBeRemoved,
-                      );
-                    } else {
-                      newEffects = prev.effects;
-                    }
-
-                    let damageReduceEffectCheck = null;
-                    if (prev.damageReduceEffect) {
-                      damageReduceEffectCheck = prev.effects.some(
-                        e => e.damageReduceEffect,
-                      );
-                    }
-
-                    return {
-                      ...prev,
-                      cooldowns: { ...prev.cooldowns },
-                      effects: newEffects,
-                      shield: newShieldAmount,
-                      damageReduceEffect: damageReduceEffectCheck
-                        ? prev.damageReduceEffect
-                        : false,
-                    };
-                  });
+                  setReceiver(prev => purgeReceiver(prev));
                 })();
               }
 
@@ -700,40 +702,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  setReceiver(prev => {
-                    let newEffects = [];
-                    let newShieldAmount = prev.shield;
-
-                    if (prev.effects.some(e => e.dispellable && e.buff)) {
-                      const shuffledArray = prev.effects.sort(
-                        () => 0.5 - Math.random(),
-                      );
-                      let effectToBeRemoved = shuffledArray.find(
-                        e => e.dispellable && e.buff,
-                      );
-
-                      if (effectToBeRemoved.effect === 'shield') {
-                        newShieldAmount -= effectToBeRemoved.shieldAmount;
-
-                        if (newShieldAmount < 0) {
-                          newShieldAmount = 0;
-                        }
-                      }
-
-                      newEffects = prev.effects.filter(
-                        e => e !== effectToBeRemoved,
-                      );
-                    } else {
-                      newEffects = prev.effects;
-                    }
-
-                    return {
-                      ...prev,
-                      cooldowns: { ...prev.cooldowns },
-                      shield: newShieldAmount,
-                      effects: newEffects,
-                    };
-                  });
+                  setReceiver(prev => purgeReceiver(prev));
                 })();
               }
 
@@ -832,6 +801,37 @@ export const useBattleSequence = (sequence, allPlayers) => {
               endTurnSequence(setAttacker);
               setInSequence(false);
             }
+            break;
+
+          case 'damageAndPurge':
+            (async () => {
+              setInSequence(true);
+              // await wait(200);
+
+              if (callNextTurnBoolean) {
+                setAttacker(prev => {
+                  let newMp = prev.mp - action.manaCost;
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    mp: newMp,
+                  };
+                });
+                // await wait(200);
+              }
+
+              setReceiver(prev => {
+                let newStateAfterDamage = damageCaseReceiverSequence(prev);
+                return purgeReceiver(newStateAfterDamage);
+              });
+              await wait(1000);
+
+              if (callNextTurnBoolean) {
+                endTurnSequence(setAttacker);
+                setInSequence(false);
+              }
+            })();
             break;
 
           case 'skip':
