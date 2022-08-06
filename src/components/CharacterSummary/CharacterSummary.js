@@ -1,10 +1,11 @@
 import { CharActions, EffectsList, Bar } from 'components';
+import { memo } from 'react';
 import styles from './styles.module.css';
 
 const red = '#ba2e25';
 const blue = '#1953cb';
 
-export const CharacterSummary = ({
+export const CharacterSummaryWithoutMemo = ({
   team2 = false,
   character,
   characterString,
@@ -31,6 +32,8 @@ export const CharacterSummary = ({
     action3,
     action4,
   } = character;
+
+  console.log(characterString);
 
   return (
     <div className={!dead ? styles.wrapper : styles.disabled}>
@@ -84,3 +87,5 @@ export const CharacterSummary = ({
     </div>
   );
 };
+
+export const CharacterSummary = memo(CharacterSummaryWithoutMemo);

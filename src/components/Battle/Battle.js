@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CharacterSummary } from 'components';
 import { useBattleSequence } from 'hooks';
 import {
@@ -39,22 +39,30 @@ export const Battle = ({ onGameEnd }) => {
     char3team2,
   });
 
-  const onAction = (action, attackerString, receivers) => {
+  const onAction = useCallback((action, attackerString, receivers) => {
     setSequence({
       action,
       attackerString,
       receivers,
     });
-  };
+  }, []);
 
-  const characterNamesObject = {
+  const characterNamesObject = useMemo(() => ({
     char1team1: `${char1team1.spec} ${char1team1.charClass}`,
     char2team1: `${char2team1.spec} ${char2team1.charClass}`,
     char3team1: `${char3team1.spec} ${char3team1.charClass}`,
     char1team2: `${char1team2.spec} ${char1team2.charClass}`,
     char2team2: `${char2team2.spec} ${char2team2.charClass}`,
     char3team2: `${char3team2.spec} ${char3team2.charClass}`,
-  };
+  }),
+    [
+      char1team1.spec, char1team1.charClass,
+      char2team1.spec, char2team1.charClass,
+      char3team1.spec, char3team1.charClass,
+      char1team2.spec, char1team2.charClass,
+      char2team2.spec, char2team2.charClass,
+      char3team2.spec, char3team2.charClass,
+    ]);
 
   //useEffect to reduce cooldowns on turn start
   //useEffect to reduce effects on turn start
@@ -169,6 +177,7 @@ export const Battle = ({ onGameEnd }) => {
     char3team1state.dead,
     char3team2state.dead,
     onGameEnd,
+    onAction
   ]);
 
   return (
