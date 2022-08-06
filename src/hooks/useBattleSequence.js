@@ -171,6 +171,83 @@ export const useBattleSequence = (sequence, allPlayers) => {
     const setAttacker = setPlayerState[attackerString];
     let setReceiver = null;
 
+    const damageCaseReceiverSequence = (prev, petDamage) => {
+      let damage = petDamage ? petDamage : action.damage;
+      let newShieldAmount = null;
+
+      if (prev.shield) {
+        newShieldAmount = prev.shield;
+        damage = (petDamage ? petDamage : action.damage) - Number(prev.shield);
+
+        if (damage >= 0) {
+          newShieldAmount = 0;
+        } else {
+          damage = 0;
+          newShieldAmount = prev.shield - (petDamage ? petDamage : action.damage);
+        }
+      }
+
+      if (prev.damageReduceEffect && action.physical) {
+        damage = Math.floor(
+          (petDamage ? petDamage : action.damage) * (1 - prev.damageReduceEffect),
+        );
+      }
+
+      if (prev.invulnerable === true) {
+        damage = 0;
+        newShieldAmount = prev.shield;
+      }
+
+      let newHp = prev.hp - Number(damage);
+
+      if (newHp <= 0) {
+        return {
+          ...prev,
+          hp: 0,
+          mp: 0,
+          dead: true,
+        };
+      }
+
+      let newEffects = [];
+      if (prev.effects.some(e => e.type === 'cc')) {
+        newEffects = prev.effects.filter(e => e.type !== 'cc');
+      } else {
+        newEffects = prev.effects;
+      }
+
+      if (newShieldAmount <= 0 && newShieldAmount !== null) {
+        newEffects = newEffects.filter(e => e.effect !== 'shield');
+      }
+
+      return {
+        ...prev,
+        cooldowns: { ...prev.cooldowns },
+        hp: newHp,
+        effects: newEffects,
+        shield: newShieldAmount
+      };
+    };
+
+    const healCaseReceiverSequence = prev => {
+      let newHp = prev.hp + Number(action.healing);
+
+      if (prev.dead) {
+        return prev;
+      }
+
+      if (newHp > prev.maxHealth) {
+        newHp = prev.maxHealth;
+      }
+
+      return {
+        ...prev,
+        cooldowns: { ...prev.cooldowns },
+        hp: newHp,
+        // effects: [...prev.effects]
+      };
+    };
+
     const startOfTurnSequence = prev => {
       //mana regen
       let newMp = Number;
@@ -200,34 +277,27 @@ export const useBattleSequence = (sequence, allPlayers) => {
       }
 
       //do pet damage
-      let newHp = Number;
       let petCheck = prev.effects.some(e => e.effect === 'pet');
+      let stateAfterDamage = null;
 
       if (petCheck) {
-        if (!invulnerabilityCheck) {
-          let petEffect = prev.effects.filter(e => e.effect === 'pet')[0];
+        let petEffect = prev.effects.filter(e => e.effect === 'pet')[0];
+        let petDamage = petEffect.damage;
 
-          if (damageReduceEffectCheck) {
-            newHp = prev.hp - (petEffect.damage * (1 - prev.damageReduceEffect));
-          } else {
-            newHp = prev.hp - petEffect.damage;
-          }
-
-        } else {
-          newHp = prev.hp;
-        }
+        stateAfterDamage = damageCaseReceiverSequence(prev, petDamage);
+      } else {
+        stateAfterDamage = prev;
       }
 
       return {
-        ...prev,
-        hp: petCheck ? newHp : prev.hp,
+        ...stateAfterDamage,
         mp: newMp,
-        cooldowns: { ...prev.cooldowns },
-        effects: prev.effects,
+        cooldowns: { ...stateAfterDamage.cooldowns },
+        effects: stateAfterDamage.effects,
         damageReduceEffect: damageReduceEffectCheck
-          ? prev.damageReduceEffect
+          ? stateAfterDamage.damageReduceEffect
           : false,
-        invulnerable: invulnerabilityCheck ? prev.invulnerable : false,
+        invulnerable: invulnerabilityCheck ? stateAfterDamage.invulnerable : false,
       };
     };
 
@@ -332,83 +402,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
         ) {
           receiverTeam = 2;
         }
-
-        const damageCaseReceiverSequence = prev => {
-          let damage = action.damage;
-          let newShieldAmount = null;
-
-          if (prev.shield) {
-            newShieldAmount = prev.shield;
-            damage = action.damage - Number(prev.shield);
-
-            if (damage >= 0) {
-              newShieldAmount = 0;
-            } else {
-              damage = 0;
-              newShieldAmount = prev.shield - action.damage;
-            }
-          }
-
-          if (prev.damageReduceEffect && action.physical) {
-            damage = Math.floor(
-              action.damage * (1 - prev.damageReduceEffect),
-            );
-          }
-
-          if (prev.invulnerable === true) {
-            damage = 0;
-            newShieldAmount = prev.shield;
-          }
-
-          let newHp = prev.hp - Number(damage);
-
-          if (newHp <= 0) {
-            return {
-              ...prev,
-              hp: 0,
-              mp: 0,
-              dead: true,
-            };
-          }
-
-          let newEffects = [];
-          if (prev.effects.some(e => e.type === 'cc')) {
-            newEffects = prev.effects.filter(e => e.type !== 'cc');
-          } else {
-            newEffects = prev.effects;
-          }
-
-          if (newShieldAmount <= 0 && newShieldAmount !== null) {
-            newEffects = newEffects.filter(e => e.effect !== 'shield');
-          }
-
-          return {
-            ...prev,
-            cooldowns: { ...prev.cooldowns },
-            hp: newHp,
-            effects: newEffects,
-            shield: newShieldAmount
-          };
-        };
-
-        const healCaseReceiverSequence = prev => {
-          let newHp = prev.hp + Number(action.healing);
-
-          if (prev.dead) {
-            return prev;
-          }
-
-          if (newHp > prev.maxHealth) {
-            newHp = prev.maxHealth;
-          }
-
-          return {
-            ...prev,
-            cooldowns: { ...prev.cooldowns },
-            hp: newHp,
-            // effects: [...prev.effects]
-          };
-        };
 
         switch (action.type) {
           case 'damage':

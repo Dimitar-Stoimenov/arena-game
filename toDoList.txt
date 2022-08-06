@@ -1,5 +1,5 @@
 ---bugs:
-
+* bug * --- need to disable pet actions if pet is not on a target
 
 
 
