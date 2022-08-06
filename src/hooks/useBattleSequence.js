@@ -81,36 +81,34 @@ export const useBattleSequence = (sequence, allPlayers) => {
   });
 
   const reduceCooldowns = useCallback((prev) => {
-    console.log('trigger');
-
     return {
       action1:
         prev.cooldowns.action1 === 0 ||
-          prev.cooldowns.action1 === 'available-next-turn'
+          prev.cooldowns.action1 === 'final-turn-on-cd'
           ? 0
           : prev.cooldowns.action1 === 1
-            ? 'available-next-turn'
+            ? 'final-turn-on-cd'
             : prev.cooldowns.action1 - 1,
       action2:
         prev.cooldowns.action2 === 0 ||
-          prev.cooldowns.action2 === 'available-next-turn'
+          prev.cooldowns.action2 === 'final-turn-on-cd'
           ? 0
           : prev.cooldowns.action2 === 1
-            ? 'available-next-turn'
+            ? 'final-turn-on-cd'
             : prev.cooldowns.action2 - 1,
       action3:
         prev.cooldowns.action3 === 0 ||
-          prev.cooldowns.action3 === 'available-next-turn'
+          prev.cooldowns.action3 === 'final-turn-on-cd'
           ? 0
           : prev.cooldowns.action3 === 1
-            ? 'available-next-turn'
+            ? 'final-turn-on-cd'
             : prev.cooldowns.action3 - 1,
       action4:
         prev.cooldowns.action4 === 0 ||
-          prev.cooldowns.action4 === 'available-next-turn'
+          prev.cooldowns.action4 === 'final-turn-on-cd'
           ? 0
           : prev.cooldowns.action4 === 1
-            ? 'available-next-turn'
+            ? 'final-turn-on-cd'
             : prev.cooldowns.action4 - 1,
     };
   }, []);
@@ -147,9 +145,12 @@ export const useBattleSequence = (sequence, allPlayers) => {
             invulnerabilityCheck = newEffects.some(e => e.invulnerable);
           }
 
+          //reduce cooldown turns
+          const newCooldowns = reduceCooldowns(prev);
+
           return {
             ...prev,
-            cooldowns: { ...prev.cooldowns },
+            cooldowns: newCooldowns,
             effects: [...newEffects],
             invulnerable: invulnerabilityCheck ? prev.invulnerable : false,
           };
@@ -184,9 +185,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
         }
       }
 
-      //reduce cooldown turns
-      const newCooldowns = reduceCooldowns(prev);
-
       //check for damage reduce effect
       let damageReduceEffectCheck = null;
       if (prev.damageReduceEffect) {
@@ -204,7 +202,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       return {
         ...prev,
         mp: newMp,
-        cooldowns: newCooldowns,
+        cooldowns: { ...prev.cooldowns },
         effects: prev.effects,
         damageReduceEffect: damageReduceEffectCheck
           ? prev.damageReduceEffect

@@ -231,7 +231,7 @@ export const paladinRetri = {
     damage: basePhysical.physicalAbilityDamage + 4,
     physical: true,
     manaCost: baseManaCost.midManaCost + 5,
-    cooldown: 5,
+    cooldown: 1,
   },
   action3: {
     ref: 'action3',
