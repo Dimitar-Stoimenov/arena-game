@@ -346,7 +346,8 @@ export const hunterBeast = {
   action3: {
     ref: 'action3',
     name: 'Intimidation',
-    type: 'stun',
+    type: 'petAction',
+    petAction: 'stun',
     target: 'pseudoSelf',
     affectedCharacters: 1,
     manaCost: baseManaCost.lowManaCost + 5,
@@ -358,7 +359,8 @@ export const hunterBeast = {
   action4: {
     ref: 'action4',
     name: 'Kill Command',
-    type: 'damage',
+    type: 'petAction',
+    petAction: 'damage',
     target: 'pseudoSelf',
     affectedCharacters: 1,
     physical: true,

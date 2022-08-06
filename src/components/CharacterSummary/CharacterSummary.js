@@ -18,7 +18,8 @@ export const CharacterSummaryWithoutMemo = ({
   cooldowns,
   effects,
   characterNamesObject,
-  shield
+  shield,
+  petTarget,
 }) => {
   const {
     charClass,
@@ -75,6 +76,7 @@ export const CharacterSummaryWithoutMemo = ({
             action4={action4}
             sendPet={sendPet}
             onAction={onAction}
+            petTarget={petTarget}
             characterString={characterString}
             hp={hp}
             mp={mp}

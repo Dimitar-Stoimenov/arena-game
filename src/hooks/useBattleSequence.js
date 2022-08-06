@@ -883,6 +883,38 @@ export const useBattleSequence = (sequence, allPlayers) => {
             })();
             break;
 
+          case 'petAction':
+            if (action.petAction === 'damage') {
+              (async () => {
+                setInSequence(true);
+                // await wait(200);
+
+                if (callNextTurnBoolean) {
+                  setAttacker(prev => {
+                    let newMp = prev.mp - action.manaCost;
+
+                    return {
+                      ...prev,
+                      cooldowns: { ...prev.cooldowns },
+                      mp: newMp,
+                    };
+                  });
+                  // await wait(200);
+                }
+
+                setReceiver(prev => damageCaseReceiverSequence(prev));
+                await wait(1000);
+
+                if (callNextTurnBoolean) {
+                  endTurnSequence(setAttacker);
+                  setInSequence(false);
+                }
+              })();
+            } else if (action.petAction === 'stun') {
+
+            }
+            break;
+
           case 'skip':
             (async () => {
               setInSequence(true);

@@ -193,6 +193,7 @@ export const Battle = ({ onGameEnd }) => {
           effects={char1team1state.effects}
           cooldowns={char1team1state.cooldowns}
           characterNamesObject={characterNamesObject}
+          petTarget={char1team1state.petTarget}
         />
         <CharacterSummary
           character={char2team1state.char}
@@ -207,6 +208,7 @@ export const Battle = ({ onGameEnd }) => {
           effects={char2team1state.effects}
           cooldowns={char2team1state.cooldowns}
           characterNamesObject={characterNamesObject}
+          petTarget={char2team1state.petTarget}
         />
         <CharacterSummary
           character={char3team1state.char}
@@ -221,6 +223,7 @@ export const Battle = ({ onGameEnd }) => {
           effects={char3team1state.effects}
           cooldowns={char3team1state.cooldowns}
           characterNamesObject={characterNamesObject}
+          petTarget={char3team1state.petTarget}
         />
       </div>
       <div className={styles.team2}>
@@ -238,6 +241,7 @@ export const Battle = ({ onGameEnd }) => {
           effects={char1team2state.effects}
           cooldowns={char1team2state.cooldowns}
           characterNamesObject={characterNamesObject}
+          petTarget={char1team2state.petTarget}
         />
         <CharacterSummary
           team2
@@ -253,6 +257,7 @@ export const Battle = ({ onGameEnd }) => {
           effects={char2team2state.effects}
           cooldowns={char2team2state.cooldowns}
           characterNamesObject={characterNamesObject}
+          petTarget={char2team2state.petTarget}
         />
         <CharacterSummary
           team2
@@ -268,6 +273,7 @@ export const Battle = ({ onGameEnd }) => {
           effects={char3team2state.effects}
           cooldowns={char3team2state.cooldowns}
           characterNamesObject={characterNamesObject}
+          petTarget={char3team2state.petTarget}
         />
       </div>
     </>

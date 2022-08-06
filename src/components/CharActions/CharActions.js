@@ -14,7 +14,8 @@ export const CharActions = ({
   mp,
   cooldowns,
   characterNamesObject,
-  effects
+  effects,
+  petTarget,
 }) => {
   const [actionState, setActionState] = useState(null);
   const red = "#ba2e25";
@@ -168,6 +169,10 @@ export const CharActions = ({
       target6String,
     ) => {
       if (actionState.affectedCharacters === 1) {
+        if (actionState.type === 'petAction') {
+          target1String = petTarget;
+        }
+
         onAction(actionState, characterString, target1String);
         setActionState('finished');
       } else if (actionState.affectedCharacters === 3) {
