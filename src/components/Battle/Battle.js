@@ -163,14 +163,9 @@ export const Battle = ({ onGameEnd }) => {
         onGameEnd('Тeam 1');
       })();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     turn,
-    char1team1state.effects,
-    char1team2state.effects,
-    char2team1state.effects,
-    char2team2state.effects,
-    char3team1state.effects,
-    char3team2state.effects,
     char1team1state.dead,
     char1team2state.dead,
     char2team1state.dead,
