@@ -151,7 +151,7 @@ export const priestHoly = {
 export const priestDisc = {
   charClass: 'Priest',
   img: '/assets/priest.png',
-  spec: 'Discipline',
+  spec: 'Disc',
   specImg: '/assets/disc-priest.png',
 
   maxHealth: baseHealth.midHealth - 10,
@@ -364,9 +364,9 @@ export const hunterBeast = {
     target: 'pseudoSelf',
     affectedCharacters: 1,
     physical: true,
-    damage: basePhysical.physicalAbilityDamage - 3,
-    manaCost: baseManaCost.midManaCost - 6,
-    cooldown: 1,
+    damage: basePhysical.physicalAbilityDamage,
+    manaCost: baseManaCost.midManaCost - 3,
+    cooldown: 2,
   },
   sendPet: {
     ref: 'sendPet',

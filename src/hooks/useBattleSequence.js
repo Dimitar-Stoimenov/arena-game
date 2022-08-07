@@ -113,6 +113,16 @@ export const useBattleSequence = (sequence, allPlayers) => {
     };
   }, []);
 
+  const removePetFromTarget = prev => {
+    let newEffects = prev.effects.filter(e => e.effect !== 'pet');
+
+    return {
+      ...prev,
+      cooldowns: { ...prev.cooldowns },
+      effects: newEffects,
+    };
+  };
+
   useEffect(() => {
     const { action, attackerString, receivers } = sequence;
 
@@ -206,6 +216,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
           hp: 0,
           mp: 0,
           dead: true,
+          effects: [],
+          shield: false
         };
       }
 
@@ -577,6 +589,12 @@ export const useBattleSequence = (sequence, allPlayers) => {
               if (callNextTurnBoolean) {
                 setAttacker(prev => {
                   let newMp = prev.mp - action.manaCost;
+
+                  if (prev.petTarget && prev.petTarget !== receiverString) {
+                    let petPreviousTarget = prev.petTarget;
+                    let setPetPreviousTarget = setPlayerState[petPreviousTarget];
+                    setPetPreviousTarget(prev => removePetFromTarget(prev));
+                  }
 
                   return {
                     ...prev,

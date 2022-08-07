@@ -1,12 +1,9 @@
 ---bugs:
-* bug * --- need to disable pet actions if pet is not on a target
 
 
 
 
 --- gameplay
-***** retarget pet, remove effect from previous target, reset pet owner petTarget prop
-
 * Add more effects:
     -dot
     -hot
