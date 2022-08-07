@@ -943,7 +943,49 @@ export const useBattleSequence = (sequence, allPlayers) => {
                 }
               })();
             } else if (action.petAction === 'stun') {
+              (async () => {
+                setInSequence(true);
+                // await wait(200);
 
+                if (callNextTurnBoolean) {
+                  setAttacker(prev => {
+                    let newMp = prev.mp - action.manaCost;
+
+                    return {
+                      ...prev,
+                      cooldowns: { ...prev.cooldowns },
+                      mp: newMp,
+                      effects: [...prev.effects]
+                    };
+                  });
+                  // await wait(200);
+                }
+
+                setReceiver(prev => {
+                  let newEffect = {
+                    type: action.petAction, //this differes from regular stun case
+                    turns: action.effectTurns,
+                    name: action.name,
+                    image: action.effectImage,
+                    buff: Boolean(action.type === 'buff'),
+                    debuff: Boolean(action.type !== 'buff'),
+                    dispellable: action.dispellable,
+                    effect: action.effect,
+                  };
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    effects: [...prev.effects, newEffect],
+                  };
+                });
+                await wait(1000);
+
+                if (callNextTurnBoolean) {
+                  endTurnSequence(setAttacker);
+                  setInSequence(false);
+                }
+              })();
             }
             break;
 
@@ -962,9 +1004,11 @@ export const useBattleSequence = (sequence, allPlayers) => {
           case 'turnStartSequence':
             (async () => {
               setInSequence(true);
-              // await wait(200);
+              await wait(100);
 
               setAttacker(prev => startOfTurnSequence(prev));
+              await wait(1000);
+
               setInSequence(false);
             })();
             break;
