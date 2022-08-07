@@ -15,7 +15,7 @@ import styles from './styles.module.css';
 export const Battle = ({ onGameEnd }) => {
   const [char1team1, setChar1team1] = useState(hunterBeast);
   const [char2team1, setChar2team1] = useState(paladinRetri);
-  const [char3team1, setChar3team1] = useState(priestHoly);
+  const [char3team1, setChar3team1] = useState(mageFrost);
   const [char1team2, setChar1team2] = useState(priestDisc);
   const [char2team2, setChar2team2] = useState(mageFrost);
   const [char3team2, setChar3team2] = useState(paladinHoly);

@@ -4,6 +4,8 @@
 
 
 --- gameplay
+* swap holy paladin flash heal with blessing of protection buff / physical immunity
+
 * Add more effects:
     -dot
     -hot
