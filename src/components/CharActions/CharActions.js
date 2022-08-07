@@ -40,9 +40,9 @@ export const CharActions = ({
           </button>}
         <button
           className={
-            action1.manaCost <= mp && cooldowns.action1 < 1
-              ? styles.actionButton
-              : styles.disabled
+            (action1.manaCost > mp || cooldowns.action1 !== 0) || (action1.type === 'petAction' && !petTarget)
+              ? styles.disabled
+              : styles.actionButton
           }
           onClick={() => actionHandler(action1)}
         >
@@ -50,9 +50,9 @@ export const CharActions = ({
         </button>
         <button
           className={
-            action2.manaCost <= mp && cooldowns.action2 < 1
-              ? styles.actionButton
-              : styles.disabled
+            (action2.manaCost > mp || cooldowns.action2 !== 0) || (action2.type === 'petAction' && !petTarget)
+              ? styles.disabled
+              : styles.actionButton
           }
           onClick={() => actionHandler(action2)}
         >
@@ -60,9 +60,9 @@ export const CharActions = ({
         </button>
         <button
           className={
-            action3.manaCost <= mp && cooldowns.action3 < 1
-              ? styles.actionButton
-              : styles.disabled
+            (action3.manaCost > mp || cooldowns.action3 !== 0) || (action3.type === 'petAction' && !petTarget)
+              ? styles.disabled
+              : styles.actionButton
           }
           onClick={() => actionHandler(action3)}
         >
@@ -70,9 +70,9 @@ export const CharActions = ({
         </button>
         <button
           className={
-            action4.manaCost <= mp && cooldowns.action4 < 1
-              ? styles.actionButton
-              : styles.disabled
+            (action4.manaCost > mp || cooldowns.action4 !== 0) || (action4.type === 'petAction' && !petTarget)
+              ? styles.disabled
+              : styles.actionButton
           }
           onClick={() => actionHandler(action4)}
         >
