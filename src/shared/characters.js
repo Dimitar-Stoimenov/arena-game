@@ -23,9 +23,9 @@ const baseHealth = {
 }; //40 diff
 const baseMana = {
   lowMana: 160,
-  midMana: 220,
-  highMana: 280,
-}; //60 diff
+  midMana: 215,
+  highMana: 270,
+}; //55 diff
 const baseManaCost = {
   lowManaCost: 20,
   midManaCost: 35,
