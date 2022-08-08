@@ -142,6 +142,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         stateSetter(prev => {
           let newEffects = [];
           let invulnerabilityCheck = null;
+          let damageReduceEffectCheck = null;
 
           if (prev.effects.length > 0) {
             for (const effect of prev.effects) {
@@ -153,6 +154,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
             }
 
             invulnerabilityCheck = newEffects.some(e => e.invulnerable);
+            damageReduceEffectCheck = newEffects.some(e => e.damageReduceRating);
           }
 
           //reduce cooldown turns
@@ -163,6 +165,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
             cooldowns: newCooldowns,
             effects: [...newEffects],
             invulnerable: invulnerabilityCheck ? prev.invulnerable : false,
+            damageReduceRating: damageReduceEffectCheck ? prev.damageReduceRating : false
           };
         });
       }
@@ -195,6 +198,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
           damage = 0;
           newShieldAmount = prev.shield - (petDamage ? petDamage : action.damage);
         }
+      }
+
+      if (petDamage) {
+        action.physical = true;
       }
 
       if (prev.damageReduceEffect && action.physical) {
@@ -242,7 +249,13 @@ export const useBattleSequence = (sequence, allPlayers) => {
     };
 
     const healCaseReceiverSequence = prev => {
-      let newHp = prev.hp + Number(action.healing);
+      let healingAmount = action.healing;
+
+      if (prev.effects.some(e => e.effect === "healingReduction")) {
+        healingAmount = Math.floor(healingAmount * (1 - prev.healingReductionEffect));
+      }
+
+      let newHp = prev.hp + Number(healingAmount);
 
       if (prev.dead) {
         return prev;
@@ -261,19 +274,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
     };
 
     const startOfTurnSequence = prev => {
-      //mana regen
-      let newMp = Number;
-
-      if (prev.mp === prev.maxMana) {
-        newMp = prev.mp;
-      } else {
-        newMp = prev.mp + prev.baseManaRegen;
-
-        if (newMp > prev.maxMana) {
-          newMp = prev.maxMana;
-        }
-      }
-
       //check for damage reduce effect
       let damageReduceEffectCheck = null;
       if (prev.damageReduceEffect) {
@@ -286,6 +286,46 @@ export const useBattleSequence = (sequence, allPlayers) => {
       let invulnerabilityCheck = null;
       if (prev.invulnerable) {
         invulnerabilityCheck = prev.effects.some(e => e.invulnerable);
+      }
+
+      //mana regen
+      let newMp = Number;
+      let viperStingCheck = prev.effects.some(e => e.effect === 'viperSting');
+
+      if (!viperStingCheck) {
+        if (prev.mp === prev.maxMana) {
+          newMp = prev.mp;
+        } else {
+          newMp = prev.mp + prev.baseManaRegen;
+
+          if (newMp > prev.maxMana) {
+            newMp = prev.maxMana;
+          }
+        }
+      } else {
+        if (!invulnerabilityCheck) {
+          let viperStingEffect = prev.effects.filter(e => e.effect === 'viperSting');
+          let viperStingBurnAmount = viperStingEffect[0].manaburn;
+          if (prev.mp === prev.maxMana) {
+            newMp = prev.mp - viperStingBurnAmount;
+          } else {
+            newMp = prev.mp + prev.baseManaRegen - viperStingBurnAmount;
+
+            if (newMp > prev.maxMana) {
+              newMp = prev.maxMana - viperStingBurnAmount;
+            }
+          }
+        } else {
+          if (prev.mp === prev.maxMana) {
+            newMp = prev.mp;
+          } else {
+            newMp = prev.mp + prev.baseManaRegen;
+
+            if (newMp > prev.maxMana) {
+              newMp = prev.maxMana;
+            }
+          }
+        }
       }
 
       //do pet damage
@@ -355,6 +395,31 @@ export const useBattleSequence = (sequence, allPlayers) => {
         damageReduceEffect: damageReduceEffectCheck
           ? prev.damageReduceEffect
           : false,
+      };
+    };
+
+    const debuffReceiver = prev => {
+      let newEffect = {
+        type: action.type,
+        turns: action.effectTurns,
+        name: action.name,
+        image: action.effectImage,
+        buff: Boolean(action.type === 'buff'),
+        debuff: Boolean(action.type !== 'buff'),
+        dispellable: action.dispellable,
+        effect: action.effect,
+        damage: action.damage,
+        physical: action.physical,
+        healingReductionRating: action?.healingReductionRating,
+        manaburn: action?.manaburn,
+      };
+
+      return {
+        ...prev,
+        mp: newEffect.effect === 'viperSting' ? prev.mp - newEffect.manaburn : prev.mp,
+        cooldowns: { ...prev.cooldowns },
+        effects: [...prev.effects, newEffect],
+        healingReductionEffect: action?.healingReductionRating
       };
     };
 
@@ -506,8 +571,17 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   effect: action.effect,
                 };
 
+                let newHp = Number;
+                if (newEffect.name === 'Polymorph') {
+                  newHp = Math.floor(prev.hp + (prev.maxHealth * 0.25));
+                  if (newHp > prev.maxHealth) {
+                    newHp = prev.maxHealth;
+                  }
+                }
+
                 return {
                   ...prev,
+                  hp: newEffect.name === 'Polymorph' ? newHp : prev.hp,
                   cooldowns: { ...prev.cooldowns },
                   effects: [...prev.effects, newEffect],
                 };
@@ -590,7 +664,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                 setAttacker(prev => {
                   let newMp = prev.mp - action.manaCost;
 
-                  if (prev.petTarget && prev.petTarget !== receiverString) {
+                  if (prev.petTarget && prev.petTarget !== receiverString && action.name === 'Send Pet') {
                     let petPreviousTarget = prev.petTarget;
                     let setPetPreviousTarget = setPlayerState[petPreviousTarget];
                     setPetPreviousTarget(prev => removePetFromTarget(prev));
@@ -601,32 +675,14 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     cooldowns: { ...prev.cooldowns },
                     mp: newMp,
                     effects: [...prev.effects],
-                    petTarget: action.name === 'Send Pet' ? receiverString : null,
+                    petTarget: action.name === 'Send Pet' ? receiverString : prev.petTarget,
                     //SETTING PET TARGET
                   };
                 });
                 // await wait(200);
               }
 
-              setReceiver(prev => {
-                let newEffect = {
-                  type: action.type,
-                  turns: action.effectTurns,
-                  name: action.name,
-                  image: action.effectImage,
-                  buff: Boolean(action.type === 'buff'),
-                  debuff: Boolean(action.type !== 'buff'),
-                  dispellable: action.dispellable,
-                  effect: action.effect,
-                  damage: action.damage,
-                };
-
-                return {
-                  ...prev,
-                  cooldowns: { ...prev.cooldowns },
-                  effects: [...prev.effects, newEffect],
-                };
-              });
+              setReceiver(prev => debuffReceiver(prev));
 
               await wait(1000);
             })();
@@ -733,15 +789,22 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                   setReceiver(prev => {
                     let newEffects = [];
-                    if (
-                      prev.effects.some(e => e.dispellable && e.debuff)
-                    ) {
-                      const shuffledArray = prev.effects.sort(
+
+                    if (prev.effects.some(e => (e.dispellable && e.debuff) || e.effect === 'viperSting')) {
+                      let newArray = [];
+
+                      prev.effects.forEach(e => {
+                        if (e.dispellable && e.debuff) {
+                          newArray.push(e);
+                        } else if (e.effect === 'viperSting') {
+                          newArray.push(e);
+                        }
+                      });
+
+                      const shuffledArray = newArray.sort(
                         () => 0.5 - Math.random(),
                       );
-                      let effectToBeRemoved = shuffledArray.find(
-                        e => e.dispellable && e.debuff,
-                      );
+                      let effectToBeRemoved = shuffledArray[0];
 
                       newEffects = prev.effects.filter(
                         e => e !== effectToBeRemoved,
@@ -903,8 +966,39 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
 
               setReceiver(prev => {
+                let newStateAfterPurge = purgeReceiver(prev);
+                return damageCaseReceiverSequence(newStateAfterPurge);
+              });
+              await wait(1000);
+
+              if (callNextTurnBoolean) {
+                endTurnSequence(setAttacker);
+                setInSequence(false);
+              }
+            })();
+            break;
+
+          case 'damageAndDebuff':
+            (async () => {
+              setInSequence(true);
+              // await wait(200);
+
+              if (callNextTurnBoolean) {
+                setAttacker(prev => {
+                  let newMp = prev.mp - action.manaCost;
+
+                  return {
+                    ...prev,
+                    cooldowns: { ...prev.cooldowns },
+                    mp: newMp,
+                  };
+                });
+                // await wait(200);
+              }
+
+              setReceiver(prev => {
                 let newStateAfterDamage = damageCaseReceiverSequence(prev);
-                return purgeReceiver(newStateAfterDamage);
+                return debuffReceiver(newStateAfterDamage);
               });
               await wait(1000);
 
