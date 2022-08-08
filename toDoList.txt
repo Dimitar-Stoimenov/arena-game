@@ -1,26 +1,20 @@
 ---bugs:
-
-
+* viper sting should remove cc but not stun
 
 
 --- gameplay
-* swap holy paladin flash heal with blessing of protection buff / physical immunity
-
 * Add more effects:
     -dot
     -hot
-    -heal reduce
-
 * Add character pickers - move the characterState out of Battle.js;
-
 * Replace mana with rage and energy for warriors and rogues (maybe feral druids?) /pseudo mana/;
-
-* Add surrender button when you have less characters alive 
+* Add warlock sacrifice pet for shield (excluding Demon lock)... 
+    Demon lock pet is Felguard with Intercept and Cleave abilities.
+    Affliction Lock has Devour Magic and Felhunter pet and Siphon Life ability.
 
 
 --- visuals
-* Add hovers on ability buttons and effects
-
+* Add hovers on ability buttons and effects (third party library)
 * Add animations / use the inSequence state
 
 
@@ -30,3 +24,4 @@
 
 --- AI
 * Add AI for single player...
+* remove surrender button for AI team...
