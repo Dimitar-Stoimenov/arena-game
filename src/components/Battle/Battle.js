@@ -175,8 +175,8 @@ export const Battle = ({ onGameEnd }) => {
       <div className={styles.gameHeader}>TEAM 1 VS TEAM 2</div>
       <div className={styles.team1}>
         {char1team1state.dead || char2team1state.dead || char3team1state.dead
-        ? <button className={styles.surrenderButton} onClick={() => onGameEnd('Тeam 2')}>Surrender</button>
-        : ''}
+          ? <button className={styles.surrenderButton} onClick={() => onGameEnd('Тeam 2')}>Surrender</button>
+          : ''}
         <CharacterSummary
           character={char1team1state.char}
           characterString={'char1team1'}
@@ -224,9 +224,9 @@ export const Battle = ({ onGameEnd }) => {
         />
       </div>
       <div className={styles.team2}>
-      {char1team2state.dead || char2team2state.dead || char3team2state.dead
-        ? <button className={styles.surrenderButton} onClick={() => onGameEnd('Тeam 1')}>Surrender</button>
-        : ''}
+        {char1team2state.dead || char2team2state.dead || char3team2state.dead
+          ? <button className={styles.surrenderButton} onClick={() => onGameEnd('Тeam 1')}>Surrender</button>
+          : ''}
         <CharacterSummary
           team2
           character={char1team2state.char}
