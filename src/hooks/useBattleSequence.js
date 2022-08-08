@@ -274,6 +274,11 @@ export const useBattleSequence = (sequence, allPlayers) => {
     };
 
     const startOfTurnSequence = prev => {
+      //remove cc from effects if it was broken
+      if (receiverString === 'ccBreak') {
+        prev.effects = prev.effects.filter(e => e.type !== 'cc');
+      }
+
       //check for damage reduce effect
       let damageReduceEffectCheck = null;
       if (prev.damageReduceEffect) {

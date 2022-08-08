@@ -1,11 +1,12 @@
 ---bugs:
-* viper sting should remove cc but not stun
 
+
+*low prio: make a unanimous function in battle.js for the turn state changes...
 
 --- gameplay
 * Add more effects:
-    -dot
-    -hot
+    -dot; e.type = 'damageOverTime'
+    -hot; e.type = 'healOverTime'
 * Add character pickers - move the characterState out of Battle.js;
 * Replace mana with rage and energy for warriors and rogues (maybe feral druids?) /pseudo mana/;
 * Add warlock sacrifice pet for shield (excluding Demon lock)... 

@@ -65,13 +65,29 @@ export const Battle = ({ onGameEnd }) => {
   //useEffect to skip turn if a character is stunned/ccd
   //useEffect to end game when all characters on a team are dead
   useEffect(() => {
+    const checkTargetForDots = (state) => {
+      if (state.effects.some(e => e.effect === 'viperSting')) {
+        return true;
+      } else if (state.effects.some(e => e.type === 'damageOverTime')) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+
     if (turn === 1) {
       if (char1team1state.dead) {
         return onAction(null, 'dead');
       } else if (char1team1state.effects.some(e => e.type === 'stun')) {
         return onAction(null, 'stun', 'char1team1');
       } else if (char1team1state.effects.some(e => e.type === 'cc')) {
-        return onAction(null, 'cc', 'char1team1');
+        // checks if target has a DOT or Viper Sting. If it does, breaks CC.
+        if (checkTargetForDots(char1team1state)) {
+          return onAction({ type: 'turnStartSequence' }, 'char1team1', 'ccBreak');
+        } else {
+          return onAction(null, 'cc', 'char1team1');
+        }
       }
 
       onAction({ type: 'turnStartSequence' }, 'char1team1');
@@ -81,9 +97,14 @@ export const Battle = ({ onGameEnd }) => {
       if (char1team2state.dead) {
         return onAction(null, 'dead');
       } else if (char1team2state.effects.some(e => e.type === 'stun')) {
-        return onAction(null, 'stun', 'char1team2'); //activates turnStartSequence inside this
+        return onAction(null, 'stun', 'char1team2');
       } else if (char1team2state.effects.some(e => e.type === 'cc')) {
-        return onAction(null, 'cc', 'char1team2'); //activates turnStartSequence inside this
+        // checks if target has a DOT or Viper Sting. If it does, breaks CC.
+        if (checkTargetForDots(char1team2state)) {
+          return onAction({ type: 'turnStartSequence' }, 'char1team2', 'ccBreak');
+        } else {
+          return onAction(null, 'cc', 'char1team2');
+        }
       }
 
       onAction({ type: 'turnStartSequence' }, 'char1team2');
@@ -95,7 +116,12 @@ export const Battle = ({ onGameEnd }) => {
       } else if (char2team1state.effects.some(e => e.type === 'stun')) {
         return onAction(null, 'stun', 'char2team1');
       } else if (char2team1state.effects.some(e => e.type === 'cc')) {
-        return onAction(null, 'cc', 'char2team1');
+        // checks if target has a DOT or Viper Sting. If it does, breaks CC.
+        if (checkTargetForDots(char2team1state)) {
+          return onAction({ type: 'turnStartSequence' }, 'char2team1', 'ccBreak');
+        } else {
+          return onAction(null, 'cc', 'char2team1');
+        }
       }
 
       onAction({ type: 'turnStartSequence' }, 'char2team1');
@@ -107,7 +133,12 @@ export const Battle = ({ onGameEnd }) => {
       } else if (char2team2state.effects.some(e => e.type === 'stun')) {
         return onAction(null, 'stun', 'char2team2');
       } else if (char2team2state.effects.some(e => e.type === 'cc')) {
-        return onAction(null, 'cc', 'char2team2');
+        // checks if target has a DOT or Viper Sting. If it does, breaks CC.
+        if (checkTargetForDots(char2team2state)) {
+          return onAction({ type: 'turnStartSequence' }, 'char2team2', 'ccBreak');
+        } else {
+          return onAction(null, 'cc', 'char2team2');
+        }
       }
 
       onAction({ type: 'turnStartSequence' }, 'char2team2');
@@ -119,7 +150,12 @@ export const Battle = ({ onGameEnd }) => {
       } else if (char3team1state.effects.some(e => e.type === 'stun')) {
         return onAction(null, 'stun', 'char3team1');
       } else if (char3team1state.effects.some(e => e.type === 'cc')) {
-        return onAction(null, 'cc', 'char3team1');
+        // checks if target has a DOT or Viper Sting. If it does, breaks CC.
+        if (checkTargetForDots(char3team1state)) {
+          return onAction({ type: 'turnStartSequence' }, 'char3team1', 'ccBreak');
+        } else {
+          return onAction(null, 'cc', 'char3team1');
+        }
       }
 
       onAction({ type: 'turnStartSequence' }, 'char3team1');
@@ -131,7 +167,12 @@ export const Battle = ({ onGameEnd }) => {
       } else if (char3team2state.effects.some(e => e.type === 'stun')) {
         return onAction(null, 'stun', 'char3team2');
       } else if (char3team2state.effects.some(e => e.type === 'cc')) {
-        return onAction(null, 'cc', 'char3team2');
+        // checks if target has a DOT or Viper Sting. If it does, breaks CC.
+        if (checkTargetForDots(char3team2state)) {
+          return onAction({ type: 'turnStartSequence' }, 'char3team2', 'ccBreak');
+        } else {
+          return onAction(null, 'cc', 'char3team2');
+        }
       }
 
       onAction({ type: 'turnStartSequence' }, 'char3team2');
