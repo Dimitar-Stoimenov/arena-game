@@ -446,6 +446,7 @@ const hunterMarks = {
     manaCost: baseManaCost.midManaCost - 3,
     cooldown: 3,
     manaburn: baseSpells.lowSpellDamage - 1,
+    dispellable: false,
     description: 'removes cc, can be dispelled by cleanse only',
   },
   sendPet: {
