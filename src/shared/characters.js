@@ -90,6 +90,7 @@ const mageFrost = {
     effectImage: '/assets/polymorph.png',
     cooldown: 3,
     dispellable: true,
+    description: 'CC target and restore 25% of their max health',
   },
 };
 
@@ -387,11 +388,88 @@ const hunterBeast = {
   }
 };
 
+const hunterMarks = {
+  charClass: 'Hunter',
+  img: '/assets/hunter.png',
+  spec: 'Marks',
+  specImg: '/assets/marks-hunter.png',
+
+  maxHealth: baseHealth.midHealth,
+  maxMana: baseMana.lowMana + 25,
+  baseManaRegen: baseManaRegen - 2,
+  action1: {
+    ref: 'action1',
+    name: 'Ranged Attack',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: basePhysical.oneHandPhysicalDamage - 2,
+    physical: true,
+    manaCost: 0,
+    cooldown: 0,
+  },
+  action2: {
+    ref: 'action2',
+    name: 'Arcane Shot',
+    type: 'damageAndPurge',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: baseSpells.lowSpellDamage,
+    physical: false,
+    manaCost: baseManaCost.lowManaCost,
+    cooldown: 1,
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Aimed Shot',
+    type: 'damageAndDebuff',
+    target: 'enemy',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.midManaCost + 5,
+    damage: basePhysical.physicalBigAbilityDamage - 5,
+    effect: 'healingReduction',
+    effectTurns: 2,
+    effectImage: '/assets/aimed-shot.png',
+    healingReductionRating: 0.3,
+    cooldown: 3,
+    dispellable: false,
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Viper Sting',
+    type: 'debuff',
+    target: 'enemy',
+    affectedCharacters: 1,
+    effect: 'viperSting',
+    effectTurns: 3,
+    effectImage: '/assets/viper-sting.png',
+    manaCost: baseManaCost.midManaCost - 3,
+    cooldown: 3,
+    manaburn: baseSpells.lowSpellDamage - 1,
+    description: 'removes cc, can be dispelled by cleanse only',
+  },
+  sendPet: {
+    ref: 'sendPet',
+    name: "Send Pet",
+    type: 'debuff',
+    target: 'enemy',
+    damage: basePhysical.oneHandPhysicalDamage - 3,
+    physical: true,
+    affectedCharacters: 1,
+    manaCost: 0,
+    effect: 'pet',
+    effectTurns: 9999,
+    effectImage: '/assets/beast-hunter-pet.png',
+    dispellable: false,
+  }
+};
+
 export const characters = {
   priestDisc,
   priestHoly,
   mageFrost,
   paladinHoly,
   paladinRetri,
-  hunterBeast
-}
+  hunterBeast,
+  hunterMarks,
+};
