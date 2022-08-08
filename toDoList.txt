@@ -1,9 +1,8 @@
 ---bugs:
-
-
 *low prio: make a unanimous function in battle.js for the turn state changes...
 
 --- gameplay
+* Add Surv Hunter class / 2 ccs, low damage, viper sting
 * Add more effects:
     -dot; e.type = 'damageOverTime'
     -hot; e.type = 'healOverTime'
