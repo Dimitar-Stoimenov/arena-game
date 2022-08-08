@@ -13,6 +13,20 @@
     box-sizing: border-box;
     justify-content: space-between;
     align-items: center;
+
+    position: relative;
+}
+
+.surrenderButton {
+    position: absolute;
+
+    top: -1.25%;
+    left: 50%;
+
+    border-radius: 5px;
+    border: 1px solid black;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .team1 {
