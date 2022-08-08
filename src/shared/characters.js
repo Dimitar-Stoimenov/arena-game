@@ -32,7 +32,7 @@ const baseManaCost = {
   bigManaCost: 52,
 }; //15 diff ++
 
-export const mageFrost = {
+const mageFrost = {
   charClass: 'Mage',
   img: '/assets/mage.png',
   spec: 'Frost',
@@ -73,7 +73,7 @@ export const mageFrost = {
     target: 'self',
     affectedCharacters: 1,
     manaCost: baseManaCost.lowManaCost + 5,
-    cooldown: 4,
+    cooldown: 5,
     effect: 'invulnerability',
     effectTurns: 2,
     effectImage: '/assets/iceblock.png',
@@ -93,7 +93,7 @@ export const mageFrost = {
   },
 };
 
-export const priestHoly = {
+const priestHoly = {
   charClass: 'Priest',
   img: '/assets/priest.png',
   spec: 'Holy',
@@ -148,7 +148,7 @@ export const priestHoly = {
   },
 };
 
-export const priestDisc = {
+const priestDisc = {
   charClass: 'Priest',
   img: '/assets/priest.png',
   spec: 'Disc',
@@ -187,9 +187,9 @@ export const priestDisc = {
     type: 'manaburn',
     target: 'enemy',
     affectedCharacters: 1,
-    manaCost: baseManaCost.midManaCost,
+    manaCost: baseManaCost.midManaCost - 7,
     damage: baseSpells.lowSpellDamage - 2,
-    manaburn: baseManaCost.midManaCost + 2,
+    manaburn: baseManaCost.midManaCost - 2,
     cooldown: 2,
   },
   action4: {
@@ -203,7 +203,7 @@ export const priestDisc = {
   },
 };
 
-export const paladinRetri = {
+const paladinRetri = {
   charClass: 'Paladin',
   img: '/assets/paladin.png',
   spec: 'Retri',
@@ -261,7 +261,7 @@ export const paladinRetri = {
   },
 };
 
-export const paladinHoly = {
+const paladinHoly = {
   charClass: 'Paladin',
   img: '/assets/paladin.png',
   spec: 'Holy',
@@ -272,17 +272,20 @@ export const paladinHoly = {
   baseManaRegen: baseManaRegen - 1,
   action1: {
     ref: 'action1',
-    name: 'Flash Heal',
-    type: 'heal',
+    name: 'Blessing of Protection',
+    type: 'buff',
     target: 'friendly',
     affectedCharacters: 1,
-    healing: baseHeals.midHeal + 3,
-    manaCost: baseManaCost.midManaCost + 6,
-    cooldown: 0,
+    manaCost: baseManaCost.midManaCost - 5,
+    effectTurns: 1,
+    effectImage: '/assets/blessing-of-protection.png',
+    damageReduceRating: 1,
+    cooldown: 5,
+    dispellable: true,
   },
   action2: {
     ref: 'action2',
-    name: 'Greater Heal',
+    name: 'Holy Light',
     type: 'heal',
     target: 'friendly',
     affectedCharacters: 1,
@@ -312,7 +315,7 @@ export const paladinHoly = {
   },
 };
 
-export const hunterBeast = {
+const hunterBeast = {
   charClass: 'Hunter',
   img: '/assets/hunter.png',
   spec: 'Beast',
@@ -383,3 +386,12 @@ export const hunterBeast = {
     dispellable: false,
   }
 };
+
+export const characters = {
+  priestDisc,
+  priestHoly,
+  mageFrost,
+  paladinHoly,
+  paladinRetri,
+  hunterBeast
+}

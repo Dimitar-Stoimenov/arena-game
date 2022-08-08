@@ -2,23 +2,18 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CharacterSummary } from 'components';
 import { useBattleSequence } from 'hooks';
 import {
-  mageFrost,
-  paladinRetri,
-  paladinHoly,
-  priestHoly,
-  priestDisc,
-  hunterBeast,
+  characters,
   wait,
 } from 'shared';
 import styles from './styles.module.css';
 
 export const Battle = ({ onGameEnd }) => {
-  const [char1team1, setChar1team1] = useState(hunterBeast);
-  const [char2team1, setChar2team1] = useState(paladinRetri);
-  const [char3team1, setChar3team1] = useState(mageFrost);
-  const [char1team2, setChar1team2] = useState(priestDisc);
-  const [char2team2, setChar2team2] = useState(mageFrost);
-  const [char3team2, setChar3team2] = useState(paladinHoly);
+  const [char1team1, setChar1team1] = useState(characters.hunterBeast);
+  const [char2team1, setChar2team1] = useState(characters.paladinRetri);
+  const [char3team1, setChar3team1] = useState(characters.mageFrost);
+  const [char1team2, setChar1team2] = useState(characters.priestDisc);
+  const [char2team2, setChar2team2] = useState(characters.mageFrost);
+  const [char3team2, setChar3team2] = useState(characters.paladinHoly);
 
   const [sequence, setSequence] = useState({});
 
@@ -66,7 +61,6 @@ export const Battle = ({ onGameEnd }) => {
     ]);
 
   //useEffect to reduce cooldowns on turn start
-  //useEffect to reduce effects on turn start
   //useEffect to skip turn if a character is dead
   //useEffect to skip turn if a character is stunned/ccd
   //useEffect to end game when all characters on a team are dead
@@ -180,6 +174,9 @@ export const Battle = ({ onGameEnd }) => {
     <>
       <div className={styles.gameHeader}>TEAM 1 VS TEAM 2</div>
       <div className={styles.team1}>
+        {char1team1state.dead || char2team1state.dead || char3team1state.dead
+        ? <button className={styles.surrenderButton} onClick={() => onGameEnd('Тeam 2')}>Surrender</button>
+        : ''}
         <CharacterSummary
           character={char1team1state.char}
           characterString={'char1team1'}
@@ -227,6 +224,9 @@ export const Battle = ({ onGameEnd }) => {
         />
       </div>
       <div className={styles.team2}>
+      {char1team2state.dead || char2team2state.dead || char3team2state.dead
+        ? <button className={styles.surrenderButton} onClick={() => onGameEnd('Тeam 1')}>Surrender</button>
+        : ''}
         <CharacterSummary
           team2
           character={char1team2state.char}
