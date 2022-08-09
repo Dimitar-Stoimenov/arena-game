@@ -153,8 +153,13 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
             }
 
+            if (prev.damageReduceEffect) {
+              damageReduceEffectCheck = newEffects.some(
+                e => e.damageReduceEffect,
+              );
+            }
+
             invulnerabilityCheck = newEffects.some(e => e.invulnerable);
-            damageReduceEffectCheck = newEffects.some(e => e.damageReduceRating);
           }
 
           //reduce cooldown turns
@@ -165,7 +170,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
             cooldowns: newCooldowns,
             effects: [...newEffects],
             invulnerable: invulnerabilityCheck ? prev.invulnerable : false,
-            damageReduceRating: damageReduceEffectCheck ? prev.damageReduceRating : false
+            damageReduceEffect: damageReduceEffectCheck
+              ? prev.damageReduceEffect
+              : false,
           };
         });
       }
@@ -200,11 +207,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
         }
       }
 
-      if (petDamage) {
-        action.physical = true;
-      }
+      let damageCheck = petDamage ? petDamage : action.damage;
 
-      if (prev.damageReduceEffect && action.physical) {
+      if (prev.damageReduceEffect && damageCheck) {
         damage = Math.floor(
           (petDamage ? petDamage : action.damage) * (1 - prev.damageReduceEffect),
         );
@@ -229,8 +234,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
       }
 
       let newEffects = [];
-      if (prev.effects.some(e => e.type === 'cc')) {
-        newEffects = prev.effects.filter(e => e.type !== 'cc');
+      if (prev.effects.some(e => e.effect === 'cc')) {
+        newEffects = prev.effects.filter(e => e.effect !== 'cc');
       } else {
         newEffects = prev.effects;
       }
@@ -276,7 +281,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     const startOfTurnSequence = prev => {
       //remove cc from effects if it was broken
       if (receiverString === 'ccBreak') {
-        prev.effects = prev.effects.filter(e => e.type !== 'cc');
+        prev.effects = prev.effects.filter(e => e.effect !== 'cc');
       }
 
       //check for damage reduce effect
@@ -308,7 +313,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           }
         }
       } else {
-        if (!invulnerabilityCheck) {
+        if (!invulnerabilityCheck) { //Viper Sting doesn't work on immune targets
           let viperStingEffect = prev.effects.filter(e => e.effect === 'viperSting');
           let viperStingBurnAmount = viperStingEffect[0].manaburn;
           if (prev.mp === prev.maxMana) {
@@ -339,7 +344,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
       if (petCheck) {
         let petEffect = prev.effects.filter(e => e.effect === 'pet')[0];
-        let petDamage = petEffect.damage;
+        let petDamage = petEffect.damageOverTime;
 
         stateAfterDamage = damageCaseReceiverSequence(prev, petDamage);
       } else {
@@ -413,19 +418,43 @@ export const useBattleSequence = (sequence, allPlayers) => {
         debuff: Boolean(action.type !== 'buff'),
         dispellable: action.dispellable,
         effect: action.effect,
+        damageOverTime: action.damageOverTime,
         damage: action.damage,
         physical: action.physical,
         healingReductionRating: action?.healingReductionRating,
         manaburn: action?.manaburn,
       };
 
-      return {
-        ...prev,
-        mp: newEffect.effect === 'viperSting' ? prev.mp - newEffect.manaburn : prev.mp,
-        cooldowns: { ...prev.cooldowns },
-        effects: [...prev.effects, newEffect],
-        healingReductionEffect: action?.healingReductionRating
-      };
+      let newState = null;
+      if (action.damage > 0) {
+        newState = damageCaseReceiverSequence(prev);
+      }
+
+      let newHp = Number;
+      if (newEffect.name === 'Polymorph') {
+        newHp = Math.floor(prev.hp + (prev.maxHealth * 0.25));
+        if (newHp > prev.maxHealth) {
+          newHp = prev.maxHealth;
+        }
+      }
+
+      if (newState) {
+        return {
+          ...newState,
+          cooldowns: { ...newState.cooldowns },
+          effects: [...newState.effects, newEffect],
+          healingReductionEffect: action?.healingReductionRating
+        };
+      } else {
+        return {
+          ...prev,
+          hp: newEffect.name === 'Polymorph' ? newHp : prev.hp,
+          mp: newEffect.effect === 'viperSting' ? prev.mp - newEffect.manaburn : prev.mp,
+          cooldowns: { ...prev.cooldowns },
+          effects: [...prev.effects, newEffect],
+          healingReductionEffect: action?.healingReductionRating
+        };
+      }
     };
 
     const executeAction = callNextTurnBoolean => {
@@ -544,62 +573,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
             })();
             break;
 
-          case 'cc':
-          case 'stun':
-            (async () => {
-              setInSequence(true);
-              // await wait(200);
-
-              if (callNextTurnBoolean) {
-                setAttacker(prev => {
-                  let newMp = prev.mp - action.manaCost;
-
-                  return {
-                    ...prev,
-                    cooldowns: { ...prev.cooldowns },
-                    mp: newMp,
-                    effects: [...prev.effects]
-                  };
-                });
-                // await wait(200);
-              }
-
-              setReceiver(prev => {
-                let newEffect = {
-                  type: action.type,
-                  turns: action.effectTurns,
-                  name: action.name,
-                  image: action.effectImage,
-                  buff: Boolean(action.type === 'buff'),
-                  debuff: Boolean(action.type !== 'buff'),
-                  dispellable: action.dispellable,
-                  effect: action.effect,
-                };
-
-                let newHp = Number;
-                if (newEffect.name === 'Polymorph') {
-                  newHp = Math.floor(prev.hp + (prev.maxHealth * 0.25));
-                  if (newHp > prev.maxHealth) {
-                    newHp = prev.maxHealth;
-                  }
-                }
-
-                return {
-                  ...prev,
-                  hp: newEffect.name === 'Polymorph' ? newHp : prev.hp,
-                  cooldowns: { ...prev.cooldowns },
-                  effects: [...prev.effects, newEffect],
-                };
-              });
-              await wait(1000);
-
-              if (callNextTurnBoolean) {
-                endTurnSequence(setAttacker);
-                setInSequence(false);
-              }
-            })();
-            break;
-
           case 'buff':
             (async () => {
               setInSequence(true);
@@ -688,7 +661,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
 
               setReceiver(prev => debuffReceiver(prev));
-
               await wait(1000);
             })();
 
@@ -744,6 +716,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                       effects: newEffects,
                     };
                   });
+                  await wait(1000);
                 })();
               } else {
                 (async () => {
@@ -765,6 +738,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   }
 
                   setReceiver(prev => purgeReceiver(prev));
+                  await wait(1000);
                 })();
               }
 
@@ -824,6 +798,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                       effects: newEffects,
                     };
                   });
+                  await wait(1000);
                 })();
               }
 
@@ -852,6 +827,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   }
 
                   setReceiver(prev => purgeReceiver(prev));
+                  await wait(1000);
                 })();
               }
 
@@ -983,37 +959,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
             })();
             break;
 
-          case 'damageAndDebuff':
-            (async () => {
-              setInSequence(true);
-              // await wait(200);
-
-              if (callNextTurnBoolean) {
-                setAttacker(prev => {
-                  let newMp = prev.mp - action.manaCost;
-
-                  return {
-                    ...prev,
-                    cooldowns: { ...prev.cooldowns },
-                    mp: newMp,
-                  };
-                });
-                // await wait(200);
-              }
-
-              setReceiver(prev => {
-                let newStateAfterDamage = damageCaseReceiverSequence(prev);
-                return debuffReceiver(newStateAfterDamage);
-              });
-              await wait(1000);
-
-              if (callNextTurnBoolean) {
-                endTurnSequence(setAttacker);
-                setInSequence(false);
-              }
-            })();
-            break;
-
           case 'petAction':
             if (action.petAction === 'damage') {
               (async () => {
@@ -1062,7 +1007,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                 setReceiver(prev => {
                   let newEffect = {
-                    type: action.petAction, //this differes from regular stun case
+                    type: action.type,
                     turns: action.effectTurns,
                     name: action.name,
                     image: action.effectImage,
@@ -1078,7 +1023,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     effects: [...prev.effects, newEffect],
                   };
                 });
-                await wait(1000);
+                await wait(100);
 
                 if (callNextTurnBoolean) {
                   endTurnSequence(setAttacker);
