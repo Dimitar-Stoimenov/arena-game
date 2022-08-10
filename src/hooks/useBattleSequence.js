@@ -219,7 +219,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         damage = Math.floor(damage * (1 - prev.damageReduceEffect));
       }
 
-      let newHp = prev.hp - Number(damage);      
+      let newHp = prev.hp - Number(damage);
       if (newHp <= 0) {
         let ownerString = prev.petOwnerString;
         //remove pet from target on death
@@ -439,10 +439,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
       let removePetEffectBoolean = false;
       let effectToBeRemoved = null;
       if (prev.effects.some(e => e.effect === 'pet') && action.effect === 'pet') {
-        let petEffectsArray = prev.effects.filter(e=> e.effect ==='pet');
+        let petEffectsArray = prev.effects.filter(e => e.effect === 'pet');
         if (petEffectsArray.find(e => e.petOwner === newEffect.petOwner)) {
           removePetEffectBoolean = true;
-          effectToBeRemoved = petEffectsArray.find(e => e.petOwner === newEffect.petOwner)
+          effectToBeRemoved = petEffectsArray.find(e => e.petOwner === newEffect.petOwner);
         }
       }
 
@@ -463,14 +463,14 @@ export const useBattleSequence = (sequence, allPlayers) => {
         return {
           ...prev,
           effects: [],
-        }
+        };
       }
 
       if (newState) {
         if (removePetEffectBoolean) {
           newState.effects = newState.effects.filter(e => e !== effectToBeRemoved);
         }
-        
+
         return {
           ...newState,
           cooldowns: { ...newState.cooldowns },
@@ -659,7 +659,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   return {
                     ...prev,
                     effects: [],
-                  }
+                  };
                 }
 
                 let calculatedDamageReduceRating = null;
@@ -675,9 +675,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   ...prev,
                   cooldowns: { ...prev.cooldowns },
                   effects:
-                    action.effect === 'invulnerability' 
-                    ? [...filteredEffects, newEffect]
-                    : [...prev.effects, newEffect],
+                    action.effect === 'invulnerability'
+                      ? [...filteredEffects, newEffect]
+                      : [...prev.effects, newEffect],
                   damageReduceEffect: action.damageReduceRating ? calculatedDamageReduceRating : prev.damageReduceEffect,
                   invulnerable:
                     action.effect === 'invulnerability' ? true : false,
@@ -708,7 +708,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   if (prev.petTarget && prev.petTarget !== receiverString && action.name === 'Send Pet') {
                     let petPreviousTarget = prev.petTarget;
                     let setPetPreviousTarget = setPlayerState[petPreviousTarget];
-                    setPetPreviousTarget(prev => removePetFromTarget(prev, action.petOwner)); //TODO: this currently removes all pets from previous target...
+                    setPetPreviousTarget(prev => removePetFromTarget(prev, action.petOwner));
                   }
 
                   return {
