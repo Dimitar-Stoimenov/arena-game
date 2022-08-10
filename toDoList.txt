@@ -1,5 +1,7 @@
 ---bugs:
-
+* reset petTarget prop in attacker state because abilities are usable when previous target of pet is dead...
+* skipping turn should regenerate small amount of mana...
+* game doesnt end when team 1 is dead... maybe cuz pet?
 
 
 --- gameplay

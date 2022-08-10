@@ -471,7 +471,7 @@ const hunterMarks = {
   }
 };
 
-const survHunter = {
+const hunterSurv = {
   charClass: 'Hunter',
   img: '/assets/hunter.png',
   spec: 'Surv',
@@ -562,5 +562,5 @@ export const characters = {
   paladinRetri,
   hunterBeast,
   hunterMarks,
-  survHunter,
+  hunterSurv,
 };
