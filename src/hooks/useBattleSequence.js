@@ -21,6 +21,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxMana: char1team1.maxMana,
     baseManaRegen: char1team1.baseManaRegen,
     dead: false,
+    petOwnerString: char1team1.petOwnerString,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
@@ -32,6 +33,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxMana: char2team1.maxMana,
     baseManaRegen: char2team1.baseManaRegen,
     dead: false,
+    petOwnerString: char2team1.petOwnerString,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
@@ -43,6 +45,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxMana: char3team1.maxMana,
     baseManaRegen: char3team1.baseManaRegen,
     dead: false,
+    petOwnerString: char3team1.petOwnerString,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
@@ -54,6 +57,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxMana: char1team2.maxMana,
     baseManaRegen: char1team2.baseManaRegen,
     dead: false,
+    petOwnerString: char1team2.petOwnerString,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
@@ -65,6 +69,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxMana: char2team2.maxMana,
     baseManaRegen: char2team2.baseManaRegen,
     dead: false,
+    petOwnerString: char2team2.petOwnerString,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
@@ -76,6 +81,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     maxMana: char3team2.maxMana,
     baseManaRegen: char3team2.baseManaRegen,
     dead: false,
+    petOwnerString: char3team2.petOwnerString,
     cooldowns: { action1: 0, action2: 0, action3: 0, action4: 0 },
     effects: [],
   });
@@ -113,8 +119,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
     };
   }, []);
 
-  const removePetFromTarget = prev => {
-    let newEffects = prev.effects.filter(e => e.effect !== 'pet');
+  const removePetFromTarget = (prev, petOwner) => {
+    let newEffects = prev.effects.filter(e => e.petOwner !== petOwner);
 
     return {
       ...prev,
@@ -155,7 +161,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
             if (prev.damageReduceEffect) {
               damageReduceEffectCheck = newEffects.some(
-                e => e.damageReduceEffect,
+                e => e.damageReduceRating,
               );
             }
 
@@ -193,11 +199,12 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
     const damageCaseReceiverSequence = (prev, petDamage) => {
       let damage = petDamage ? petDamage : action.damage;
-      let newShieldAmount = null;
+      let newShieldAmount = prev.shield;
 
-      if (prev.shield) {
-        newShieldAmount = prev.shield;
-        damage = (petDamage ? petDamage : action.damage) - Number(prev.shield);
+      if (prev.invulnerable === true) {
+        damage = 0;
+      } else if (prev.shield) {
+        damage = damage - Number(prev.shield);
 
         if (damage >= 0) {
           newShieldAmount = 0;
@@ -207,29 +214,28 @@ export const useBattleSequence = (sequence, allPlayers) => {
         }
       }
 
-      let damageCheck = petDamage ? petDamage : action.damage;
-
-      if (prev.damageReduceEffect && damageCheck) {
-        damage = Math.floor(
-          (petDamage ? petDamage : action.damage) * (1 - prev.damageReduceEffect),
-        );
+      let physicalOrPetCheck = petDamage ? true : action.physical;
+      if (prev.damageReduceEffect && physicalOrPetCheck) {
+        damage = Math.floor(damage * (1 - prev.damageReduceEffect));
       }
 
-      if (prev.invulnerable === true) {
-        damage = 0;
-        newShieldAmount = prev.shield;
-      }
-
-      let newHp = prev.hp - Number(damage);
-
+      let newHp = prev.hp - Number(damage);      
       if (newHp <= 0) {
+        let ownerString = prev.petOwnerString;
+        //remove pet from target on death
+        if (prev.petTarget) {
+          let setTargetPetRemoveState = setPlayerState[prev.petTarget];
+          setTargetPetRemoveState(prev => removePetFromTarget(prev, ownerString));
+        }
+
         return {
           ...prev,
           hp: 0,
           mp: 0,
           dead: true,
           effects: [],
-          shield: false
+          shield: false,
+          petTarget: false,
         };
       }
 
@@ -249,7 +255,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         cooldowns: { ...prev.cooldowns },
         hp: newHp,
         effects: newEffects,
-        shield: newShieldAmount
+        shield: newShieldAmount,
       };
     };
 
@@ -343,8 +349,12 @@ export const useBattleSequence = (sequence, allPlayers) => {
       let stateAfterDamage = null;
 
       if (petCheck) {
-        let petEffect = prev.effects.filter(e => e.effect === 'pet')[0];
-        let petDamage = petEffect.damageOverTime;
+        let petEffectArray = prev.effects.filter(e => e.effect === 'pet');
+
+        let petDamage = 0;
+        for (const effect of petEffectArray) {
+          petDamage += effect.damageOverTime;
+        }
 
         stateAfterDamage = damageCaseReceiverSequence(prev, petDamage);
       } else {
@@ -423,7 +433,18 @@ export const useBattleSequence = (sequence, allPlayers) => {
         physical: action.physical,
         healingReductionRating: action?.healingReductionRating,
         manaburn: action?.manaburn,
+        petOwner: action?.petOwner,
       };
+
+      let removePetEffectBoolean = false;
+      let effectToBeRemoved = null;
+      if (prev.effects.some(e => e.effect === 'pet') && action.effect === 'pet') {
+        let petEffectsArray = prev.effects.filter(e=> e.effect ==='pet');
+        if (petEffectsArray.find(e => e.petOwner === newEffect.petOwner)) {
+          removePetEffectBoolean = true;
+          effectToBeRemoved = petEffectsArray.find(e => e.petOwner === newEffect.petOwner)
+        }
+      }
 
       let newState = null;
       if (action.damage > 0) {
@@ -438,7 +459,18 @@ export const useBattleSequence = (sequence, allPlayers) => {
         }
       }
 
+      if (prev.dead) {
+        return {
+          ...prev,
+          effects: [],
+        }
+      }
+
       if (newState) {
+        if (removePetEffectBoolean) {
+          newState.effects = newState.effects.filter(e => e !== effectToBeRemoved);
+        }
+        
         return {
           ...newState,
           cooldowns: { ...newState.cooldowns },
@@ -446,12 +478,17 @@ export const useBattleSequence = (sequence, allPlayers) => {
           healingReductionEffect: action?.healingReductionRating
         };
       } else {
+        let modifiedEffects = null;
+        if (removePetEffectBoolean) {
+          modifiedEffects = prev.effects.filter(e => e !== effectToBeRemoved);
+        }
+
         return {
           ...prev,
           hp: newEffect.name === 'Polymorph' ? newHp : prev.hp,
           mp: newEffect.effect === 'viperSting' ? prev.mp - newEffect.manaburn : prev.mp,
           cooldowns: { ...prev.cooldowns },
-          effects: [...prev.effects, newEffect],
+          effects: removePetEffectBoolean ? [...modifiedEffects, newEffect] : [...prev.effects, newEffect],
           healingReductionEffect: action?.healingReductionRating
         };
       }
@@ -603,7 +640,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   dispellable: action.dispellable,
                   shieldAmount: action?.shieldAmount,
                   effect: action.effect,
-                  damageReduceRating: action?.damageReduceRating,
+                  damageReduceRating: action.damageReduceRating,
                   invulnerable:
                     action.effect === 'invulnerability' ? true : false,
                 };
@@ -613,14 +650,40 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   newShieldAmount += prev.shield;
                 }
 
+                let filteredEffects = [];
+                if (action.effect === 'invulnerability') {
+                  filteredEffects = prev.effects.filter(e => !e.debuff || e.effect === 'pet');
+                }
+
+                if (prev.dead) {
+                  return {
+                    ...prev,
+                    effects: [],
+                  }
+                }
+
+                let calculatedDamageReduceRating = null;
+                if (action.damageReduceRating) {
+                  if (action.damageReduceRating < prev.damageReduceEffect) {
+                    calculatedDamageReduceRating = prev.damageReduceEffect;
+                  } else {
+                    calculatedDamageReduceRating = action.damageReduceRating;
+                  }
+                }
+
                 return {
                   ...prev,
                   cooldowns: { ...prev.cooldowns },
-                  effects: [...prev.effects, newEffect],
-                  damageReduceEffect: action?.damageReduceRating,
+                  effects:
+                    action.effect === 'invulnerability' 
+                    ? [...filteredEffects, newEffect]
+                    : [...prev.effects, newEffect],
+                  damageReduceEffect: action.damageReduceRating ? calculatedDamageReduceRating : prev.damageReduceEffect,
                   invulnerable:
                     action.effect === 'invulnerability' ? true : false,
                   shield: newShieldAmount,
+                  healingReductionEffect:
+                    action.effect === 'invulnerability' ? false : prev.healingReductionEffect,
                 };
               });
 
@@ -645,7 +708,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   if (prev.petTarget && prev.petTarget !== receiverString && action.name === 'Send Pet') {
                     let petPreviousTarget = prev.petTarget;
                     let setPetPreviousTarget = setPlayerState[petPreviousTarget];
-                    setPetPreviousTarget(prev => removePetFromTarget(prev));
+                    setPetPreviousTarget(prev => removePetFromTarget(prev, action.petOwner)); //TODO: this currently removes all pets from previous target...
                   }
 
                   return {

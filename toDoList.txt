@@ -1,11 +1,9 @@
 ---bugs:
-* immunity should drop debuffs, excluding pet
-* buffs can be added to dead targets...
 
 
 
 --- gameplay
-* Make cleanse dispel poison effects.
+* Make cleanse dispel poison effects (when Wound Poison is added);
 * Add more effects:
     -dot; e.effect = 'damageOverTime'
     -hot; e.effect = 'healOverTime'

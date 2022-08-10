@@ -104,7 +104,7 @@ export const CharActions = ({
     const [target6String, setTarget6String] = useState('');
 
     useEffect(() => {
-      if (action.target === 'enemy') {
+      if (action.target === 'enemy' || action.target === 'allEnemies') {
         if (
           characterString === 'char1team1' ||
           characterString === 'char2team1' ||
@@ -221,7 +221,7 @@ export const CharActions = ({
         >
           {action.target === 'self'
             ? 'Self'
-            : action.target === 'pseudoSelf' || action.target === 'confirm'
+            : action.target === 'pseudoSelf' || action.target === 'confirm' || action.target === 'allEnemies'
               ? `Confirm ${action.name}`
               : action.target === 'enemy'
                 ? `${characterNamesObject[target1String]}`
@@ -229,7 +229,8 @@ export const CharActions = ({
         </button>
         {action.target !== 'self' &&
           action.target !== 'pseudoSelf' &&
-          action.target !== 'confirm' ? (
+          action.target !== 'confirm' &&
+          action.target !== 'allEnemies' ? (
           <>
             <button
               className={styles.actionButton}

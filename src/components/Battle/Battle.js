@@ -9,10 +9,10 @@ import styles from './styles.module.css';
 
 export const Battle = ({ onGameEnd }) => {
   const [char1team1, setChar1team1] = useState(characters.hunterMarks);
-  const [char2team1, setChar2team1] = useState(characters.paladinRetri);
+  const [char2team1, setChar2team1] = useState(characters.hunterBeast);
   const [char3team1, setChar3team1] = useState(characters.mageFrost);
-  const [char1team2, setChar1team2] = useState(characters.hunterBeast);
-  const [char2team2, setChar2team2] = useState(characters.mageFrost);
+  const [char1team2, setChar1team2] = useState(characters.mageFrost);
+  const [char2team2, setChar2team2] = useState(characters.paladinRetri);
   const [char3team2, setChar3team2] = useState(characters.priestDisc);
 
   const [sequence, setSequence] = useState({});
@@ -179,6 +179,7 @@ export const Battle = ({ onGameEnd }) => {
           cooldowns={char1team1state.cooldowns}
           characterNamesObject={characterNamesObject}
           petTarget={char1team1state.petTarget}
+          damageReduceEffect= {char1team1state.damageReduceEffect}
         />
         <CharacterSummary
           character={char2team1state.char}
@@ -194,6 +195,7 @@ export const Battle = ({ onGameEnd }) => {
           cooldowns={char2team1state.cooldowns}
           characterNamesObject={characterNamesObject}
           petTarget={char2team1state.petTarget}
+          damageReduceEffect= {char2team1state.damageReduceEffect}
         />
         <CharacterSummary
           character={char3team1state.char}
@@ -209,6 +211,7 @@ export const Battle = ({ onGameEnd }) => {
           cooldowns={char3team1state.cooldowns}
           characterNamesObject={characterNamesObject}
           petTarget={char3team1state.petTarget}
+          damageReduceEffect= {char3team1state.damageReduceEffect}
         />
       </div>
       <div className={styles.team2}>
@@ -230,6 +233,7 @@ export const Battle = ({ onGameEnd }) => {
           cooldowns={char1team2state.cooldowns}
           characterNamesObject={characterNamesObject}
           petTarget={char1team2state.petTarget}
+          damageReduceEffect= {char1team2state.damageReduceEffect}
         />
         <CharacterSummary
           team2
@@ -246,6 +250,7 @@ export const Battle = ({ onGameEnd }) => {
           cooldowns={char2team2state.cooldowns}
           characterNamesObject={characterNamesObject}
           petTarget={char2team2state.petTarget}
+          damageReduceEffect= {char2team2state.damageReduceEffect}
         />
         <CharacterSummary
           team2
@@ -262,6 +267,7 @@ export const Battle = ({ onGameEnd }) => {
           cooldowns={char3team2state.cooldowns}
           characterNamesObject={characterNamesObject}
           petTarget={char3team2state.petTarget}
+          damageReduceEffect= {char3team2state.damageReduceEffect}
         />
       </div>
     </>

@@ -1,6 +1,6 @@
 const baseManaRegen = 14;
 const baseSpells = {
-  wandDamage: 10,
+  wandDamage: 9,
   lowSpellDamage: 14,
   midSpellDamage: 25,
   bigSpellDamage: 36,
@@ -47,7 +47,7 @@ const mageFrost = {
     type: 'damage', //damage, heal, cc, stun, buff
     target: 'enemy', //enemy, friendly, all, self, pseudoSelf(ask for confirm only)
     affectedCharacters: 1, //num
-    damage: baseSpells.wandDamage + 1,
+    damage: baseSpells.wandDamage,
     manaCost: 0,
     cooldown: 0,
   },
@@ -323,7 +323,7 @@ const hunterBeast = {
   img: '/assets/hunter.png',
   spec: 'Beast',
   specImg: '/assets/beast-hunter.png',
-
+  petOwnerString: 'beast-hunter',
   maxHealth: baseHealth.midHealth,
   maxMana: baseMana.lowMana + 10,
   baseManaRegen: baseManaRegen - 3,
@@ -333,19 +333,19 @@ const hunterBeast = {
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
-    damage: basePhysical.oneHandPhysicalDamage - 2,
+    damage: basePhysical.oneHandPhysicalDamage - 3,
     physical: true,
     manaCost: 0,
     cooldown: 0,
   },
   action2: {
     ref: 'action2',
-    name: 'Arcane Shot',
-    type: 'damageAndPurge',
-    target: 'enemy',
-    affectedCharacters: 1,
-    damage: baseSpells.lowSpellDamage,
-    physical: false,
+    name: 'Multi-Shot',
+    type: 'damage',
+    target: 'allEnemies',
+    affectedCharacters: 3,
+    damage: basePhysical.oneHandPhysicalDamage + 1,
+    physical: true,
     manaCost: baseManaCost.lowManaCost,
     cooldown: 1,
   },
@@ -387,6 +387,7 @@ const hunterBeast = {
     effect: 'pet',
     effectTurns: 9999,
     effectImage: '/assets/beast-hunter-pet.png',
+    petOwner: 'beast-hunter',
     dispellable: false,
   }
 };
@@ -396,7 +397,7 @@ const hunterMarks = {
   img: '/assets/hunter.png',
   spec: 'Marks',
   specImg: '/assets/marks-hunter.png',
-
+  petOwnerString: 'marks-hunter',
   maxHealth: baseHealth.midHealth,
   maxMana: baseMana.lowMana + 25,
   baseManaRegen: baseManaRegen - 2,
@@ -430,7 +431,7 @@ const hunterMarks = {
     affectedCharacters: 1,
     physical: true,
     manaCost: baseManaCost.midManaCost + 5,
-    damage: basePhysical.physicalBigAbilityDamage - 5,
+    damage: basePhysical.physicalAbilityDamage + 3,
     effect: 'healingReduction',
     effectTurns: 2,
     effectImage: '/assets/aimed-shot.png',
@@ -458,13 +459,14 @@ const hunterMarks = {
     name: "Send Pet",
     type: 'debuff',
     target: 'enemy',
-    damageOverTime: basePhysical.oneHandPhysicalDamage - 3,
+    damageOverTime: basePhysical.oneHandPhysicalDamage - 4,
     physical: true,
     affectedCharacters: 1,
     manaCost: 0,
     effect: 'pet',
     effectTurns: 9999,
     effectImage: '/assets/marks-hunter-pet.png',
+    petOwner: 'marks-hunter',
     dispellable: false,
   }
 };
@@ -474,7 +476,7 @@ const survHunter = {
   img: '/assets/hunter.png',
   spec: 'Surv',
   specImg: '/assets/surv-hunter.png',
-
+  petOwnerString: 'surv-hunter',
   maxHealth: baseHealth.midHealth + 15,
   maxMana: baseMana.lowMana + 25,
   baseManaRegen: baseManaRegen - 2,
@@ -547,6 +549,7 @@ const survHunter = {
     effect: 'pet',
     effectTurns: 9999,
     effectImage: '/assets/surv-hunter-pet.png',
+    petOwner: 'surv-hunter',
     dispellable: false,
   }
 };
