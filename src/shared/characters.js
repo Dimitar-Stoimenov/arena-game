@@ -1,5 +1,6 @@
 const baseManaRegen = 14;
 const baseSpells = {
+  baseDamageOverTime: 10,
   wandDamage: 9,
   lowSpellDamage: 14,
   midSpellDamage: 25,
@@ -12,6 +13,7 @@ const baseHeals = {
 };
 const basePhysical = {
   oneHandPhysicalDamage: 13, //one-handed and ranged
+  physicalAoeAbility: 14,
   physicalDamage: 16, //two-handed
   physicalAbilityDamage: 25,
   physicalBigAbilityDamage: 35,
@@ -23,9 +25,9 @@ const baseHealth = {
 }; //40 diff
 const baseMana = {
   lowMana: 160,
-  midMana: 215,
-  highMana: 270,
-}; //55 diff
+  midMana: 210,
+  highMana: 260,
+}; //50 diff
 const baseManaCost = {
   lowManaCost: 20,
   midManaCost: 35,
@@ -344,7 +346,7 @@ const hunterBeast = {
     type: 'damage',
     target: 'allEnemies',
     affectedCharacters: 3,
-    damage: basePhysical.oneHandPhysicalDamage + 1,
+    damage: basePhysical.physicalAoeAbility,
     physical: true,
     manaCost: baseManaCost.lowManaCost,
     cooldown: 1,
@@ -371,7 +373,7 @@ const hunterBeast = {
     target: 'pseudoSelf',
     affectedCharacters: 1,
     physical: true,
-    damage: basePhysical.physicalAbilityDamage,
+    damage: basePhysical.physicalAbilityDamage - 5,
     manaCost: baseManaCost.midManaCost - 3,
     cooldown: 2,
   },
@@ -554,6 +556,82 @@ const hunterSurv = {
   }
 };
 
+const warlockDemon = {
+  charClass: 'Warlock',
+  img: '/assets/warlock.png',
+  spec: 'Demon',
+  specImg: '/assets/demon-warlock.png',
+
+  maxHealth: baseHealth.midHealth,
+  maxMana: baseMana.midMana + 20,
+  baseManaRegen: baseManaRegen + 2,
+  action1: {
+    ref: 'action1',
+    name: 'Wand',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: baseSpells.wandDamage,
+    manaCost: 0,
+    cooldown: 0,
+  },
+  action2: {
+    ref: 'action2',
+    name: 'Corruption',
+    type: 'debuff',
+    target: 'enemy',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.midManaCost - 5,
+    cooldown: 0,
+    effect: 'damageOverTime',
+    damageOverTime: baseSpells.baseDamageOverTime,
+    effectTurns: 3,
+    effectImage: '/assets/corrupion.png',
+    dispellable: true,
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Intercept',
+    type: 'petAction',
+    petAction: 'stun',
+    effect: 'stun',
+    target: 'pseudoSelf',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.lowManaCost + 5,
+    effectTurns: 1,
+    effectImage: '/assets/intimidation.png',
+    cooldown: 4,
+    dispellable: false,
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Cleave',
+    type: 'damage',
+    // petAction: 'damage',
+    target: 'allEnemies',
+    affectedCharacters: 3,
+    physical: true,
+    damage: basePhysical.physicalAoeAbility - 1,
+    manaCost: baseManaCost.midManaCost - 2,
+    cooldown: 2,
+  },
+  sendPet: {
+    ref: 'sendPet',
+    name: "Send Pet",
+    type: 'debuff',
+    target: 'enemy',
+    damageOverTime: basePhysical.oneHandPhysicalDamage - 4,
+    physical: true,
+    affectedCharacters: 1,
+    manaCost: 0,
+    effect: 'pet',
+    effectTurns: 9999,
+    effectImage: '/assets/demon-warlock-pet.png',
+    petOwner: 'demon-warlock',
+    dispellable: false,
+  }
+};
+
 export const characters = {
   priestDisc,
   priestHoly,
@@ -563,4 +641,5 @@ export const characters = {
   hunterBeast,
   hunterMarks,
   hunterSurv,
+  warlockDemon,
 };

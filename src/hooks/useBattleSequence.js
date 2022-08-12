@@ -143,7 +143,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       char3team2: setChar3team2state,
     };
 
-    const endTurnSequence = stateSetter => {
+    const endTurnSequence = (stateSetter, skipTurnBoolean = false) => {
       if (stateSetter !== 'dead') {
         stateSetter(prev => {
           let newEffects = [];
@@ -171,9 +171,19 @@ export const useBattleSequence = (sequence, allPlayers) => {
           //reduce cooldown turns
           const newCooldowns = reduceCooldowns(prev);
 
+          //regen mana on turn skip, if there is no pet
+          let newMp = prev.mp;
+          if (skipTurnBoolean) {
+            let petCheck = prev.effects.some(e=> e.effect === 'pet');
+            if (!petCheck) {
+              newMp += Math.floor(0.3 * prev.baseManaRegen);
+            }
+          }
+
           return {
             ...prev,
             cooldowns: newCooldowns,
+            mp: newMp,
             effects: [...newEffects],
             invulnerable: invulnerabilityCheck ? prev.invulnerable : false,
             damageReduceEffect: damageReduceEffectCheck
@@ -197,8 +207,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
     const setAttacker = setPlayerState[attackerString];
     let setReceiver = null;
 
-    const damageCaseReceiverSequence = (prev, petDamage) => {
-      let damage = petDamage ? petDamage : action.damage;
+    const damageCaseReceiverSequence = (prev, damageObj) => {
+      let damage = damageObj ? damageObj.damage : action.damage;
       let newShieldAmount = prev.shield;
 
       if (prev.invulnerable === true) {
@@ -210,12 +220,12 @@ export const useBattleSequence = (sequence, allPlayers) => {
           newShieldAmount = 0;
         } else {
           damage = 0;
-          newShieldAmount = prev.shield - (petDamage ? petDamage : action.damage);
+          newShieldAmount = prev.shield - (damageObj ? damageObj.damage : action.damage);
         }
       }
 
-      let physicalOrPetCheck = petDamage ? true : action.physical;
-      if (prev.damageReduceEffect && physicalOrPetCheck) {
+      let physicalDamageCheck = damageObj ? damageObj.physical : action.physical;
+      if (prev.damageReduceEffect && physicalDamageCheck) {
         damage = Math.floor(damage * (1 - prev.damageReduceEffect));
       }
 
@@ -344,9 +354,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
         }
       }
 
-      //do pet damage
+      //do pet damage and dot damage
       let petCheck = prev.effects.some(e => e.effect === 'pet');
-      let stateAfterDamage = null;
+      let stateAfterPetDamage = null;
 
       if (petCheck) {
         let petEffectArray = prev.effects.filter(e => e.effect === 'pet');
@@ -356,20 +366,36 @@ export const useBattleSequence = (sequence, allPlayers) => {
           petDamage += effect.damageOverTime;
         }
 
-        stateAfterDamage = damageCaseReceiverSequence(prev, petDamage);
+        stateAfterPetDamage = damageCaseReceiverSequence(prev, {damage: petDamage, physical: true});
       } else {
-        stateAfterDamage = prev;
+        stateAfterPetDamage = prev;
+      }
+
+      let dotCheck = stateAfterPetDamage.effects.some(e => e.effect === 'damageOverTime');
+      let stateAfterDot = null;
+
+      if (dotCheck) {
+        let dotEffectArray = stateAfterPetDamage.effects.filter(e => e.effect === 'damageOverTime');
+
+        let dotDamage = 0;
+        for (const effect of dotEffectArray) {
+          dotDamage += effect.damageOverTime;
+        }
+
+        stateAfterDot = damageCaseReceiverSequence(stateAfterPetDamage, {damage: dotDamage, physical: false}); //dot effects ignore armor anyway, so physical: false is always true
+      } else {
+        stateAfterDot = stateAfterPetDamage;
       }
 
       return {
-        ...stateAfterDamage,
+        ...stateAfterDot,
         mp: newMp,
-        cooldowns: { ...stateAfterDamage.cooldowns },
-        effects: stateAfterDamage.effects,
+        cooldowns: { ...stateAfterDot.cooldowns },
+        effects: stateAfterDot.effects,
         damageReduceEffect: damageReduceEffectCheck
-          ? stateAfterDamage.damageReduceEffect
+          ? stateAfterDot.damageReduceEffect
           : false,
-        invulnerable: invulnerabilityCheck ? stateAfterDamage.invulnerable : false,
+        invulnerable: invulnerabilityCheck ? stateAfterDot.invulnerable : false,
       };
     };
 
@@ -405,6 +431,14 @@ export const useBattleSequence = (sequence, allPlayers) => {
         damageReduceEffectCheck = prev.effects.some(
           e => e.damageReduceEffect,
         );
+      }
+
+      if (prev.invulnerable) {
+        return {
+          ...prev,
+          cooldowns: {...prev.cooldowns},
+          effects: [...prev.effects]
+        }
       }
 
       return {
@@ -464,6 +498,14 @@ export const useBattleSequence = (sequence, allPlayers) => {
           ...prev,
           effects: [],
         };
+      }
+
+      if (prev.invulnerable && action.effect !== 'pet') {
+        return {
+          ...prev,
+          cooldowns: {...prev.cooldowns},
+          effects: [...prev.effects]
+        }
       }
 
       if (newState) {
@@ -1102,7 +1144,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               // await wait(200);
 
               if (callNextTurnBoolean) {
-                endTurnSequence(setAttacker);
+                endTurnSequence(setAttacker, true);
                 setInSequence(false);
               }
             })();
