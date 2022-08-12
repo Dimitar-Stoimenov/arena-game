@@ -8,12 +8,12 @@ import {
 import styles from './styles.module.css';
 
 export const Battle = ({ onGameEnd }) => {
-  const [char1team1, setChar1team1] = useState(characters.hunterSurv);
-  const [char2team1, setChar2team1] = useState(characters.priestDisc);
-  const [char3team1, setChar3team1] = useState(characters.paladinHoly);
+  const [char1team1, setChar1team1] = useState(characters.warlockDemon);
+  const [char2team1, setChar2team1] = useState(characters.hunterBeast);
+  const [char3team1, setChar3team1] = useState(characters.paladinRetri);
   const [char1team2, setChar1team2] = useState(characters.mageFrost);
-  const [char2team2, setChar2team2] = useState(characters.hunterBeast);
-  const [char3team2, setChar3team2] = useState(characters.priestHoly);
+  const [char2team2, setChar2team2] = useState(characters.priestDisc);
+  const [char3team2, setChar3team2] = useState(characters.paladinHoly);
 
   const [sequence, setSequence] = useState({});
 
@@ -94,12 +94,33 @@ export const Battle = ({ onGameEnd }) => {
     const checkTargetForDots = (state) => { //also checks for Viper Sting
       if (state.effects.some(e => e.effect === 'viperSting')) {
         return true;
-      } else if (state.effects.some(e => e.damageOverTime)) {
+      } else if (state.effects.some(e => e.damageOverTime)) { //includes pet
         return true;
       } else {
         return false;
       }
     };
+
+    if (
+      char1team1state.dead &&
+      char2team1state.dead &&
+      char3team1state.dead
+    ) {
+      (async () => {
+        await wait(1000);
+        onGameEnd('Тeam 2');
+      })();
+    }
+    if (
+      char1team2state.dead &&
+      char2team2state.dead &&
+      char3team2state.dead
+    ) {
+      (async () => {
+        await wait(1000);
+        onGameEnd('Тeam 1');
+      })();
+    }
 
     if (turn === 1) {
       return turnChangeSequence(turn, char1team1state);
@@ -125,26 +146,6 @@ export const Battle = ({ onGameEnd }) => {
       return turnChangeSequence(turn, char3team2state);
     }
 
-    if (
-      char1team1state.dead &&
-      char2team1state.dead &&
-      char3team1state.dead
-    ) {
-      (async () => {
-        await wait(1000);
-        onGameEnd('Тeam 2');
-      })();
-    }
-    if (
-      char1team2state.dead &&
-      char2team2state.dead &&
-      char3team2state.dead
-    ) {
-      (async () => {
-        await wait(1000);
-        onGameEnd('Тeam 1');
-      })();
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     turn,

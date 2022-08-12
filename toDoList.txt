@@ -1,13 +1,16 @@
 ---bugs:
-* reset petTarget prop in attacker state because abilities are usable when previous target of pet is dead...
-* skipping turn should regenerate small amount of mana...
-* game doesnt end when team 1 is dead... maybe cuz pet?
+* doing aoe triggers health changes on dead targets... prevent doing damage on a dead target... or changing the dead target mana
+* lower demon pet damage, maybe stun should be removed... done lowering
+* make dots unstackable
+* when a dot is applied, check if the same dot exists, if it does replace it with the new one.
+* add lock pet and spec images
+
+* very low prio, maybe turn into a feature? :) - reset petTarget prop in attacker state because abilities are usable when previous target of pet is dead...
 
 
 --- gameplay
 * Make cleanse dispel poison effects (when Wound Poison is added);
 * Add more effects:
-    -dot; e.effect = 'damageOverTime'
     -hot; e.effect = 'healOverTime'
 * Add character pickers - move the characterState out of Battle.js;
 * Replace mana with rage and energy for warriors and rogues (maybe feral druids?) /pseudo mana/;
@@ -15,7 +18,7 @@
     Demon lock pet is Felguard with Intercept and Cleave abilities.
     Affliction Lock has Devour Magic and Felhunter pet and Siphon Life ability.
 
-
+    
 --- visuals
 * Add hovers on ability buttons and effects (third party library)
 * Add animations / use the inSequence state
