@@ -1,6 +1,6 @@
 const baseManaRegen = 14;
 const baseSpells = {
-  baseDamageOverTime: 10,
+  baseDamageOverTime: 9,
   wandDamage: 9,
   lowSpellDamage: 14,
   midSpellDamage: 25,
@@ -450,6 +450,7 @@ const hunterMarks = {
     effect: 'viperSting',
     effectTurns: 3,
     effectImage: '/assets/viper-sting.png',
+    poison: true,
     manaCost: baseManaCost.midManaCost - 3,
     cooldown: 3,
     manaburn: baseSpells.lowSpellDamage - 1,
@@ -563,8 +564,8 @@ const warlockDemon = {
   specImg: '/assets/demon-warlock.png',
 
   maxHealth: baseHealth.midHealth,
-  maxMana: baseMana.midMana + 20,
-  baseManaRegen: baseManaRegen + 2,
+  maxMana: baseMana.midMana,
+  baseManaRegen: baseManaRegen + 1,
   action1: {
     ref: 'action1',
     name: 'Wand',
@@ -632,6 +633,87 @@ const warlockDemon = {
   }
 };
 
+const warlockAffliction = {
+  charClass: 'Warlock',
+  img: '/assets/warlock.png',
+  spec: 'Affliction',
+  specImg: '/assets/affliction-warlock.png',
+
+  maxHealth: baseHealth.midHealth - 20,
+  maxMana: baseMana.midMana + 20,
+  baseManaRegen: baseManaRegen + 2,
+  action1: {
+    ref: 'action1',
+    name: 'Unstable Affliction',
+    type: 'debuff',
+    target: 'enemy',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.midManaCost + 5,
+    cooldown: 1,
+    effect: 'damageOverTime',
+    unstableAffliction: true,
+    unstableAfflictionStunDuration: 1,
+    damageOverTime: baseSpells.baseDamageOverTime,
+    effectTurns: 3,
+    effectImage: '/assets/unstable-affliction.png',
+    dispellable: true,
+  },
+  action2: {
+    ref: 'action2',
+    name: 'Corruption',
+    type: 'debuff',
+    target: 'enemy',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.midManaCost - 5,
+    cooldown: 0,
+    effect: 'damageOverTime',
+    damageOverTime: baseSpells.baseDamageOverTime,
+    effectTurns: 3,
+    effectImage: '/assets/corruption.png',
+    dispellable: true,
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Death Coil',
+    type: 'debuff',
+    target: 'enemy',
+    affectedCharacters: 1,
+    physical: false,
+    manaCost: baseManaCost.midManaCost,
+    damage: baseSpells.midSpellDamage - 5,
+    selfHeal: baseSpells.midSpellDamage - 5,
+    effect: 'stun',
+    effectTurns: 1,
+    effectImage: '/assets/death-coil.png',
+    cooldown: 3,
+    dispellable: true,
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Dispel',
+    type: 'dispel',
+    target: 'all',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.lowManaCost,
+    cooldown: 2,
+  },
+  sendPet: {
+    ref: 'sendPet',
+    name: "Send Pet",
+    type: 'debuff',
+    target: 'enemy',
+    damageOverTime: basePhysical.oneHandPhysicalDamage - 8,
+    physical: true,
+    affectedCharacters: 1,
+    manaCost: 0,
+    effect: 'pet',
+    effectTurns: 9999,
+    effectImage: '/assets/affliction-warlock-pet.png',
+    petOwner: 'affliction-warlock',
+    dispellable: false,
+  }
+};
+
 export const characters = {
   priestDisc,
   priestHoly,
@@ -642,4 +724,5 @@ export const characters = {
   hunterMarks,
   hunterSurv,
   warlockDemon,
+  warlockAffliction,
 };

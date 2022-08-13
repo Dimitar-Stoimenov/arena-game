@@ -89,21 +89,33 @@ export const useBattleSequence = (sequence, allPlayers) => {
   const reduceCooldowns = useCallback((prev) => {
     return {
       action1:
-        prev.cooldowns.action1 === 0
-          ? prev.cooldowns.action1 = 0
-          : prev.cooldowns.action1 - 1,
+        prev.cooldowns.action1 === 0 ||
+          prev.cooldowns.action1 === 'final-turn-on-cd'
+          ? 0
+          : prev.cooldowns.action1 === 1
+            ? 'final-turn-on-cd'
+            : prev.cooldowns.action1 - 1,
       action2:
-        prev.cooldowns.action2 === 0
-          ? prev.cooldowns.action2 = 0
-          : prev.cooldowns.action2 - 1,
+        prev.cooldowns.action2 === 0 ||
+          prev.cooldowns.action2 === 'final-turn-on-cd'
+          ? 0
+          : prev.cooldowns.action2 === 1
+            ? 'final-turn-on-cd'
+            : prev.cooldowns.action2 - 1,
       action3:
-        prev.cooldowns.action3 === 0
-          ? prev.cooldowns.action3 = 0
-          : prev.cooldowns.action3 - 1,
+        prev.cooldowns.action3 === 0 ||
+          prev.cooldowns.action3 === 'final-turn-on-cd'
+          ? 0
+          : prev.cooldowns.action3 === 1
+            ? 'final-turn-on-cd'
+            : prev.cooldowns.action3 - 1,
       action4:
-        prev.cooldowns.action4 === 0
-          ? prev.cooldowns.action4 = 0
-          : prev.cooldowns.action4 - 1,
+        prev.cooldowns.action4 === 0 ||
+          prev.cooldowns.action4 === 'final-turn-on-cd'
+          ? 0
+          : prev.cooldowns.action4 === 1
+            ? 'final-turn-on-cd'
+            : prev.cooldowns.action4 - 1,
     };
   }, []);
 
@@ -241,7 +253,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       if (prev.effects.some(e => e.effect === 'cc')) {
         newEffects = prev.effects.filter(e => e.effect !== 'cc');
       } else {
-        newEffects = prev.effects;
+        newEffects = [...prev.effects];
       }
 
       if (newShieldAmount <= 0 && newShieldAmount !== null) {
@@ -266,23 +278,23 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
       let newHp = prev.hp + Number(healingAmount);
 
-      if (prev.dead) {
-        return prev;
-      }
-
       if (newHp > prev.maxHealth) {
         newHp = prev.maxHealth;
+      }
+
+      if (prev.dead) {
+        return prev;
       }
 
       return {
         ...prev,
         cooldowns: { ...prev.cooldowns },
         hp: newHp,
-        // effects: [...prev.effects]
+        effects: [...prev.effects]
       };
     };
 
-    const startOfTurnSequence = prev => {
+    const startTurnSequence = prev => {
       //remove cc from effects if it was broken
       if (receiverString === 'ccBreak') {
         prev.effects = prev.effects.filter(e => e.effect !== 'cc');
@@ -387,17 +399,45 @@ export const useBattleSequence = (sequence, allPlayers) => {
       };
     };
 
-    const cleanseReceiver = prev => {
+    const cleansedUnstableAfflictionEffectSequence = (prev, effect) => {
+      let unstableAfflictionEffect = effect;
+      let stunEffect = {
+        type: 'debuff',
+        turns: unstableAfflictionEffect.unstableAfflictionStunDuration,
+        name: 'Unstable Affliction Stun',
+        image: '/assets/unstable-affliction-stun.png',
+        debuff: true,
+        dispellable: false,
+        effect: 'stun',
+        physical: false,
+      };
+
+      let copiedEffects = [...prev.effects];
+      if (prev.effects.some(e => e.name === "Unstable Affliction Stun")) {
+        copiedEffects = copiedEffects.filter(e => e.name !== "Unstable Affliction Stun");
+      }
+
+      return {
+        ...prev,
+        cooldowns: { ...prev.cooldowns },
+        effects: [...copiedEffects, stunEffect],
+      };
+    };
+
+    const cleanseCaseReceiverSequence = prev => {
       let newEffects = [];
-      if (
-        prev.effects.some(e => e.dispellable && e.debuff)
-      ) {
+
+      if (prev.effects.some(e => e.dispellable && e.debuff)) {
         const shuffledArray = prev.effects.sort(
           () => 0.5 - Math.random(),
         );
         let effectToBeRemoved = shuffledArray.find(
           e => e.dispellable && e.debuff,
         );
+
+        if (effectToBeRemoved.name === 'Unstable Affliction') {
+          setAttacker(prev => cleansedUnstableAfflictionEffectSequence(prev, effectToBeRemoved));
+        };
 
         newEffects = prev.effects.filter(
           e => e !== effectToBeRemoved,
@@ -413,7 +453,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       };
     };
 
-    const purgeReceiver = prev => {
+    const purgeCaseReceiverSequence = prev => {
       let newEffects = [];
       let newShieldAmount = prev.shield;
 
@@ -466,7 +506,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       };
     };
 
-    const debuffReceiver = prev => {
+    const debuffCaseReceiverSequence = prev => {
       let newEffect = {
         type: action.type,
         turns: action.effectTurns,
@@ -482,6 +522,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
         healingReductionRating: action?.healingReductionRating,
         manaburn: action?.manaburn,
         petOwner: action?.petOwner,
+        unstableAffliction: action?.unstableAffliction,
+        unstableAfflictionStunDuration: action?.unstableAfflictionStunDuration,
       };
 
       let removePetEffectBoolean = false;
@@ -585,7 +627,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           setInSequence(true);
           // await wait(200);
 
-          setReceiver(prev => startOfTurnSequence(prev));
+          setReceiver(prev => startTurnSequence(prev));
 
           endTurnSequence(setReceiver);
 
@@ -639,7 +681,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
                     mp: newMp,
-                    // effects: [...prev.effects]
+                    effects: [...prev.effects]
                   };
                 });
                 // await wait(200);
@@ -704,9 +746,11 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
 
               setReceiver(prev => {
+                let selfCastCheck = attackerString === receiverString;
+
                 let newEffect = {
                   type: action.type,
-                  turns: action.effectTurns,
+                  turns: action.name = "Blessing of Protection" && selfCastCheck ? action.effectTurns + 1 : action.effectTurns,
                   name: action.name,
                   image: action.effectImage,
                   buff: Boolean(action.type === 'buff'),
@@ -785,9 +829,21 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     setPetPreviousTarget(prev => removePetFromTarget(prev, action.petOwner));
                   }
 
+                  let newHp = prev.hp;
+                  if (action.name === 'Death Coil') {
+                    newHp += action.selfHeal;
+
+                    if (newHp > prev.maxHealth) {
+                      newHp = prev.maxHealth;
+                    }
+                  }
+
+
+                  console.log(prev.cooldowns);
                   return {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
+                    hp: newHp,
                     mp: newMp,
                     effects: [...prev.effects],
                     petTarget: action.name === 'Send Pet' ? receiverString : prev.petTarget,
@@ -797,7 +853,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                 // await wait(200);
               }
 
-              setReceiver(prev => debuffReceiver(prev));
+              setReceiver(prev => debuffCaseReceiverSequence(prev));
               await wait(1000);
             })();
 
@@ -828,7 +884,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  setReceiver(prev => cleanseReceiver(prev));
+                  setReceiver(prev => cleanseCaseReceiverSequence(prev));
                   await wait(1000);
                 })();
               } else {
@@ -850,7 +906,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  setReceiver(prev => purgeReceiver(prev));
+                  setReceiver(prev => purgeCaseReceiverSequence(prev));
                   await wait(1000);
                 })();
               }
@@ -879,7 +935,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  setReceiver(prev => cleanseReceiver(prev));
+                  setReceiver(prev => cleanseCaseReceiverSequence(prev));
                   await wait(1000);
                 })();
               }
@@ -908,7 +964,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  setReceiver(prev => purgeReceiver(prev));
+                  setReceiver(prev => purgeCaseReceiverSequence(prev));
                   await wait(1000);
                 })();
               }
@@ -1029,7 +1085,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
 
               setReceiver(prev => {
-                let newStateAfterPurge = purgeReceiver(prev);
+                let newStateAfterPurge = purgeCaseReceiverSequence(prev);
                 return damageCaseReceiverSequence(newStateAfterPurge);
               });
               await wait(1000);
@@ -1132,7 +1188,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               setInSequence(true);
               await wait(100);
 
-              setAttacker(prev => startOfTurnSequence(prev));
+              setAttacker(prev => startTurnSequence(prev));
               await wait(1000);
 
               setInSequence(false);

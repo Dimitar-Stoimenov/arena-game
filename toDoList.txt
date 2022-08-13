@@ -1,5 +1,5 @@
 ---bugs:
-* doing aoe triggers health changes on dead targets... prevent doing damage on a dead target... or changing the dead target mana
+debuff cooldowns are not properly calculated on basic damage and basic heal...
 
 
 --- gameplay
