@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { wait } from 'shared';
 
 export const useBattleSequence = (sequence, allPlayers) => {
@@ -86,49 +86,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
     effects: [],
   });
 
-  const reduceCooldowns = useCallback((prev) => {
-    return {
-      action1:
-        prev.cooldowns.action1 === 0 ||
-          prev.cooldowns.action1 === 'final-turn-on-cd'
-          ? 0
-          : prev.cooldowns.action1 === 1
-            ? 'final-turn-on-cd'
-            : prev.cooldowns.action1 - 1,
-      action2:
-        prev.cooldowns.action2 === 0 ||
-          prev.cooldowns.action2 === 'final-turn-on-cd'
-          ? 0
-          : prev.cooldowns.action2 === 1
-            ? 'final-turn-on-cd'
-            : prev.cooldowns.action2 - 1,
-      action3:
-        prev.cooldowns.action3 === 0 ||
-          prev.cooldowns.action3 === 'final-turn-on-cd'
-          ? 0
-          : prev.cooldowns.action3 === 1
-            ? 'final-turn-on-cd'
-            : prev.cooldowns.action3 - 1,
-      action4:
-        prev.cooldowns.action4 === 0 ||
-          prev.cooldowns.action4 === 'final-turn-on-cd'
-          ? 0
-          : prev.cooldowns.action4 === 1
-            ? 'final-turn-on-cd'
-            : prev.cooldowns.action4 - 1,
-    };
-  }, []);
-
-  const removePetFromTarget = (prev, petOwner) => {
-    let newEffects = prev.effects.filter(e => e.petOwner !== petOwner);
-
-    return {
-      ...prev,
-      cooldowns: { ...prev.cooldowns },
-      effects: newEffects,
-    };
-  };
-
   useEffect(() => {
     const { action, attackerString, receivers } = sequence;
 
@@ -141,6 +98,50 @@ export const useBattleSequence = (sequence, allPlayers) => {
       char1team2: setChar1team2state,
       char2team2: setChar2team2state,
       char3team2: setChar3team2state,
+    };
+
+
+    const reduceCooldowns = (prev) => {
+      return {
+        action1:
+          prev.cooldowns.action1 === 0 ||
+            prev.cooldowns.action1 === 'final-turn-on-cd'
+            ? 0
+            : prev.cooldowns.action1 === 1
+              ? 'final-turn-on-cd'
+              : prev.cooldowns.action1 - 1,
+        action2:
+          prev.cooldowns.action2 === 0 ||
+            prev.cooldowns.action2 === 'final-turn-on-cd'
+            ? 0
+            : prev.cooldowns.action2 === 1
+              ? 'final-turn-on-cd'
+              : prev.cooldowns.action2 - 1,
+        action3:
+          prev.cooldowns.action3 === 0 ||
+            prev.cooldowns.action3 === 'final-turn-on-cd'
+            ? 0
+            : prev.cooldowns.action3 === 1
+              ? 'final-turn-on-cd'
+              : prev.cooldowns.action3 - 1,
+        action4:
+          prev.cooldowns.action4 === 0 ||
+            prev.cooldowns.action4 === 'final-turn-on-cd'
+            ? 0
+            : prev.cooldowns.action4 === 1
+              ? 'final-turn-on-cd'
+              : prev.cooldowns.action4 - 1,
+      };
+    };
+
+    const removePetFromTarget = (prev, petOwner) => {
+      let newEffects = prev.effects.filter(e => e.petOwner !== petOwner);
+
+      return {
+        ...prev,
+        cooldowns: { ...prev.cooldowns },
+        effects: newEffects,
+      };
     };
 
     const endTurnSequence = (stateSetter, skipTurnBoolean = false) => {
@@ -168,9 +169,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
             invulnerabilityCheck = newEffects.some(e => e.invulnerable);
           }
 
-          //reduce cooldown turns
-          const newCooldowns = reduceCooldowns(prev);
-
           //regen mana on turn skip, if there is no pet
           let newMp = prev.mp;
           if (skipTurnBoolean) {
@@ -179,6 +177,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
               newMp += Math.floor(0.3 * prev.baseManaRegen);
             }
           }
+
+          //reduce cooldown turns
+          const newCooldowns = reduceCooldowns(prev);
 
           return {
             ...prev,
@@ -750,7 +751,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                 let newEffect = {
                   type: action.type,
-                  turns: action.name = "Blessing of Protection" && selfCastCheck ? action.effectTurns + 1 : action.effectTurns,
+                  turns: action.name === "Blessing of Protection" && selfCastCheck ? action.effectTurns + 1 : action.effectTurns,
                   name: action.name,
                   image: action.effectImage,
                   buff: Boolean(action.type === 'buff'),
@@ -838,8 +839,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     }
                   }
 
-
-                  console.log(prev.cooldowns);
                   return {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
@@ -1249,7 +1248,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         executeAction(true);
       }
     }
-  }, [sequence, reduceCooldowns]);
+  }, [sequence]);
 
   return {
     turn,

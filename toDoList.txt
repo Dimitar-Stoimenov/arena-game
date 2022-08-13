@@ -1,5 +1,6 @@
 ---bugs:
-debuff cooldowns are not properly calculated on basic damage and basic heal...
+debuff cooldowns are not properly calculated - they get 1 additional turn of cooldown...
+only basic damage and mana burn are calcualted properly
 
 
 --- gameplay
