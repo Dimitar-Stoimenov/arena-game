@@ -1,11 +1,5 @@
 ---bugs:
 * doing aoe triggers health changes on dead targets... prevent doing damage on a dead target... or changing the dead target mana
-* lower demon pet damage, maybe stun should be removed... done lowering
-* make dots unstackable
-* when a dot is applied, check if the same dot exists, if it does replace it with the new one.
-* add lock pet and spec images
-
-* very low prio, maybe turn into a feature? :) - reset petTarget prop in attacker state because abilities are usable when previous target of pet is dead...
 
 
 --- gameplay
