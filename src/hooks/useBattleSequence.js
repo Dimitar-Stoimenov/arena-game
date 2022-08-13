@@ -174,7 +174,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           //regen mana on turn skip, if there is no pet
           let newMp = prev.mp;
           if (skipTurnBoolean) {
-            let petCheck = prev.effects.some(e=> e.effect === 'pet');
+            let petCheck = prev.effects.some(e => e.effect === 'pet');
             if (!petCheck) {
               newMp += Math.floor(0.3 * prev.baseManaRegen);
             }
@@ -366,7 +366,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           petDamage += effect.damageOverTime;
         }
 
-        stateAfterPetDamage = damageCaseReceiverSequence(prev, {damage: petDamage, physical: true});
+        stateAfterPetDamage = damageCaseReceiverSequence(prev, { damage: petDamage, physical: true });
       } else {
         stateAfterPetDamage = prev;
       }
@@ -382,7 +382,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           dotDamage += effect.damageOverTime;
         }
 
-        stateAfterDot = damageCaseReceiverSequence(stateAfterPetDamage, {damage: dotDamage, physical: false}); //dot effects ignore armor anyway, so physical: false is always true
+        stateAfterDot = damageCaseReceiverSequence(stateAfterPetDamage, { damage: dotDamage, physical: false }); //dot effects ignore armor anyway, so physical: false is always true
       } else {
         stateAfterDot = stateAfterPetDamage;
       }
@@ -436,9 +436,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
       if (prev.invulnerable) {
         return {
           ...prev,
-          cooldowns: {...prev.cooldowns},
+          cooldowns: { ...prev.cooldowns },
           effects: [...prev.effects]
-        }
+        };
       }
 
       return {
@@ -480,6 +480,16 @@ export const useBattleSequence = (sequence, allPlayers) => {
         }
       }
 
+      let removeDuplicateDotBoolean = false;
+      let dotToBeRemoved = null;
+      if (prev.effects.some(e => e.effect === 'damageOverTime') && action.effect === 'damageOverTime') {
+        let dotEffectsArray = prev.effects.filter(e => e.effect === 'damageOverTime');
+        if (dotEffectsArray.find(e => e.name === newEffect.name)) {
+          removeDuplicateDotBoolean = true;
+          dotToBeRemoved = dotEffectsArray.find(e => e.name === newEffect.name);
+        }
+      }
+
       let newState = null;
       if (action.damage > 0) {
         newState = damageCaseReceiverSequence(prev);
@@ -503,14 +513,18 @@ export const useBattleSequence = (sequence, allPlayers) => {
       if (prev.invulnerable && action.effect !== 'pet') {
         return {
           ...prev,
-          cooldowns: {...prev.cooldowns},
+          cooldowns: { ...prev.cooldowns },
           effects: [...prev.effects]
-        }
+        };
       }
 
       if (newState) {
         if (removePetEffectBoolean) {
           newState.effects = newState.effects.filter(e => e !== effectToBeRemoved);
+        }
+
+        if (removeDuplicateDotBoolean) {
+          newState.effects = newState.effects.filter(e => e !== dotToBeRemoved);
         }
 
         return {
@@ -520,9 +534,13 @@ export const useBattleSequence = (sequence, allPlayers) => {
           healingReductionEffect: action?.healingReductionRating
         };
       } else {
-        let modifiedEffects = null;
+        let modifiedEffects = [...prev.effects];
         if (removePetEffectBoolean) {
-          modifiedEffects = prev.effects.filter(e => e !== effectToBeRemoved);
+          modifiedEffects = modifiedEffects.filter(e => e !== effectToBeRemoved);
+        }
+
+        if (removeDuplicateDotBoolean) {
+          modifiedEffects = modifiedEffects.filter(e => e !== dotToBeRemoved);
         }
 
         return {
@@ -530,7 +548,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           hp: newEffect.name === 'Polymorph' ? newHp : prev.hp,
           mp: newEffect.effect === 'viperSting' ? prev.mp - newEffect.manaburn : prev.mp,
           cooldowns: { ...prev.cooldowns },
-          effects: removePetEffectBoolean ? [...modifiedEffects, newEffect] : [...prev.effects, newEffect],
+          effects: [...modifiedEffects, newEffect],
           healingReductionEffect: action?.healingReductionRating
         };
       }
