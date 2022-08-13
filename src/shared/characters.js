@@ -586,7 +586,7 @@ const warlockDemon = {
     effect: 'damageOverTime',
     damageOverTime: baseSpells.baseDamageOverTime,
     effectTurns: 3,
-    effectImage: '/assets/corrupion.png',
+    effectImage: '/assets/corruption.png',
     dispellable: true,
   },
   action3: {
