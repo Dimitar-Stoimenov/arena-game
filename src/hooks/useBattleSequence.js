@@ -89,33 +89,21 @@ export const useBattleSequence = (sequence, allPlayers) => {
   const reduceCooldowns = useCallback((prev) => {
     return {
       action1:
-        prev.cooldowns.action1 === 0 ||
-          prev.cooldowns.action1 === 'final-turn-on-cd'
-          ? 0
-          : prev.cooldowns.action1 === 1
-            ? 'final-turn-on-cd'
-            : prev.cooldowns.action1 - 1,
+        prev.cooldowns.action1 === 0
+          ? prev.cooldowns.action1 = 0
+          : prev.cooldowns.action1 - 1,
       action2:
-        prev.cooldowns.action2 === 0 ||
-          prev.cooldowns.action2 === 'final-turn-on-cd'
-          ? 0
-          : prev.cooldowns.action2 === 1
-            ? 'final-turn-on-cd'
-            : prev.cooldowns.action2 - 1,
+        prev.cooldowns.action2 === 0
+          ? prev.cooldowns.action2 = 0
+          : prev.cooldowns.action2 - 1,
       action3:
-        prev.cooldowns.action3 === 0 ||
-          prev.cooldowns.action3 === 'final-turn-on-cd'
-          ? 0
-          : prev.cooldowns.action3 === 1
-            ? 'final-turn-on-cd'
-            : prev.cooldowns.action3 - 1,
+        prev.cooldowns.action3 === 0
+          ? prev.cooldowns.action3 = 0
+          : prev.cooldowns.action3 - 1,
       action4:
-        prev.cooldowns.action4 === 0 ||
-          prev.cooldowns.action4 === 'final-turn-on-cd'
-          ? 0
-          : prev.cooldowns.action4 === 1
-            ? 'final-turn-on-cd'
-            : prev.cooldowns.action4 - 1,
+        prev.cooldowns.action4 === 0
+          ? prev.cooldowns.action4 = 0
+          : prev.cooldowns.action4 - 1,
     };
   }, []);
 
@@ -396,6 +384,32 @@ export const useBattleSequence = (sequence, allPlayers) => {
           ? stateAfterDot.damageReduceEffect
           : false,
         invulnerable: invulnerabilityCheck ? stateAfterDot.invulnerable : false,
+      };
+    };
+
+    const cleanseReceiver = prev => {
+      let newEffects = [];
+      if (
+        prev.effects.some(e => e.dispellable && e.debuff)
+      ) {
+        const shuffledArray = prev.effects.sort(
+          () => 0.5 - Math.random(),
+        );
+        let effectToBeRemoved = shuffledArray.find(
+          e => e.dispellable && e.debuff,
+        );
+
+        newEffects = prev.effects.filter(
+          e => e !== effectToBeRemoved,
+        );
+      } else {
+        newEffects = prev.effects;
+      }
+
+      return {
+        ...prev,
+        cooldowns: { ...prev.cooldowns },
+        effects: newEffects,
       };
     };
 
@@ -814,31 +828,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  setReceiver(prev => {
-                    let newEffects = [];
-                    if (
-                      prev.effects.some(e => e.dispellable && e.debuff)
-                    ) {
-                      const shuffledArray = prev.effects.sort(
-                        () => 0.5 - Math.random(),
-                      );
-                      let effectToBeRemoved = shuffledArray.find(
-                        e => e.dispellable && e.debuff,
-                      );
-
-                      newEffects = prev.effects.filter(
-                        e => e !== effectToBeRemoved,
-                      );
-                    } else {
-                      newEffects = prev.effects;
-                    }
-
-                    return {
-                      ...prev,
-                      cooldowns: { ...prev.cooldowns },
-                      effects: newEffects,
-                    };
-                  });
+                  setReceiver(prev => cleanseReceiver(prev));
                   await wait(1000);
                 })();
               } else {
@@ -889,38 +879,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  setReceiver(prev => {
-                    let newEffects = [];
-
-                    if (prev.effects.some(e => (e.dispellable && e.debuff) || e.effect === 'viperSting')) {
-                      let newArray = [];
-
-                      prev.effects.forEach(e => {
-                        if (e.dispellable && e.debuff) {
-                          newArray.push(e);
-                        } else if (e.effect === 'viperSting') {
-                          newArray.push(e);
-                        }
-                      });
-
-                      const shuffledArray = newArray.sort(
-                        () => 0.5 - Math.random(),
-                      );
-                      let effectToBeRemoved = shuffledArray[0];
-
-                      newEffects = prev.effects.filter(
-                        e => e !== effectToBeRemoved,
-                      );
-                    } else {
-                      newEffects = prev.effects;
-                    }
-
-                    return {
-                      ...prev,
-                      cooldowns: { ...prev.cooldowns },
-                      effects: newEffects,
-                    };
-                  });
+                  setReceiver(prev => cleanseReceiver(prev));
                   await wait(1000);
                 })();
               }
