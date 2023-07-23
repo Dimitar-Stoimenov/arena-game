@@ -19,7 +19,7 @@ export const Battle = ({ onGameEnd }) => {
 
   const {
     turn,
-    // inSequence,
+    inSequence,
     char1team1state,
     char2team1state,
     char3team1state,
@@ -181,6 +181,7 @@ export const Battle = ({ onGameEnd }) => {
           characterNamesObject={characterNamesObject}
           petTarget={char1team1state.petTarget}
           damageReduceEffect={char1team1state.damageReduceEffect}
+          actionDisabled={inSequence}
         />
         <CharacterSummary
           character={char2team1state.char}
@@ -197,6 +198,7 @@ export const Battle = ({ onGameEnd }) => {
           characterNamesObject={characterNamesObject}
           petTarget={char2team1state.petTarget}
           damageReduceEffect={char2team1state.damageReduceEffect}
+          actionDisabled={inSequence}
         />
         <CharacterSummary
           character={char3team1state.char}
@@ -213,6 +215,7 @@ export const Battle = ({ onGameEnd }) => {
           characterNamesObject={characterNamesObject}
           petTarget={char3team1state.petTarget}
           damageReduceEffect={char3team1state.damageReduceEffect}
+          actionDisabled={inSequence}
         />
       </div>
       <div className={styles.team2}>
@@ -235,6 +238,7 @@ export const Battle = ({ onGameEnd }) => {
           characterNamesObject={characterNamesObject}
           petTarget={char1team2state.petTarget}
           damageReduceEffect={char1team2state.damageReduceEffect}
+          actionDisabled={inSequence}
         />
         <CharacterSummary
           team2
@@ -252,6 +256,7 @@ export const Battle = ({ onGameEnd }) => {
           characterNamesObject={characterNamesObject}
           petTarget={char2team2state.petTarget}
           damageReduceEffect={char2team2state.damageReduceEffect}
+          actionDisabled={inSequence}
         />
         <CharacterSummary
           team2
@@ -269,6 +274,7 @@ export const Battle = ({ onGameEnd }) => {
           characterNamesObject={characterNamesObject}
           petTarget={char3team2state.petTarget}
           damageReduceEffect={char3team2state.damageReduceEffect}
+          actionDisabled={inSequence}
         />
       </div>
     </>

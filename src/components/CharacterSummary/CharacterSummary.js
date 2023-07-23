@@ -20,6 +20,7 @@ export const CharacterSummaryWithoutMemo = ({
   characterNamesObject,
   shield,
   petTarget,
+  actionDisabled
 }) => {
   const {
     charClass,
@@ -32,7 +33,7 @@ export const CharacterSummaryWithoutMemo = ({
     action2,
     action3,
     action4,
-    sendPet,
+    sendPet
   } = character;
 
   return (
@@ -67,7 +68,7 @@ export const CharacterSummaryWithoutMemo = ({
         </div>
       </div>
       <div className={styles.actions}>
-        {charTurn === turn && !dead && (
+        {charTurn === turn && !dead && !actionDisabled && (
           <CharActions
             backgroundColor={team2 ? red : blue}
             action1={action1}

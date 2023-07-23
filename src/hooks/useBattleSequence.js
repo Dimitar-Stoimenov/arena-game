@@ -604,7 +604,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
         // dead turn skipper
         return (async () => {
           setInSequence(true);
-          // await wait(200);
+
+          await wait(2000);
 
           endTurnSequence('dead');
 
@@ -614,7 +615,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
         // stun/cc turn skipper
         return (async () => {
           setInSequence(true);
-          // await wait(200);
+
+          await wait(2000);
 
           setReceiver(prev => startTurnSequence(prev));
 
@@ -1176,7 +1178,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               await wait(100);
 
               setAttacker(prev => startTurnSequence(prev));
-              await wait(1000);
+              await wait(100);
 
               setInSequence(false);
             })();
