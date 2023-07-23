@@ -564,7 +564,7 @@ const warlockDemon = {
   img: '/assets/warlock.png',
   spec: 'Demon',
   specImg: '/assets/demon-warlock.png',
-
+  petOwnerString: 'demon-warlock',
   maxHealth: baseHealth.midHealth,
   maxMana: baseMana.midMana,
   baseManaRegen: baseManaRegen + 1,
@@ -640,7 +640,7 @@ const warlockAffliction = {
   img: '/assets/warlock.png',
   spec: 'Affliction',
   specImg: '/assets/affliction-warlock.png',
-
+  petOwnerString: "affliction-warlock",
   maxHealth: baseHealth.midHealth - 20,
   maxMana: baseMana.midMana + 20,
   baseManaRegen: baseManaRegen + 2,
