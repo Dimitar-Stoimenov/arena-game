@@ -8,12 +8,12 @@ import {
 import styles from './styles.module.css';
 
 export const Battle = ({ onGameEnd }) => {
-  const [char1team1, setChar1team1] = useState(characters.hunterMarks);
-  const [char2team1, setChar2team1] = useState(characters.paladinRetri);
-  const [char3team1, setChar3team1] = useState(characters.warlockDemon);
-  const [char1team2, setChar1team2] = useState(characters.mageFrost);
-  const [char2team2, setChar2team2] = useState(characters.priestDisc);
-  const [char3team2, setChar3team2] = useState(characters.paladinHoly);
+  const [char1team1, setChar1team1] = useState(characters.priestDisc);
+  const [char2team1, setChar2team1] = useState(characters.mageFrost);
+  const [char3team1, setChar3team1] = useState(characters.paladinRetri);
+  const [char1team2, setChar1team2] = useState(characters.warlockDemon);
+  const [char2team2, setChar2team2] = useState(characters.priestHoly);
+  const [char3team2, setChar3team2] = useState(characters.hunterBeast);
 
   const [sequence, setSequence] = useState({});
 
@@ -108,7 +108,7 @@ export const Battle = ({ onGameEnd }) => {
     ) {
       (async () => {
         await wait(1000);
-        onGameEnd('Тeam 2');
+        onGameEnd('Team 2');
       })();
     }
     if (
@@ -118,7 +118,7 @@ export const Battle = ({ onGameEnd }) => {
     ) {
       (async () => {
         await wait(1000);
-        onGameEnd('Тeam 1');
+        onGameEnd('Team 1');
       })();
     }
 
@@ -164,7 +164,7 @@ export const Battle = ({ onGameEnd }) => {
       <div className={styles.gameHeader}>TEAM 1 VS TEAM 2</div>
       <div className={styles.team1}>
         {char1team1state.dead || char2team1state.dead || char3team1state.dead
-          ? <button className={styles.surrenderButton} onClick={() => onGameEnd('Тeam 2')}>Surrender</button>
+          ? <button className={styles.surrenderButton} onClick={() => onGameEnd('Team 2')}>Surrender</button>
           : ''}
         <CharacterSummary
           character={char1team1state.char}
@@ -217,7 +217,7 @@ export const Battle = ({ onGameEnd }) => {
       </div>
       <div className={styles.team2}>
         {char1team2state.dead || char2team2state.dead || char3team2state.dead
-          ? <button className={styles.surrenderButton} onClick={() => onGameEnd('Тeam 1')}>Surrender</button>
+          ? <button className={styles.surrenderButton} onClick={() => onGameEnd('Team 1')}>Surrender</button>
           : ''}
         <CharacterSummary
           team2
