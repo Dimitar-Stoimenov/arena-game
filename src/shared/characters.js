@@ -13,7 +13,7 @@ const baseHeals = {
 };
 const basePhysical = {
   oneHandPhysicalDamage: 13, //one-handed and ranged
-  physicalAoeAbility: 14,
+  physicalAoeAbility: 13,
   physicalDamage: 16, //two-handed
   physicalAbilityDamage: 25,
   physicalBigAbilityDamage: 35,
@@ -81,7 +81,6 @@ const mageFrost = {
     effectImage: '/assets/iceblock.png',
     dispellable: false,
     //TODO: maybe add a slight heal on using Ice Block?
-    //TODO: drop all pets
   },
   action4: {
     ref: 'action4',
@@ -375,8 +374,8 @@ const hunterBeast = {
     target: 'pseudoSelf',
     affectedCharacters: 1,
     physical: true,
-    damage: basePhysical.physicalAbilityDamage - 5,
-    manaCost: baseManaCost.midManaCost - 3,
+    damage: basePhysical.physicalAbilityDamage - 2,
+    manaCost: baseManaCost.midManaCost - 2,
     cooldown: 3,
   },
   sendPet: {
@@ -434,8 +433,8 @@ const hunterMarks = {
     target: 'enemy',
     affectedCharacters: 1,
     physical: true,
-    manaCost: baseManaCost.midManaCost + 5,
-    damage: basePhysical.physicalAbilityDamage + 3,
+    manaCost: baseManaCost.midManaCost + 6,
+    damage: basePhysical.physicalAbilityDamage + 5,
     effect: 'healingReduction',
     effectTurns: 2,
     effectImage: '/assets/aimed-shot.png',
@@ -614,7 +613,7 @@ const warlockDemon = {
     target: 'allEnemies',
     affectedCharacters: 3,
     physical: true,
-    damage: basePhysical.physicalAoeAbility - 1,
+    damage: basePhysical.physicalAoeAbility - 3,
     manaCost: baseManaCost.midManaCost - 2,
     cooldown: 3,
   },
@@ -716,6 +715,68 @@ const warlockAffliction = {
   }
 };
 
+const rogueSub = {
+  charClass: "Rogue",
+  img: "none", //TODO
+  spec: "Subtlety",
+  specImg: "none", //TODO
+  maxHealth: baseHealth.midHealth - 20,
+  maxMana: 100,
+  baseManaRegen: 20,
+  action1: {
+    ref: 'action1',
+    name: 'Basic Attack',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: basePhysical.oneHandPhysicalDamage - 3,
+    physical: true,
+    manaCost: 0,
+    cooldown: 0,
+  },
+  action2: {
+    ref: 'action2',
+    name: 'Shiv',
+    type: 'debuff',
+    target: 'enemy',
+    affectedCharacters: 1,
+    physical: true,
+    manaCost: 25,
+    damage: basePhysical.oneHandPhysicalDamage,
+    effect: 'healingReduction',
+    effectTurns: 2,
+    effectImage: '/assets/aimed-shot.png',
+    healingReductionRating: 0.3,
+    cooldown: 0,
+    dispellable: false,
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Backstab',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: basePhysical.physicalBigAbilityDamage - 5,
+    physical: true,
+    manaCost: 50,
+    cooldown: 0,
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Blind',
+    type: 'debuff',
+    effect: 'cc',
+    target: 'enemy',
+    affectedCharacters: 1,
+    manaCost: 10,
+    effectTurns: 1,
+    effectImage: "none", //TODO
+    cooldown: 4,
+    dispellable: false,
+    description: 'CC target - not dispellable',
+  },
+};
+
 export const characters = {
   priestDisc,
   priestHoly,
@@ -727,4 +788,5 @@ export const characters = {
   hunterSurv,
   warlockDemon,
   warlockAffliction,
+  rogueSub
 };
