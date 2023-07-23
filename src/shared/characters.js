@@ -75,11 +75,13 @@ const mageFrost = {
     target: 'self',
     affectedCharacters: 1,
     manaCost: baseManaCost.lowManaCost + 5,
-    cooldown: 5,
+    cooldown: 6,
     effect: 'invulnerability',
     effectTurns: 2,
     effectImage: '/assets/iceblock.png',
     dispellable: false,
+    //TODO: maybe add a slight heal on using Ice Block?
+    //TODO: drop all pets
   },
   action4: {
     ref: 'action4',
@@ -91,7 +93,7 @@ const mageFrost = {
     manaCost: baseManaCost.lowManaCost + 5,
     effectTurns: 1,
     effectImage: '/assets/polymorph.png',
-    cooldown: 3,
+    cooldown: 4,
     dispellable: true,
     description: 'CC target and restore 25% of their max health',
   },
@@ -139,7 +141,7 @@ const priestHoly = {
     manaCost: baseManaCost.bigManaCost + 15,
     damage: baseSpells.lowSpellDamage,
     healing: baseHeals.smallHeal + 3,
-    cooldown: 1,
+    cooldown: 2,
   },
   action4: {
     ref: 'action4',
@@ -148,7 +150,7 @@ const priestHoly = {
     target: 'all',
     affectedCharacters: 1,
     manaCost: baseManaCost.lowManaCost,
-    cooldown: 1,
+    cooldown: 2,
   },
 };
 
@@ -203,7 +205,7 @@ const priestDisc = {
     target: 'all',
     affectedCharacters: 1,
     manaCost: baseManaCost.lowManaCost,
-    cooldown: 1,
+    cooldown: 2,
   },
 };
 
@@ -236,7 +238,7 @@ const paladinRetri = {
     damage: basePhysical.physicalAbilityDamage + 4,
     physical: true,
     manaCost: baseManaCost.midManaCost + 5,
-    cooldown: 1,
+    cooldown: 2,
   },
   action3: {
     ref: 'action3',
@@ -248,7 +250,7 @@ const paladinRetri = {
     manaCost: baseManaCost.midManaCost - 3,
     effectTurns: 1,
     effectImage: '/assets/hoj.png',
-    cooldown: 2,
+    cooldown: 3,
     dispellable: true,
   },
   action4: {
@@ -261,7 +263,7 @@ const paladinRetri = {
     effectTurns: 3,
     effectImage: '/assets/devotion-aura.png',
     damageReduceRating: 0.2,
-    cooldown: 1,
+    cooldown: 2,
     dispellable: true,
   },
 };
@@ -307,7 +309,7 @@ const paladinHoly = {
     damage: baseSpells.lowSpellDamage,
     healing: baseHeals.midHeal - 2,
     manaCost: baseManaCost.lowManaCost,
-    cooldown: 1,
+    cooldown: 2,
   },
   action4: {
     ref: 'action4',
@@ -316,7 +318,7 @@ const paladinHoly = {
     target: 'friendly',
     affectedCharacters: 1,
     manaCost: baseManaCost.lowManaCost,
-    cooldown: 1,
+    cooldown: 2,
   },
 };
 
@@ -349,7 +351,7 @@ const hunterBeast = {
     damage: basePhysical.physicalAoeAbility,
     physical: true,
     manaCost: baseManaCost.lowManaCost,
-    cooldown: 1,
+    cooldown: 2,
   },
   action3: {
     ref: 'action3',
@@ -362,7 +364,7 @@ const hunterBeast = {
     manaCost: baseManaCost.lowManaCost + 5,
     effectTurns: 1,
     effectImage: '/assets/intimidation.png',
-    cooldown: 2,
+    cooldown: 3,
     dispellable: false,
   },
   action4: {
@@ -375,7 +377,7 @@ const hunterBeast = {
     physical: true,
     damage: basePhysical.physicalAbilityDamage - 5,
     manaCost: baseManaCost.midManaCost - 3,
-    cooldown: 2,
+    cooldown: 3,
   },
   sendPet: {
     ref: 'sendPet',
@@ -423,7 +425,7 @@ const hunterMarks = {
     damage: baseSpells.lowSpellDamage,
     physical: false,
     manaCost: baseManaCost.lowManaCost,
-    cooldown: 1,
+    cooldown: 2,
   },
   action3: {
     ref: 'action3',
@@ -438,7 +440,7 @@ const hunterMarks = {
     effectTurns: 2,
     effectImage: '/assets/aimed-shot.png',
     healingReductionRating: 0.3,
-    cooldown: 3,
+    cooldown: 4,
     dispellable: false,
   },
   action4: {
@@ -506,7 +508,7 @@ const hunterSurv = {
     initialDamage: basePhysical.oneHandPhysicalDamage - 3,
     effectTurns: 1,
     effectImage: '/assets/scatter-shot.png',
-    cooldown: 3,
+    cooldown: 4,
     dispellable: false,
     description: 'Can not be dispelled, breaks on damage',
   },
@@ -520,7 +522,7 @@ const hunterSurv = {
     manaCost: baseManaCost.lowManaCost + 5,
     effectTurns: 1,
     effectImage: '/assets/polymorph.png',
-    cooldown: 3,
+    cooldown: 4,
     dispellable: true,
     description: 'Dispellable',
   },
@@ -614,7 +616,7 @@ const warlockDemon = {
     physical: true,
     damage: basePhysical.physicalAoeAbility - 1,
     manaCost: baseManaCost.midManaCost - 2,
-    cooldown: 2,
+    cooldown: 3,
   },
   sendPet: {
     ref: 'sendPet',
@@ -649,7 +651,7 @@ const warlockAffliction = {
     target: 'enemy',
     affectedCharacters: 1,
     manaCost: baseManaCost.midManaCost + 5,
-    cooldown: 1,
+    cooldown: 2,
     effect: 'damageOverTime',
     unstableAffliction: true,
     unstableAfflictionStunDuration: 1,
@@ -685,7 +687,7 @@ const warlockAffliction = {
     effect: 'stun',
     effectTurns: 1,
     effectImage: '/assets/death-coil.png',
-    cooldown: 3,
+    cooldown: 4,
     dispellable: true,
   },
   action4: {
