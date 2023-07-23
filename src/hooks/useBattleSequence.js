@@ -104,33 +104,21 @@ export const useBattleSequence = (sequence, allPlayers) => {
     const reduceCooldowns = (prev) => {
       return {
         action1:
-          prev.cooldowns.action1 === 0 ||
-            prev.cooldowns.action1 === 'final-turn-on-cd'
+          prev.cooldowns.action1 === 0 || prev.cooldowns.action1 === 1
             ? 0
-            : prev.cooldowns.action1 === 1
-              ? 'final-turn-on-cd'
-              : prev.cooldowns.action1 - 1,
+            : prev.cooldowns.action1 - 1,
         action2:
-          prev.cooldowns.action2 === 0 ||
-            prev.cooldowns.action2 === 'final-turn-on-cd'
+          prev.cooldowns.action2 === 0 || prev.cooldowns.action2 === 1
             ? 0
-            : prev.cooldowns.action2 === 1
-              ? 'final-turn-on-cd'
-              : prev.cooldowns.action2 - 1,
+            : prev.cooldowns.action2 - 1,
         action3:
-          prev.cooldowns.action3 === 0 ||
-            prev.cooldowns.action3 === 'final-turn-on-cd'
+          prev.cooldowns.action3 === 0 || prev.cooldowns.action3 === 1
             ? 0
-            : prev.cooldowns.action3 === 1
-              ? 'final-turn-on-cd'
-              : prev.cooldowns.action3 - 1,
+            : prev.cooldowns.action3 - 1,
         action4:
-          prev.cooldowns.action4 === 0 ||
-            prev.cooldowns.action4 === 'final-turn-on-cd'
+          prev.cooldowns.action4 === 0 || prev.cooldowns.action4 === 1
             ? 0
-            : prev.cooldowns.action4 === 1
-              ? 'final-turn-on-cd'
-              : prev.cooldowns.action4 - 1,
+            : prev.cooldowns.action4 - 1,
       };
     };
 
