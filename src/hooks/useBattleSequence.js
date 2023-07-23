@@ -496,6 +496,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
     };
 
     const debuffCaseReceiverSequence = prev => {
+      const isNotManaUser = prev.char.charClass === "Rogue" || prev.char.charClass === "Warrior";
+
       let newEffect = {
         type: action.type,
         turns: action.effectTurns,
@@ -509,7 +511,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         damage: action.damage,
         physical: action.physical,
         healingReductionRating: action?.healingReductionRating,
-        manaburn: action?.manaburn,
+        manaburn: isNotManaUser ? 0 : action?.manaburn,
         petOwner: action?.petOwner,
         unstableAffliction: action?.unstableAffliction,
         unstableAfflictionStunDuration: action?.unstableAfflictionStunDuration,
@@ -532,6 +534,16 @@ export const useBattleSequence = (sequence, allPlayers) => {
         if (dotEffectsArray.find(e => e.name === newEffect.name)) {
           removeDuplicateDotBoolean = true;
           dotToBeRemoved = dotEffectsArray.find(e => e.name === newEffect.name);
+        }
+      }
+
+      let removeDuplicateHealingReductionDebuff = false;
+      let healingReductionDebuffToBeRemoved = null;
+      if (prev.effects.some(e => e.effect === 'healingReduction') && action.effect === 'healingReduction') {
+        let healingDebuffEffectsArray = prev.effects.filter(e => e.effect === 'healingReduction');
+        if (healingDebuffEffectsArray.find(e => e.name === newEffect.name)) {
+          removeDuplicateHealingReductionDebuff = true;
+          healingReductionDebuffToBeRemoved = healingDebuffEffectsArray.find(e => e.name === newEffect.name);
         }
       }
 
@@ -572,6 +584,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
           newState.effects = newState.effects.filter(e => e !== dotToBeRemoved);
         }
 
+        if (removeDuplicateHealingReductionDebuff) {
+          newState.effects = newState.effects.filter(e => e !== healingReductionDebuffToBeRemoved);
+        }
+
         return {
           ...newState,
           cooldowns: { ...newState.cooldowns },
@@ -588,12 +604,25 @@ export const useBattleSequence = (sequence, allPlayers) => {
           modifiedEffects = modifiedEffects.filter(e => e !== dotToBeRemoved);
         }
 
+        if (removeDuplicateHealingReductionDebuff) {
+          modifiedEffects = modifiedEffects.filter(e => e !== removeDuplicateHealingReductionDebuff);
+        }
+
+        let doNotApplyEffect = false;
+        if (newEffect.effect === 'viperSting' && isNotManaUser) {
+          doNotApplyEffect = true;
+        }
+
         return {
           ...prev,
           hp: newEffect.name === 'Polymorph' ? newHp : prev.hp,
-          mp: newEffect.effect === 'viperSting' ? prev.mp - newEffect.manaburn : prev.mp,
+          mp: isNotManaUser
+            ? prev.mp
+            : newEffect.effect === 'viperSting'
+              ? prev.mp - newEffect.manaburn
+              : prev.mp,
           cooldowns: { ...prev.cooldowns },
-          effects: [...modifiedEffects, newEffect],
+          effects: doNotApplyEffect ? [...modifiedEffects] : [...modifiedEffects, newEffect],
           healingReductionEffect: action?.healingReductionRating
         };
       }
@@ -605,7 +634,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         return (async () => {
           setInSequence(true);
 
-          await wait(2000);
+          // await wait(2000);
 
           endTurnSequence('dead');
 
@@ -988,7 +1017,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
               setReceiver(prev => {
                 let newStateAfterDamage = damageCaseReceiverSequence(prev);
                 let manaBurned = action.manaburn;
-                if (newStateAfterDamage.invulnerable === true) {
+                const isNotManaUser = prev.char.charClass === "Rogue" || prev.char.charClass === "Warrior";
+
+                if (newStateAfterDamage.invulnerable === true || isNotManaUser) {
                   manaBurned = 0;
                 }
 
