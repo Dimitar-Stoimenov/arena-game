@@ -157,6 +157,20 @@ export const useBattleSequence = (sequence, allPlayers) => {
             invulnerabilityCheck = newEffects.some(e => e.invulnerable);
           }
 
+
+          //remove shield if shield effect is expired
+          let newShieldAmount = prev.shield;
+          if (prev.shield) {
+            const shieldEffects = newEffects.filter(e => e.effect === "shield");
+            let counter = 0;
+
+            for (const effect of shieldEffects) {
+              counter += effect.turns;
+            }
+
+            counter === 0 ? newShieldAmount = 0 : newShieldAmount = prev.shield;
+          }
+
           //regen mana on turn skip, if there is no pet
           let newMp = prev.mp;
           if (skipTurnBoolean) {
@@ -171,6 +185,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
           return {
             ...prev,
+            shield: newShieldAmount,
             cooldowns: newCooldowns,
             mp: newMp,
             effects: [...newEffects],
@@ -1178,7 +1193,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   return {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
-                    effects: [...prev.effects, newEffect],
+                    effects: prev.invulnerable ? [...prev.effects] : [...prev.effects, newEffect],
                   };
                 });
                 await wait(100);
