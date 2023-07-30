@@ -275,9 +275,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
     const healCaseReceiverSequence = prev => {
       let healingAmount = action.healing;
-
       if (prev.effects.some(e => e.effect === "healingReduction")) {
-        healingAmount = Math.floor(healingAmount * (1 - prev.healingReductionEffect));
+        healingAmount = Math.floor(action.healing * (1 - prev.healingReductionEffect));
       }
 
       let newHp = prev.hp + Number(healingAmount);
@@ -607,7 +606,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           ...newState,
           cooldowns: { ...newState.cooldowns },
           effects: [...newState.effects, newEffect],
-          healingReductionEffect: action?.healingReductionRating
+          healingReductionEffect: action?.healingReductionRating ? action.healingReductionRating : prev.healingReductionEffect
         };
       } else {
         let modifiedEffects = [...prev.effects];
@@ -638,7 +637,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               : prev.mp,
           cooldowns: { ...prev.cooldowns },
           effects: doNotApplyEffect ? [...modifiedEffects] : [...modifiedEffects, newEffect],
-          healingReductionEffect: action?.healingReductionRating
+          healingReductionEffect: action?.healingReductionRating ? action.healingReductionRating : prev.healingReductionEffect
         };
       }
     };
