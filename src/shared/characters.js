@@ -8,8 +8,8 @@ const baseSpells = {
 }; //11 diff
 const baseHeals = {
   smallHeal: 13,
-  midHeal: 22,
-  bigHeal: 34,
+  midHeal: 23,
+  bigHeal: 38,
 };
 const basePhysical = {
   oneHandPhysicalDamage: 13, //one-handed and ranged
@@ -127,8 +127,8 @@ const priestHoly = {
     type: 'heal',
     target: 'friendly',
     affectedCharacters: 1,
-    healing: baseHeals.bigHeal + 2,
-    manaCost: baseManaCost.bigManaCost + 2,
+    healing: baseHeals.bigHeal,
+    manaCost: baseManaCost.bigManaCost + 5,
     cooldown: 0,
   },
   action3: {
@@ -296,7 +296,7 @@ const paladinHoly = {
     target: 'friendly',
     affectedCharacters: 1,
     healing: baseHeals.bigHeal,
-    manaCost: baseManaCost.bigManaCost,
+    manaCost: baseManaCost.bigManaCost + 5,
     cooldown: 0,
   },
   action3: {
