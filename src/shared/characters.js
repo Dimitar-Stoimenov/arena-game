@@ -1,6 +1,6 @@
 const baseManaRegen = 14;
 const baseSpells = {
-  baseDamageOverTime: 9,
+  baseDamageOverTime: 7,
   wandDamage: 9,
   lowSpellDamage: 14,
   midSpellDamage: 25,
@@ -13,7 +13,7 @@ const baseHeals = {
 };
 const basePhysical = {
   oneHandPhysicalDamage: 13, //one-handed and ranged
-  physicalAoeAbility: 13,
+  physicalAoeAbility: 10,
   physicalDamage: 16, //two-handed
   physicalAbilityDamage: 25,
   physicalBigAbilityDamage: 35,
@@ -128,7 +128,7 @@ const priestHoly = {
     target: 'friendly',
     affectedCharacters: 1,
     healing: baseHeals.bigHeal + 2,
-    manaCost: baseManaCost.bigManaCost,
+    manaCost: baseManaCost.bigManaCost + 2,
     cooldown: 0,
   },
   action3: {
@@ -138,7 +138,7 @@ const priestHoly = {
     target: 'pseudoSelf',
     affectedCharacters: 6,
     manaCost: baseManaCost.bigManaCost + 15,
-    damage: baseSpells.lowSpellDamage,
+    damage: baseSpells.lowSpellDamage - 2,
     healing: baseHeals.smallHeal + 3,
     cooldown: 2,
   },
@@ -583,7 +583,7 @@ const warlockDemon = {
     type: 'debuff',
     target: 'enemy',
     affectedCharacters: 1,
-    manaCost: baseManaCost.midManaCost - 5,
+    manaCost: baseManaCost.midManaCost,
     cooldown: 0,
     effect: 'damageOverTime',
     damageOverTime: baseSpells.baseDamageOverTime,
@@ -613,7 +613,7 @@ const warlockDemon = {
     target: 'allEnemies',
     affectedCharacters: 3,
     physical: true,
-    damage: basePhysical.physicalAoeAbility - 3,
+    damage: basePhysical.physicalAoeAbility - 2,
     manaCost: baseManaCost.midManaCost - 2,
     cooldown: 3,
   },
@@ -665,7 +665,7 @@ const warlockAffliction = {
     type: 'debuff',
     target: 'enemy',
     affectedCharacters: 1,
-    manaCost: baseManaCost.midManaCost - 5,
+    manaCost: baseManaCost.midManaCost,
     cooldown: 0,
     effect: 'damageOverTime',
     damageOverTime: baseSpells.baseDamageOverTime,
