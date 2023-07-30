@@ -7,9 +7,9 @@ const baseSpells = {
   bigSpellDamage: 36,
 }; //11 diff
 const baseHeals = {
-  smallHeal: 15,
-  midHeal: 25,
-  bigHeal: 40,
+  smallHeal: 13,
+  midHeal: 22,
+  bigHeal: 34,
 };
 const basePhysical = {
   oneHandPhysicalDamage: 13, //one-handed and ranged
