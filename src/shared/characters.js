@@ -234,9 +234,9 @@ const paladinRetri = {
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
-    damage: basePhysical.physicalAbilityDamage + 4,
+    damage: basePhysical.physicalAbilityDamage + 2,
     physical: true,
-    manaCost: baseManaCost.midManaCost + 5,
+    manaCost: baseManaCost.midManaCost + 7,
     cooldown: 2,
   },
   action3: {

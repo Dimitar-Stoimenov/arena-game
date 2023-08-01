@@ -8,7 +8,7 @@ import {
 import styles from './styles.module.css';
 
 export const Battle = ({ onGameEnd }) => {
-  const [char1team1, setChar1team1] = useState(characters.rogueSub);
+  const [char1team1, setChar1team1] = useState(characters.warlockAffliction);
   const [char2team1, setChar2team1] = useState(characters.mageFrost);
   const [char3team1, setChar3team1] = useState(characters.priestDisc);
   const [char1team2, setChar1team2] = useState(characters.hunterBeast);
