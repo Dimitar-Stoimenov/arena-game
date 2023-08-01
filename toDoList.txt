@@ -1,6 +1,6 @@
 ---bugs:
-debuff cooldowns are not properly calculated - they get 1 additional turn of cooldown...
-only basic damage and mana burn are calcualted properly
+blessing of protection -> didn’t work when target was stunned
+viper sting reduces below 0 mana
 
 
 --- gameplay
@@ -8,11 +8,7 @@ only basic damage and mana burn are calcualted properly
 * Add more effects:
     -hot; e.effect = 'healOverTime'
 * Add character pickers - move the characterState out of Battle.js;
-* Replace mana with rage and energy for warriors and rogues (maybe feral druids?) /pseudo mana/;
-* Add warlock sacrifice pet for shield (excluding Demon lock)... 
-    Demon lock pet is Felguard with Intercept and Cleave abilities.
-    Affliction Lock has Devour Magic and Felhunter pet and Siphon Life ability.
-
+* make rogues unable to skip?
     
 --- visuals
 * Add hovers on ability buttons and effects (third party library)

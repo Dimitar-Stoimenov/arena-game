@@ -546,7 +546,7 @@ const hunterSurv = {
     name: "Send Pet",
     type: 'debuff',
     target: 'enemy',
-    damageOverTime: basePhysical.oneHandPhysicalDamage - 6,
+    damageOverTime: basePhysical.oneHandPhysicalDamage - 4,
     physical: true,
     affectedCharacters: 1,
     manaCost: 0,

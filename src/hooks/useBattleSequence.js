@@ -176,7 +176,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           if (skipTurnBoolean) {
             let petCheck = prev.effects.some(e => e.effect === 'pet');
             if (!petCheck) {
-              newMp += Math.floor(0.3 * prev.baseManaRegen);
+              newMp += Math.floor(0.5 * prev.baseManaRegen);
             }
           }
 
