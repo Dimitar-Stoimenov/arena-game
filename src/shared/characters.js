@@ -717,9 +717,9 @@ const warlockAffliction = {
 
 const rogueSub = {
   charClass: "Rogue",
-  img: "none", //TODO
+  img: '/assets/rogue.png',
   spec: "Subtlety",
-  specImg: "none", //TODO
+  specImg: '/assets/subtlety.png',
   maxHealth: baseHealth.midHealth - 20,
   maxMana: 100,
   baseManaRegen: 20,
@@ -745,7 +745,7 @@ const rogueSub = {
     damage: basePhysical.oneHandPhysicalDamage,
     effect: 'healingReduction',
     effectTurns: 2,
-    effectImage: '/assets/aimed-shot.png',
+    effectImage: '/assets/wound-poison.jpg',
     healingReductionRating: 0.5,
     cooldown: 0,
     dispellable: false,
