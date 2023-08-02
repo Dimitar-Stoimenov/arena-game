@@ -343,6 +343,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
             if (newMp > prev.maxMana) {
               newMp = prev.maxMana - viperStingBurnAmount;
             }
+
+            if (newMp < 0) newMp = 0;
           }
         } else {
           if (prev.mp === prev.maxMana) {

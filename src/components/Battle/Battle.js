@@ -8,12 +8,12 @@ import {
 import styles from './styles.module.css';
 
 export const Battle = ({ onGameEnd }) => {
-  const [char1team1, setChar1team1] = useState(characters.warlockAffliction);
-  const [char2team1, setChar2team1] = useState(characters.mageFrost);
+  const [char1team1, setChar1team1] = useState(characters.hunterSurv);
+  const [char2team1, setChar2team1] = useState(characters.paladinHoly);
   const [char3team1, setChar3team1] = useState(characters.priestDisc);
-  const [char1team2, setChar1team2] = useState(characters.hunterSurv);
-  const [char2team2, setChar2team2] = useState(characters.priestDisc);
-  const [char3team2, setChar3team2] = useState(characters.paladinHoly);
+  const [char1team2, setChar1team2] = useState(characters.hunterBeast);
+  const [char2team2, setChar2team2] = useState(characters.warlockDemon);
+  const [char3team2, setChar3team2] = useState(characters.priestHoly);
 
   const [sequence, setSequence] = useState({});
 
