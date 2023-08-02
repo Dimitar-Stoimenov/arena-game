@@ -1,7 +1,5 @@
 ---bugs:
 blessing of protection -> didn’t work when target was stunned
-viper sting reduces below 0 mana
-
 
 --- gameplay
 * Make cleanse dispel poison effects (when Wound Poison is added);

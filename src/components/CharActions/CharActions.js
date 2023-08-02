@@ -16,6 +16,7 @@ export const CharActions = ({
   characterNamesObject,
   effects,
   petTarget,
+  charClass
 }) => {
   const [actionState, setActionState] = useState(null);
   const red = "#ba2e25";
@@ -78,19 +79,22 @@ export const CharActions = ({
         >
           {action4.name}
         </button>
-        <button
-          className={styles.actionButton}
-          onClick={() =>
-            actionHandler({
-              target: 'confirm',
-              affectedCharacters: 1,
-              type: 'skip',
-              name: 'Skip Turn',
-            })
-          }
-        >
-          Skip Turn
-        </button>
+        {charClass !== "Rogue"
+          ? <button
+            className={styles.actionButton}
+            onClick={() =>
+              actionHandler({
+                target: 'confirm',
+                affectedCharacters: 1,
+                type: 'skip',
+                name: 'Skip Turn',
+              })
+            }
+          >
+            Skip Turn
+          </button>
+          : null
+        }
       </div>
     );
   };

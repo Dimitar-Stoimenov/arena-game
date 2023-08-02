@@ -84,6 +84,7 @@ export const CharacterSummaryWithoutMemo = ({
             cooldowns={cooldowns}
             effects={effects}
             characterNamesObject={characterNamesObject}
+            charClass={charClass}
           />
         )}
       </div>
