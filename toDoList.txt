@@ -1,5 +1,4 @@
 ---bugs:
-blessing of protection -> didn’t work when target was stunned
 
 --- gameplay
 * Make cleanse dispel poison effects (when Wound Poison is added);
