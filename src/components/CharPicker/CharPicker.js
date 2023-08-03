@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { CharCard } from './CharCard';
+
 import { characters } from "shared";
 
 import styles from './styles.module.css';
@@ -59,16 +61,9 @@ export const CharPicker = ({
 
 			<div className={styles.pickOuterContainer}>			
 				<div className={styles.pickContainer}>
-					<div className={styles.card}>Card 1</div>
-					<div className={styles.card}>Card 2</div>
-					<div className={styles.card}>Card 3</div>
-					<div className={styles.card}>Card 4</div>
-					<div className={styles.card}>Card 5</div>
-					<div className={styles.card}>Card 6</div>
-					<div className={styles.card}>Card 1</div>
-					<div className={styles.card}>Card 2</div>
-					<div className={styles.card}>Card 3</div>
-					<div className={styles.card}>Card 4</div>
+					{initialCharactersList.map((char) => {
+						return <CharCard className={styles.card}/>
+					})}
 				</div>
 			</div>
 		</div>
