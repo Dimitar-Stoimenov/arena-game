@@ -15,6 +15,15 @@ export const App = () => {
 	const [char2team2, setChar2team2] = useState(null);
 	const [char3team2, setChar3team2] = useState(null);
 
+	const resetAllCharStates = () => {
+		setChar1team1(null);
+		setChar2team1(null);
+		setChar3team1(null);
+		setChar1team2(null);
+		setChar2team2(null);
+		setChar3team2(null);
+	};
+
 	return (
 		<div className={styles.main}>
 			{mode === 'start' && (
@@ -22,13 +31,7 @@ export const App = () => {
 			)}
 
 			{mode === 'pick' && (
-				<CharPicker 
-					char1team1={char1team1}
-					char2team1={char2team1}
-					char3team1={char3team1}
-					char1team2={char1team2}
-					char2team2={char2team2}
-					char3team2={char3team2}
+				<CharPicker
 					setChar1team1={setChar1team1}
 					setChar2team1={setChar2team1}
 					setChar3team1={setChar3team1}
@@ -53,9 +56,10 @@ export const App = () => {
 					setChar1team2={setChar1team2}
 					setChar2team2={setChar2team2}
 					setChar3team2={setChar3team2}
-					onGameEnd={winner => {
+					onGameEnd={(winner) => {
 						setWinner(winner);
 						setMode('gameOver');
+						resetAllCharStates();
 					}}
 				/>
 			)}

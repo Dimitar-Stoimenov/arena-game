@@ -18,17 +18,10 @@ const stageMapping = {
 	5: "Team 2 - Second Pick",
 	6: "Team 1 - Second Pick",
 	7: "Team 1 - Third Pick",
-	8: "Team 2 - Third Pick",
-	9: "Ready to play!"
+	8: "Team 2 - Third Pick"
 }
 
 export const CharPicker = ({
-	char1team1,
-	char2team1,
-	char3team1,
-	char1team2,
-	char2team2,
-	char3team2,
 	setChar1team1,
 	setChar2team1,
 	setChar3team1,
@@ -36,24 +29,47 @@ export const CharPicker = ({
 	setChar2team2,
 	setChar3team2,
 	onStartClick
-}) => {
-	const [readyToStart, setReadyToStart] = useState(false);	
+}) => {	
 	const [availableCharsList, setAvailableCharslist] = useState(initialCharactersList);
 	const [stageNumber, setStageNumber] = useState(1);
 	const [team1chars, setTeam1chars] = useState([]);
+	const [team1bans, setTeam1bans] = useState([]);
 	const [team2chars, setTeam2chars] = useState([]);
+	const [team2bans, setTeam2bans] = useState([]);
 
 	return (
 		<div className={styles.main}>
+
 			<div className={styles.teamsContainer}>
-				<div className={styles.team1container}>team1</div>
-				<div className={styles.team2container}>t2</div>
+				<div className={styles.team1container}>
+					<div className={styles.bannedCharacters}></div>
+					<div className={styles.pickedCharacters}></div>
+				</div>
+				<div className={styles.team2container}>
+					<div className={styles.bannedCharacters}></div>
+					<div className={styles.pickedCharacters}></div>
+				</div>
 			</div>
-			<div className={styles.startButtonContainer}>
-				{readyToStart 
-					? <button className={styles.startButton} onClick={onStartClick}>Start Game</button> 
-					: null
-				}
+
+			<div className={styles.messageContainer}>{
+				stageNumber < 9
+				? stageMapping[stageNumber]
+				: <button className={styles.startButton} onClick={onStartClick}>Start Game</button>
+			}</div>
+
+			<div className={styles.pickOuterContainer}>			
+				<div className={styles.pickContainer}>
+					<div className={styles.card}>Card 1</div>
+					<div className={styles.card}>Card 2</div>
+					<div className={styles.card}>Card 3</div>
+					<div className={styles.card}>Card 4</div>
+					<div className={styles.card}>Card 5</div>
+					<div className={styles.card}>Card 6</div>
+					<div className={styles.card}>Card 1</div>
+					<div className={styles.card}>Card 2</div>
+					<div className={styles.card}>Card 3</div>
+					<div className={styles.card}>Card 4</div>
+				</div>
 			</div>
 		</div>
 	);
