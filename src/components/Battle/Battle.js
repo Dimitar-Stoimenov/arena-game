@@ -2,19 +2,26 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CharacterSummary } from 'components';
 import { useBattleSequence } from 'hooks';
 import {
-  characters,
   wait
 } from 'shared';
+
 import styles from './styles.module.css';
 
-export const Battle = ({ onGameEnd }) => {
-  const [char1team1, setChar1team1] = useState(characters.hunterBeast);
-  const [char2team1, setChar2team1] = useState(characters.warlockDemon);
-  const [char3team1, setChar3team1] = useState(characters.paladinRetri);
-  const [char1team2, setChar1team2] = useState(characters.hunterBeast);
-  const [char2team2, setChar2team2] = useState(characters.warlockDemon);
-  const [char3team2, setChar3team2] = useState(characters.priestHoly);
-
+export const Battle = ({ 
+  char1team1,
+  char2team1,
+  char3team1,
+  char1team2,
+  char2team2,
+  char3team2,
+  setChar1team1,
+  setChar2team1,
+  setChar3team1,
+  setChar1team2,
+  setChar2team2,
+  setChar3team2,
+  onGameEnd 
+}) => {
   const [sequence, setSequence] = useState({});
 
   const {
