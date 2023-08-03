@@ -1,5 +1,4 @@
 ---bugs:
-skipping at max mana gives you more mana than the max…
 
 --- gameplay
 * Make cleanse dispel poison effects (when Wound Poison is added);

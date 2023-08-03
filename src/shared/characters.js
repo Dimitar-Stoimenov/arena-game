@@ -195,7 +195,7 @@ const priestDisc = {
     manaCost: baseManaCost.midManaCost - 7,
     damage: baseSpells.lowSpellDamage - 2,
     manaburn: baseManaCost.midManaCost - 2,
-    cooldown: 2,
+    cooldown: 3,
   },
   action4: {
     ref: 'action4',

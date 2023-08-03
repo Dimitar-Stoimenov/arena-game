@@ -171,7 +171,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
             counter === 0 ? newShieldAmount = 0 : newShieldAmount = prev.shield;
           }
 
-          //regen mana on turn skip, if there is no pet
+          //regen mana on turn skip, if there is no pet          
           let newMp = prev.mp;
           if (skipTurnBoolean) {
             let petCheck = prev.effects.some(e => e.effect === 'pet');
@@ -179,6 +179,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
               newMp += Math.floor(0.5 * prev.baseManaRegen);
             }
           }
+          
+          //if somehow you regen more mana than the max - bring it down to the max
+          if (newMp > prev.maxMana) newMp = prev.maxMana;
 
           //reduce cooldown turns
           const newCooldowns = reduceCooldowns(prev);
