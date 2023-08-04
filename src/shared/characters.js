@@ -48,7 +48,7 @@ const mageFrost = {
     ref: 'action1',
     name: 'Wand',
     type: 'damage', //damage, heal, cc, stun, buff
-    target: 'enemy', //enemy, friendly, all, self, pseudoSelf(ask for confirm only)
+    target: 'enemy', //enemy, friendly, all, self, allEnemies, pseudoSelf(ask for confirm only)
     affectedCharacters: 1, //num
     damage: baseSpells.wandDamage,
     manaCost: 0,
@@ -831,16 +831,16 @@ const priestShadow = {
     affectedCharacters: 1,
     damage: baseSpells.midSpellDamage + 5,
     manaCost: baseManaCost.bigManaCost - 5,
-    cooldown: 1,
+    cooldown: 2,
   },
   action4: {
     ref: 'action4',
     name: 'Psychic Scream',
     type: 'debuff',
     effect: 'cc',
-    target: 'enemy',
+    target: 'allEnemies',
     affectedCharacters: 3,
-    manaCost: baseManaCost.midMana,
+    manaCost: baseManaCost.midManaCost,
     effectTurns: 1,
     effectImage: '/assets/psychic-scream.png',
     cooldown: 6,
