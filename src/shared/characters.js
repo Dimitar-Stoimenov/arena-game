@@ -463,7 +463,7 @@ const hunterMarks = {
     cooldown: 4,
     manaburn: baseSpells.lowSpellDamage - 1,
     dispellable: false,
-    description: 'removes cc, can be dispelled by cleanse only',
+    description: 'breaks cc, can be dispelled by cleanse only',
   },
   sendPet: {
     ref: 'sendPet',
@@ -547,7 +547,7 @@ const hunterSurv = {
     cooldown: 4,
     manaburn: baseSpells.lowSpellDamage - 1,
     dispellable: false,
-    description: 'removes cc, can be dispelled by cleanse only',
+    description: 'breaks cc, can be dispelled by cleanse only',
   },
   sendPet: {
     ref: 'sendPet',
