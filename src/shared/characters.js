@@ -489,7 +489,7 @@ const hunterSurv = {
   spec: 'Surv',
   specImg: '/assets/surv-hunter.png',
   petOwnerString: 'surv-hunter',
-  maxHealth: 1,
+  maxHealth: baseHealth.midHealth + 15,
   maxMana: baseMana.lowMana + 25,
   baseManaRegen: baseManaRegen - 2,
   action1: {
@@ -755,6 +755,7 @@ const rogueSub = {
     manaCost: 25,
     damage: basePhysical.oneHandPhysicalDamage,
     effect: 'healingReduction',
+    poison: true,
     effectTurns: 2,
     effectImage: '/assets/wound-poison.jpg',
     healingReductionRating: 0.5,
