@@ -59,15 +59,21 @@ export const App = () => {
 					onGameEnd={(winner) => {
 						setWinner(winner);
 						setMode('gameOver');
-						resetAllCharStates();
 					}}
 				/>
 			)}
 
 			{mode === 'gameOver' && (
 				<EndMenu
+					char1team1={char1team1}
+					char2team1={char2team1}
+					char3team1={char3team1}
+					char1team2={char1team2}
+					char2team2={char2team2}
+					char3team2={char3team2}
 					winner={winner}
 					onStartClick={() => {
+						resetAllCharStates();
 						setWinner(undefined);
 						setMode('pick');
 					}}

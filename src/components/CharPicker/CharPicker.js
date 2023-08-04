@@ -8,7 +8,7 @@ import styles from './styles.module.css';
 
 const initialCharactersList = Object.keys(characters)
 	.map((key) => (characters[key])
-);
+	);
 
 const stageMapping = {
 	1: "Team 1 Ban",
@@ -19,7 +19,7 @@ const stageMapping = {
 	6: "Team 1 - Second Pick",
 	7: "Team 1 - Third Pick",
 	8: "Team 2 - Third Pick"
-}
+};
 
 export const CharPicker = ({
 	setChar1team1,
@@ -29,7 +29,7 @@ export const CharPicker = ({
 	setChar2team2,
 	setChar3team2,
 	onStartClick
-}) => {	
+}) => {
 	const [availableCharsList, setAvailableCharslist] = useState(initialCharactersList);
 	const [stageNumber, setStageNumber] = useState(1);
 	const [team1chars, setTeam1chars] = useState([]);
@@ -50,7 +50,7 @@ export const CharPicker = ({
 			setChar3team2(char3team2);
 		}
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [stageNumber, team1chars, team2chars]);
 
 	const handleClick = (e, charClass, spec) => {
@@ -82,40 +82,40 @@ export const CharPicker = ({
 
 			setTeam2chars(arr);
 		}
-		
+
 		const indexOfPickedChar = availableCharsList.indexOf(pickedChar);
 
 		if (indexOfPickedChar !== -1) {
-			const newList = availableCharsList.filter((char) => char !== pickedChar);			
+			const newList = availableCharsList.filter((char) => char !== pickedChar);
 			setAvailableCharslist(newList);
 			setStageNumber((prev) => prev + 1);
 		} else {
 			// show error?
-		}		
-	}
+		}
+	};
 
 	const team1bansJSX = team1bans.map((char) => {
-		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={null} disabled={false}/>
-	})
+		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={() => null} disabled={false} />;
+	});
 
 	const team2bansJSX = team2bans.map((char) => {
-		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={null} disabled={false}/>
-	})
+		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={() => null} disabled={false} />;
+	});
 
 	const team1picksJSX = team1chars.map((char) => {
-		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={null} disabled={false}/>
-	})
+		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={() => null} disabled={false} />;
+	});
 
 	const team2picksJSX = team2chars.map((char) => {
-		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={null} disabled={false}/>
-	})
+		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={() => null} disabled={false} />;
+	});
 
 	const pickJSX = initialCharactersList.map((char) => {
 		const indexOfPickedChar = availableCharsList.indexOf(char);
 		let disabled = false;
 		if (indexOfPickedChar === -1) disabled = true;
 
-		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={handleClick} disabled={disabled} />
+		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={handleClick} disabled={disabled} />;
 	});
 
 	return (
@@ -142,11 +142,11 @@ export const CharPicker = ({
 
 			<div className={styles.messageContainer}>{
 				stageNumber < 9
-				? stageMapping[stageNumber]
-				: <button className={styles.startButton} onClick={onStartClick}>Start Game</button>
+					? stageMapping[stageNumber]
+					: <button className={styles.startButton} onClick={onStartClick}>Start Game</button>
 			}</div>
 
-			<div className={styles.pickOuterContainer}>			
+			<div className={styles.pickOuterContainer}>
 				<div className={styles.pickContainer}>
 					{pickJSX}
 				</div>
