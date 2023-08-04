@@ -590,6 +590,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       if (prev.dead || newState?.dead) {
         return {
           ...prev,
+          dead: true,
           effects: [],
         };
       }
