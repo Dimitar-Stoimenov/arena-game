@@ -37,6 +37,47 @@ export const CharPicker = ({
 	const [team2chars, setTeam2chars] = useState([]);
 	const [team2bans, setTeam2bans] = useState([]);
 
+	const handleClick = (e, charClass, spec) => {
+		const pickedChar = availableCharsList.filter((char) => char.charClass === charClass).find((char) => char.spec === spec);
+		if (stageNumber === 1) {
+			let arr = [...team1bans];
+			arr.push(pickedChar);
+
+			setTeam1bans(arr);
+		}
+
+		if (stageNumber === 2) {
+			let arr = [...team2bans];
+			arr.push(pickedChar);
+
+			setTeam2bans(arr);
+		}
+
+		if (stageNumber === 3 || stageNumber === 6 || stageNumber === 7) {
+			let arr = [...team1chars];
+			arr.push(pickedChar);
+
+			setTeam1chars(arr);
+		}
+
+		if (stageNumber === 4 || stageNumber === 5 || stageNumber === 8) {
+			let arr = [...team2chars];
+			arr.push(pickedChar);
+
+			setTeam2chars(arr);
+		}
+		
+		const indexOfPickedChar = availableCharsList.indexOf(pickedChar);
+
+		if (indexOfPickedChar !== -1) {
+			const newList = availableCharsList.filter((char) => char !== pickedChar);			
+			setAvailableCharslist(newList);
+			setStageNumber((prev) => prev + 1);
+		} else {
+			// show error?
+		}		
+	}
+
 	return (
 		<div className={styles.main}>
 
@@ -60,7 +101,7 @@ export const CharPicker = ({
 			<div className={styles.pickOuterContainer}>			
 				<div className={styles.pickContainer}>
 					{initialCharactersList.map((char) => {
-						return <CharCard className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} />
+						return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={handleClick}/>
 					})}
 				</div>
 			</div>
