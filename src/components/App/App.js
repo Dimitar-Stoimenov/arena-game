@@ -69,7 +69,7 @@ export const App = () => {
 					winner={winner}
 					onStartClick={() => {
 						setWinner(undefined);
-						setMode('battle');
+						setMode('pick');
 					}}
 				/>
 			)}
