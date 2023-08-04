@@ -179,7 +179,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
               newMp += Math.floor(0.5 * prev.baseManaRegen);
             }
           }
-          
+
           //if somehow you regen more mana than the max - bring it down to the max
           if (newMp > prev.maxMana) newMp = prev.maxMana;
 
@@ -432,15 +432,22 @@ export const useBattleSequence = (sequence, allPlayers) => {
       };
     };
 
-    const cleanseCaseReceiverSequence = prev => {
+    const cleanseCaseReceiverSequence = (prev, isCleanse = false) => {
       let newEffects = [];
 
-      if (prev.effects.some(e => e.dispellable && e.debuff)) {
+      if (
+        prev.effects.some(
+          (e) => isCleanse
+            ? (e.dispellable && e.debuff) || (e.poison && e.debuff)
+            : e.dispellable && e.debuff)
+      ) {
         const shuffledArray = prev.effects.sort(
           () => 0.5 - Math.random(),
         );
         let effectToBeRemoved = shuffledArray.find(
-          e => e.dispellable && e.debuff,
+          (e) => isCleanse
+            ? (e.dispellable && e.debuff) || (e.poison && e.debuff)
+            : e.dispellable && e.debuff
         );
 
         if (effectToBeRemoved.name === 'Unstable Affliction') {
@@ -528,6 +535,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         effect: action.effect,
         damageOverTime: action.damageOverTime,
         damage: action.damage,
+        poison: action.poison,
         physical: action.physical,
         healingReductionRating: action?.healingReductionRating,
         manaburn: isNotManaUser ? 0 : action?.manaburn,
@@ -972,7 +980,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  setReceiver(prev => cleanseCaseReceiverSequence(prev));
+                  setReceiver(prev => cleanseCaseReceiverSequence(prev, true));
                   await wait(1000);
                 })();
               }
