@@ -389,7 +389,7 @@ const hunterBeast = {
     name: "Send Pet",
     type: 'debuff',
     target: 'enemy',
-    damageOverTime: basePhysical.oneHandPhysicalDamage - 1,
+    damageOverTime: basePhysical.oneHandPhysicalDamage - 2,
     physical: true,
     affectedCharacters: 1,
     manaCost: 0,
