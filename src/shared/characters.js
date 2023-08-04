@@ -786,12 +786,72 @@ const rogueSub = {
     cooldown: 4,
     dispellable: false,
     description: 'CC target - not dispellable',
+  }
+};
+
+const priestShadow = {
+  id: 12,
+  charClass: 'Priest',
+  img: '/assets/priest.png',
+  spec: 'Shadow',
+  specImg: '/assets/shadow-priest.png',
+
+  maxHealth: baseHealth.lowHealth + 30,
+  maxMana: baseMana.midMana,
+  baseManaRegen: baseManaRegen,
+  action1: {
+    ref: 'action1',
+    name: 'Wand',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: baseSpells.wandDamage,
+    manaCost: 0,
+    cooldown: 0,
   },
+  action2: {
+    ref: 'action2',
+    name: 'PW: Shield',
+    type: 'buff',
+    effect: 'shield',
+    effectTurns: 3,
+    effectImage: '/assets/pw-shield.png',
+    target: 'friendly',
+    shieldAmount: baseSpells.midSpellDamage,
+    affectedCharacters: 1,
+    manaCost: baseManaCost.midManaCost - 5,
+    cooldown: 2,
+    dispellable: true,
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Mind Blast',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: baseSpells.midSpellDamage + 5,
+    manaCost: baseManaCost.bigManaCost - 5,
+    cooldown: 1,
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Psychic Scream',
+    type: 'debuff',
+    effect: 'cc',
+    target: 'enemy',
+    affectedCharacters: 3,
+    manaCost: baseManaCost.midMana,
+    effectTurns: 1,
+    effectImage: '/assets/psychic-scream.png',
+    cooldown: 6,
+    dispellable: true,
+  }
 };
 
 export const characters = {
   priestDisc,
   priestHoly,
+  priestShadow,
   mageFrost,
   paladinHoly,
   paladinRetri,
