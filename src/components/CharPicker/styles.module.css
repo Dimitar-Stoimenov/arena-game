@@ -44,14 +44,20 @@
 
     gap: 50px;
 
-    background-color: lightgray;
+    background-color: green;
 }
 
 .card {
     margin: 5px;
-    width: calc(15% - 29px);
+    padding: 0 3px;
+    width: calc(15% - 72px);
     height: 100px;
-    background-color: red;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: lightgray;
+    
+    display: flex;
+    flex-direction: column;
 }
 
 .team1container,

@@ -7,9 +7,7 @@ import { characters } from "shared";
 import styles from './styles.module.css';
 
 const initialCharactersList = Object.keys(characters)
-	.map((key) => ({
-		[key]: characters[key]
-	})
+	.map((key) => (characters[key])
 );
 
 const stageMapping = {
@@ -62,7 +60,7 @@ export const CharPicker = ({
 			<div className={styles.pickOuterContainer}>			
 				<div className={styles.pickContainer}>
 					{initialCharactersList.map((char) => {
-						return <CharCard className={styles.card}/>
+						return <CharCard className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} />
 					})}
 				</div>
 			</div>

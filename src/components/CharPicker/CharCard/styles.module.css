@@ -1,0 +1,23 @@
+.img {
+  max-height: 100%;
+  max-width: 60%;
+}
+
+.specImg {
+  margin-left: 2px;
+  max-height: 35%;
+  border-radius: 5px;
+  border: 0.1px solid black;
+}
+
+.imgContainer {
+  height: 80%;
+}
+
+.classAndSpecNames {
+  text-align: center;
+  margin-top: 3px;
+  font-size: 0.75em;
+  font-weight: bold;
+  height: 20%
+}
