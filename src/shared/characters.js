@@ -650,7 +650,7 @@ const warlockAffliction = {
   spec: 'Affliction',
   specImg: '/assets/affliction-warlock.png',
   petOwnerString: "affliction-warlock",
-  maxHealth: baseHealth.midHealth - 20,
+  maxHealth: baseHealth.lowHealth + 20,
   maxMana: baseMana.midMana + 20,
   baseManaRegen: baseManaRegen + 2,
   action1: {
@@ -731,7 +731,7 @@ const rogueSub = {
   img: '/assets/rogue.png',
   spec: "Subtlety",
   specImg: '/assets/subtlety.png',
-  maxHealth: baseHealth.midHealth - 20,
+  maxHealth: baseHealth.midHealth - 15,
   maxMana: 100,
   baseManaRegen: 20,
   action1: {
@@ -796,7 +796,7 @@ const priestShadow = {
   spec: 'Shadow',
   specImg: '/assets/shadow-priest.png',
 
-  maxHealth: baseHealth.lowHealth + 30,
+  maxHealth: baseHealth.midHealth - 10,
   maxMana: baseMana.midMana,
   baseManaRegen: baseManaRegen,
   action1: {
