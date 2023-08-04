@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { CharCard } from './CharCard';
 
@@ -36,6 +36,22 @@ export const CharPicker = ({
 	const [team1bans, setTeam1bans] = useState([]);
 	const [team2chars, setTeam2chars] = useState([]);
 	const [team2bans, setTeam2bans] = useState([]);
+
+	useEffect(() => {
+		if (stageNumber > 8) {
+			const [char1team1, char2team1, char3team1] = team1chars;
+			const [char1team2, char2team2, char3team2] = team2chars;
+
+			setChar1team1(char1team1);
+			setChar2team1(char2team1);
+			setChar3team1(char3team1);
+			setChar1team2(char1team2);
+			setChar2team2(char2team2);
+			setChar3team2(char3team2);
+		}
+
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [stageNumber, team1chars, team2chars]);
 
 	const handleClick = (e, charClass, spec) => {
 		const pickedChar = availableCharsList.filter((char) => char.charClass === charClass).find((char) => char.spec === spec);
@@ -78,17 +94,49 @@ export const CharPicker = ({
 		}		
 	}
 
+	const team1bansJSX = team1bans.map((char) => {
+		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={null} disabled={false}/>
+	})
+
+	const team2bansJSX = team2bans.map((char) => {
+		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={null} disabled={false}/>
+	})
+
+	const team1picksJSX = team1chars.map((char) => {
+		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={null} disabled={false}/>
+	})
+
+	const team2picksJSX = team2chars.map((char) => {
+		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={null} disabled={false}/>
+	})
+
+	const pickJSX = initialCharactersList.map((char) => {
+		const indexOfPickedChar = availableCharsList.indexOf(char);
+		let disabled = false;
+		if (indexOfPickedChar === -1) disabled = true;
+
+		return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={handleClick} disabled={disabled} />
+	});
+
 	return (
 		<div className={styles.main}>
 
 			<div className={styles.teamsContainer}>
 				<div className={styles.team1container}>
-					<div className={styles.bannedCharacters}></div>
-					<div className={styles.pickedCharacters}></div>
+					<div className={styles.bannedCharacters}>
+						{team1bansJSX}
+					</div>
+					<div className={styles.pickedCharacters}>
+						{team1picksJSX}
+					</div>
 				</div>
 				<div className={styles.team2container}>
-					<div className={styles.bannedCharacters}></div>
-					<div className={styles.pickedCharacters}></div>
+					<div className={styles.bannedCharacters}>
+						{team2bansJSX}
+					</div>
+					<div className={styles.pickedCharacters}>
+						{team2picksJSX}
+					</div>
 				</div>
 			</div>
 
@@ -100,9 +148,7 @@ export const CharPicker = ({
 
 			<div className={styles.pickOuterContainer}>			
 				<div className={styles.pickContainer}>
-					{initialCharactersList.map((char) => {
-						return <CharCard key={char.id} className={styles.card} img={char.img} specImg={char.specImg} charClass={char.charClass} spec={char.spec} onClick={handleClick}/>
-					})}
+					{pickJSX}
 				</div>
 			</div>
 		</div>
