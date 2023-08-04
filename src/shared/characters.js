@@ -35,6 +35,7 @@ const baseManaCost = {
 }; //15 diff ++
 
 const mageFrost = {
+  id: 1,
   charClass: 'Mage',
   img: '/assets/mage.png',
   spec: 'Frost',
@@ -99,6 +100,7 @@ const mageFrost = {
 };
 
 const priestHoly = {
+  id: 2,
   charClass: 'Priest',
   img: '/assets/priest.png',
   spec: 'Holy',
@@ -154,6 +156,7 @@ const priestHoly = {
 };
 
 const priestDisc = {
+  id: 3,
   charClass: 'Priest',
   img: '/assets/priest.png',
   spec: 'Disc',
@@ -209,6 +212,7 @@ const priestDisc = {
 };
 
 const paladinRetri = {
+  id: 4,
   charClass: 'Paladin',
   img: '/assets/paladin.png',
   spec: 'Retri',
@@ -268,6 +272,7 @@ const paladinRetri = {
 };
 
 const paladinHoly = {
+  id: 5,
   charClass: 'Paladin',
   img: '/assets/paladin.png',
   spec: 'Holy',
@@ -322,6 +327,7 @@ const paladinHoly = {
 };
 
 const hunterBeast = {
+  id: 6,
   charClass: 'Hunter',
   img: '/assets/hunter.png',
   spec: 'Beast',
@@ -396,6 +402,7 @@ const hunterBeast = {
 };
 
 const hunterMarks = {
+  id: 7,
   charClass: 'Hunter',
   img: '/assets/hunter.png',
   spec: 'Marks',
@@ -476,6 +483,7 @@ const hunterMarks = {
 };
 
 const hunterSurv = {
+  id: 8,
   charClass: 'Hunter',
   img: '/assets/hunter.png',
   spec: 'Surv',
@@ -559,6 +567,7 @@ const hunterSurv = {
 };
 
 const warlockDemon = {
+  id: 9,
   charClass: 'Warlock',
   img: '/assets/warlock.png',
   spec: 'Demon',
@@ -635,6 +644,7 @@ const warlockDemon = {
 };
 
 const warlockAffliction = {
+  id: 10,
   charClass: 'Warlock',
   img: '/assets/warlock.png',
   spec: 'Affliction',
@@ -716,6 +726,7 @@ const warlockAffliction = {
 };
 
 const rogueSub = {
+  id: 11,
   charClass: "Rogue",
   img: '/assets/rogue.png',
   spec: "Subtlety",
