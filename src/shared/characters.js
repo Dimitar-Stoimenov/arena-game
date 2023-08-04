@@ -369,7 +369,7 @@ const hunterBeast = {
     manaCost: baseManaCost.lowManaCost + 5,
     effectTurns: 1,
     effectImage: '/assets/intimidation.png',
-    cooldown: 3,
+    cooldown: 4,
     dispellable: false,
   },
   action4: {
@@ -382,7 +382,7 @@ const hunterBeast = {
     physical: true,
     damage: basePhysical.physicalAbilityDamage - 5,
     manaCost: baseManaCost.midManaCost - 2,
-    cooldown: 3,
+    cooldown: 4,
   },
   sendPet: {
     ref: 'sendPet',
