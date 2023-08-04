@@ -781,7 +781,7 @@ const rogueSub = {
     affectedCharacters: 1,
     manaCost: 10,
     effectTurns: 1,
-    effectImage: "none", //TODO
+    effectImage: "/assets/blind.png",
     cooldown: 4,
     dispellable: false,
     description: 'CC target - not dispellable',
