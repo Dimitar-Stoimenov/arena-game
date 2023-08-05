@@ -908,7 +908,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   newHp = prev.hp;
                 }
 
+                let doNotApplyEffect = false;
                 if (action.effect === 'consumeHots') {
+                  doNotApplyEffect = true;
                   const hotEffectsArray = filteredEffects.filter((e) => e.effect === "healOverTime");
                   const totalHealOverTime = hotEffectsArray.reduce((sum, obj) => sum + obj.healOverTime, 0);
                   const finalHeal = totalHealOverTime * action.consumeMultiplier;
@@ -950,7 +952,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   manaRegenMultiplier:
                     action.effect === 'manaRegen' ? manaRegenMultiplier : prev.manaRegenMultiplier,
                   cooldowns: { ...prev.cooldowns },
-                  effects: [...filteredEffects, newEffect],
+                  effects: doNotApplyEffect ? [...filteredEffects] : [...filteredEffects, newEffect],
                   damageReduceEffect:
                     action.damageReduceRating ? calculatedDamageReduceRating : prev.damageReduceEffect,
                   invulnerable:
