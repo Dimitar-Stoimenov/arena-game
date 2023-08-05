@@ -141,7 +141,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
           if (prev.effects.length > 0) {
             for (const effect of prev.effects) {
-              const newEffectTurns = !(effect.effect === "damageOverTime" || effect.effect === "healOverTime")
+              const newEffectTurns = !(effect.effect === "damageOverTime" || effect.type === "buff")
                 ? effect.turns - 1
                 : effect.turns;
 
@@ -417,7 +417,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       let newEffects = [];
       if (stateAfterDot.effects.length > 0) {
         for (const effect of stateAfterDot.effects) {
-          const newEffectTurns = (effect.effect === "damageOverTime" || effect.effect === "healOverTime")
+          const newEffectTurns = (effect.effect === "damageOverTime" || effect.type === "buff")
             ? effect.turns - 1
             : effect.turns;
 
