@@ -165,7 +165,7 @@ const priestDisc = {
 
   maxHealth: baseHealth.midHealth - 10,
   maxMana: baseMana.midMana + 10,
-  baseManaRegen: baseManaRegen + 1,
+  baseManaRegen: baseManaRegen + 2,
   action1: {
     ref: 'action1',
     name: 'PW: Shield',
@@ -176,7 +176,7 @@ const priestDisc = {
     target: 'friendly',
     shieldAmount: baseSpells.bigSpellDamage - 3,
     affectedCharacters: 1,
-    manaCost: baseManaCost.midManaCost - 6,
+    manaCost: baseManaCost.midManaCost - 4,
     cooldown: 2,
     dispellable: true,
   },
@@ -187,7 +187,7 @@ const priestDisc = {
     target: 'friendly',
     affectedCharacters: 1,
     healing: baseHeals.midHeal + 3,
-    manaCost: baseManaCost.midManaCost + 2,
+    manaCost: baseManaCost.midManaCost + 3,
     cooldown: 0,
   },
   action3: {
@@ -199,7 +199,7 @@ const priestDisc = {
     manaCost: baseManaCost.midManaCost - 7,
     damage: baseSpells.lowSpellDamage - 2,
     manaburn: baseManaCost.midManaCost - 2,
-    cooldown: 3,
+    cooldown: 4,
   },
   action4: {
     ref: 'action4',
@@ -903,6 +903,7 @@ const druidResto = {
     name: 'Innervate',
     type: 'buff',
     effect: 'manaRegen',
+    manaRegenMultiplier: 3.5,
     target: 'friendly',
     affectedCharacters: 1,
     manaCost: 0,
