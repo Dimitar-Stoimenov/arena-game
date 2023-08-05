@@ -714,7 +714,7 @@ const warlockAffliction = {
     name: "Send Pet",
     type: 'debuff',
     target: 'enemy',
-    damageOverTime: basePhysical.oneHandPhysicalDamage - 8,
+    damageOverTime: basePhysical.oneHandPhysicalDamage - 7,
     physical: true,
     affectedCharacters: 1,
     manaCost: 0,
