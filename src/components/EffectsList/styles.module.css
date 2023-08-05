@@ -7,3 +7,8 @@
   display: flex;
   flex-direction: column;
 }
+
+.effectsOutside {
+  position: absolute;
+  left: 38px;
+}
