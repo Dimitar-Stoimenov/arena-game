@@ -6,6 +6,8 @@
 * Add hovers on ability buttons and effects (third party library)
 * Add animations / use the inSequence state
 
+*** Rogue visuals should not have Mana, but Energy
+
 
 --- game info
 * page with character information and abilities

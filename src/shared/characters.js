@@ -854,8 +854,7 @@ const druidResto = {
   charClass: 'Druid',
   img: '/assets/druid.png',
   spec: 'Restoration',
-  specImg: 'none', // TODO: add pic
-
+  specImg: '/assets/resto-druid.png',
   maxHealth: baseHealth.midHealth + 10,
   maxMana: baseMana.midMana + 10,
   baseManaRegen: baseManaRegen + 3,
@@ -901,15 +900,15 @@ const druidResto = {
   },
   action4: {
     ref: 'action4',
-    name: 'Psychic Scream',
-    type: 'debuff',
-    effect: 'cc',
-    target: 'allEnemies',
-    affectedCharacters: 3,
-    manaCost: baseManaCost.midManaCost,
-    effectTurns: 1,
-    effectImage: '/assets/psychic-scream.png',
-    cooldown: 6,
+    name: 'Innervate',
+    type: 'buff',
+    effect: 'manaRegen',
+    target: 'friendly',
+    affectedCharacters: 1,
+    manaCost: 0,
+    effectTurns: 3,
+    effectImage: '/assets/innervate.png',
+    cooldown: 7,
     dispellable: true,
   }
 };
