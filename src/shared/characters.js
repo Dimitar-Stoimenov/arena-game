@@ -196,9 +196,9 @@ const priestDisc = {
     type: 'manaburn',
     target: 'enemy',
     affectedCharacters: 1,
-    manaCost: baseManaCost.lowManaCost + 6,
-    damage: Math.floor((baseManaCost.lowManaCost + 6) / 2),
-    manaburn: baseManaCost.lowManaCost + 6,
+    manaCost: baseManaCost.midManaCost - 7,
+    damage: baseSpells.lowSpellDamage - 2,
+    manaburn: baseManaCost.midManaCost - 2,
     cooldown: 4,
   },
   action4: {
