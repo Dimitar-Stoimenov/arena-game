@@ -325,12 +325,17 @@ export const useBattleSequence = (sequence, allPlayers) => {
       //mana regen
       let newMp = Number;
       let viperStingCheck = prev.effects.some(e => e.effect === 'viperSting');
+      let currentManaRegenMultiplier = prev?.manaRegenMultiplier ? prev.manaRegenMultiplier : 1;
+
+      if (prev.effects.findIndex((e) => e.effect === "manaRegen") === -1) {
+        currentManaRegenMultiplier = 1;
+      }
 
       if (!viperStingCheck) {
         if (prev.mp === prev.maxMana) {
           newMp = prev.mp;
         } else {
-          newMp = prev.mp + prev.baseManaRegen;
+          newMp = prev.mp + Math.floor(prev.baseManaRegen * currentManaRegenMultiplier);
 
           if (newMp > prev.maxMana) {
             newMp = prev.maxMana;
@@ -343,7 +348,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           if (prev.mp === prev.maxMana) {
             newMp = prev.mp - viperStingBurnAmount;
           } else {
-            newMp = prev.mp + prev.baseManaRegen - viperStingBurnAmount;
+            newMp = prev.mp + Math.floor(prev.baseManaRegen * currentManaRegenMultiplier) - viperStingBurnAmount;
 
             if (newMp > prev.maxMana) {
               newMp = prev.maxMana - viperStingBurnAmount;
@@ -355,7 +360,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
           if (prev.mp === prev.maxMana) {
             newMp = prev.mp;
           } else {
-            newMp = prev.mp + prev.baseManaRegen;
+            newMp = prev.mp + Math.floor(prev.baseManaRegen * currentManaRegenMultiplier);
 
             if (newMp > prev.maxMana) {
               newMp = prev.maxMana;
@@ -606,6 +611,17 @@ export const useBattleSequence = (sequence, allPlayers) => {
         }
       }
 
+      let removeDuplicateViperStingDebuff = false;
+      let viperStingDebuffToBeRemoved = null;
+      if (prev.effects.some(e => e.effect === 'viperSting') && action.effect === 'viperSting') {
+        let viperStingEffectsArray = prev.effects.filter(e => e.effect === 'viperSting');
+        if (viperStingEffectsArray.find(e => e.name === newEffect.name)) {
+          removeDuplicateViperStingDebuff = true;
+          viperStingDebuffToBeRemoved = viperStingEffectsArray.find(e => e.name === newEffect.name);
+        }
+      }
+
+
       let newState = null;
       if (action.damage > 0) {
         newState = damageCaseReceiverSequence(prev);
@@ -648,6 +664,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
           newState.effects = newState.effects.filter(e => e !== healingReductionDebuffToBeRemoved);
         }
 
+        if (removeDuplicateViperStingDebuff) {
+          newState.effects = newState.effects.filter(e => e !== viperStingDebuffToBeRemoved);
+        }
+
         return {
           ...newState,
           cooldowns: { ...newState.cooldowns },
@@ -666,6 +686,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
         if (removeDuplicateHealingReductionDebuff) {
           modifiedEffects = modifiedEffects.filter(e => e !== removeDuplicateHealingReductionDebuff);
+        }
+
+        if (removeDuplicateViperStingDebuff) {
+          modifiedEffects = modifiedEffects.filter(e => e !== viperStingDebuffToBeRemoved);
         }
 
         let doNotApplyEffect = false;
@@ -897,6 +921,11 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   filteredEffects = filteredEffects.filter((e) => e.effect !== "healOverTime");
                 }
 
+                let manaRegenMultiplier = 1;
+                if (action.effect === 'manaRegen') {
+                  manaRegenMultiplier *= action.manaRegenMultiplier;
+                }
+
                 if (prev.dead) {
                   return {
                     ...prev,
@@ -918,9 +947,12 @@ export const useBattleSequence = (sequence, allPlayers) => {
                 return {
                   ...prev,
                   hp: newHp,
+                  manaRegenMultiplier:
+                    action.effect === 'manaRegen' ? manaRegenMultiplier : prev.manaRegenMultiplier,
                   cooldowns: { ...prev.cooldowns },
                   effects: [...filteredEffects, newEffect],
-                  damageReduceEffect: action.damageReduceRating ? calculatedDamageReduceRating : prev.damageReduceEffect,
+                  damageReduceEffect:
+                    action.damageReduceRating ? calculatedDamageReduceRating : prev.damageReduceEffect,
                   invulnerable:
                     action.effect === 'invulnerability' ? true : false,
                   shield: newShieldAmount,
