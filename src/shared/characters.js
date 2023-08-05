@@ -857,7 +857,7 @@ const druidResto = {
   specImg: '/assets/resto-druid.png',
   maxHealth: baseHealth.midHealth + 10,
   maxMana: baseMana.midMana + 10,
-  baseManaRegen: baseManaRegen + 3,
+  baseManaRegen: baseManaRegen + 2,
   action1: {
     ref: 'action1',
     name: 'Rejuvenation',
@@ -883,7 +883,7 @@ const druidResto = {
     healOverTime: baseHeals.baseHealOverTime - 1,
     healing: baseHeals.smallHeal,
     affectedCharacters: 1,
-    manaCost: baseManaCost.midManaCost + 2,
+    manaCost: baseManaCost.midManaCost + 5,
     cooldown: 0,
     dispellable: true
   },
@@ -895,7 +895,7 @@ const druidResto = {
     consumeMultiplier: 3,
     target: 'friendly',
     affectedCharacters: 1,
-    manaCost: baseManaCost.midManaCost + 5,
+    manaCost: baseManaCost.midManaCost + 7,
     cooldown: 5,
   },
   action4: {
@@ -909,7 +909,7 @@ const druidResto = {
     manaCost: 0,
     effectTurns: 3,
     effectImage: '/assets/innervate.png',
-    cooldown: 7,
+    cooldown: 10,
     dispellable: true,
   }
 };
