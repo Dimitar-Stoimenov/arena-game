@@ -4,8 +4,8 @@ export const CharCard = ({ className, img, specImg, charClass, spec, onClick, di
 	return (
 		<div className={className} onClick={!disabled ? (e) => onClick(e, charClass, spec) : null}>
 			<div className={!disabled ? styles.imgContainer : `${styles.imgContainer} ${styles.disabled}`}>
-				<img className={styles.img} src={img} alt={charClass} />
-				<img className={styles.specImg} src={specImg} alt={charClass} />
+				<img className={styles.img} src={img} alt={charClass} draggable={false} />
+				<img className={styles.specImg} src={specImg} alt={charClass} draggable={false} />
 			</div>
 			<div className={styles.classAndSpecNames}>
 				{`${charClass} ${spec}`}

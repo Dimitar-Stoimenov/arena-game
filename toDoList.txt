@@ -1,9 +1,6 @@
 ---bugs:
 
 --- gameplay
-* Make cleanse dispel poison effects (when Wound Poison is added);
-* Add more effects:
-    -hot; e.effect = 'healOverTime'
     
 --- visuals
 * Add hovers on ability buttons and effects (third party library)

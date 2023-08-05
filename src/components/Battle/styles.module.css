@@ -3,6 +3,9 @@
     color: #fdac00;
     text-shadow: 0px 0px 5px #7f0000;
     font-family: cursive;
+
+    user-select: none;
+
 }
 
 .team1, .team2 {
@@ -15,6 +18,8 @@
     align-items: center;
 
     position: relative;
+
+    user-select: none;
 }
 
 .surrenderButton {

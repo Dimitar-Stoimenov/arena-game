@@ -7,7 +7,8 @@ const baseSpells = {
   bigSpellDamage: 36,
 }; //11 diff
 const baseHeals = {
-  smallHeal: 13,
+  baseHealOverTime: 7,
+  smallHeal: 15,
   midHeal: 23,
   bigHeal: 38,
 };
@@ -141,7 +142,7 @@ const priestHoly = {
     affectedCharacters: 6,
     manaCost: baseManaCost.bigManaCost + 15,
     damage: baseSpells.lowSpellDamage - 2,
-    healing: baseHeals.smallHeal + 3,
+    healing: baseHeals.smallHeal + 1,
     cooldown: 2,
   },
   action4: {
@@ -848,6 +849,71 @@ const priestShadow = {
   }
 };
 
+const druidResto = {
+  id: 13,
+  charClass: 'Druid',
+  img: '/assets/druid.png',
+  spec: 'Restoration',
+  specImg: 'none', // TODO: add pic
+
+  maxHealth: baseHealth.midHealth + 10,
+  maxMana: baseMana.midMana + 10,
+  baseManaRegen: baseManaRegen + 3,
+  action1: {
+    ref: 'action1',
+    name: 'Rejuvenation',
+    type: 'buff',
+    effect: 'healOverTime',
+    effectTurns: 3,
+    effectImage: '/assets/rejuvenation.png',
+    target: 'friendly',
+    healOverTime: baseHeals.baseHealOverTime + 2,
+    affectedCharacters: 1,
+    manaCost: baseManaCost.lowManaCost + 6,
+    cooldown: 2,
+    dispellable: true
+  },
+  action2: {
+    ref: 'action2',
+    name: 'Regrowth',
+    type: 'buff',
+    effect: 'healOverTime',
+    effectTurns: 3,
+    effectImage: '/assets/regrowth.png',
+    target: 'friendly',
+    healOverTime: baseHeals.baseHealOverTime - 1,
+    healing: baseHeals.smallHeal,
+    affectedCharacters: 1,
+    manaCost: baseManaCost.midManaCost + 2,
+    cooldown: 0,
+    dispellable: true
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Swiftmend',
+    type: 'buff',
+    effect: 'consumeHots',
+    consumeMultiplier: 3,
+    target: 'friendly',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.midManaCost + 5,
+    cooldown: 5,
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Psychic Scream',
+    type: 'debuff',
+    effect: 'cc',
+    target: 'allEnemies',
+    affectedCharacters: 3,
+    manaCost: baseManaCost.midManaCost,
+    effectTurns: 1,
+    effectImage: '/assets/psychic-scream.png',
+    cooldown: 6,
+    dispellable: true,
+  }
+};
+
 export const characters = {
   priestDisc,
   priestHoly,
@@ -860,5 +926,6 @@ export const characters = {
   hunterSurv,
   warlockDemon,
   warlockAffliction,
-  rogueSub
+  rogueSub,
+  druidResto
 };

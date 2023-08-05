@@ -141,7 +141,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
           if (prev.effects.length > 0) {
             for (const effect of prev.effects) {
-              const newEffectTurns = effect.turns - 1;
+              const newEffectTurns = !(effect.effect === "damageOverTime" || effect.effect === "healOverTime")
+                ? effect.turns - 1
+                : effect.turns;
 
               if (newEffectTurns > 0) {
                 newEffects.push({ ...effect, turns: newEffectTurns });
@@ -276,10 +278,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
       };
     };
 
-    const healCaseReceiverSequence = prev => {
-      let healingAmount = action.healing;
+    const healCaseReceiverSequence = (prev, healObj) => {
+      let healingAmount = healObj ? healObj.healing : action.healing;
       if (prev.effects.some(e => e.effect === "healingReduction")) {
-        healingAmount = Math.floor(action.healing * (1 - prev.healingReductionEffect));
+        healingAmount = Math.floor(healingAmount * (1 - prev.healingReductionEffect));
       }
 
       let newHp = prev.hp + Number(healingAmount);
@@ -362,21 +364,38 @@ export const useBattleSequence = (sequence, allPlayers) => {
         }
       }
 
+      //do heal over time
+      let hotCheck = prev.effects.some(e => e.effect === 'healOverTime');
+      let stateAfterHot = null;
+
+      if (hotCheck) {
+        let hotEffectArray = prev.effects.filter(e => e.effect === 'healOverTime');
+
+        let hotHealing = 0;
+        for (const effect of hotEffectArray) {
+          hotHealing += effect.healOverTime;
+        }
+
+        stateAfterHot = healCaseReceiverSequence(prev, { healing: hotHealing });
+      } else {
+        stateAfterHot = prev;
+      }
+
       //do pet damage and dot damage
-      let petCheck = prev.effects.some(e => e.effect === 'pet');
+      let petCheck = stateAfterHot.effects.some(e => e.effect === 'pet');
       let stateAfterPetDamage = null;
 
       if (petCheck) {
-        let petEffectArray = prev.effects.filter(e => e.effect === 'pet');
+        let petEffectArray = stateAfterHot.effects.filter(e => e.effect === 'pet');
 
         let petDamage = 0;
         for (const effect of petEffectArray) {
           petDamage += effect.damageOverTime;
         }
 
-        stateAfterPetDamage = damageCaseReceiverSequence(prev, { damage: petDamage, physical: true });
+        stateAfterPetDamage = damageCaseReceiverSequence(stateAfterHot, { damage: petDamage, physical: true });
       } else {
-        stateAfterPetDamage = prev;
+        stateAfterPetDamage = stateAfterHot;
       }
 
       let dotCheck = stateAfterPetDamage.effects.some(e => e.effect === 'damageOverTime');
@@ -395,11 +414,24 @@ export const useBattleSequence = (sequence, allPlayers) => {
         stateAfterDot = stateAfterPetDamage;
       }
 
+      let newEffects = [];
+      if (stateAfterDot.effects.length > 0) {
+        for (const effect of stateAfterDot.effects) {
+          const newEffectTurns = (effect.effect === "damageOverTime" || effect.effect === "healOverTime")
+            ? effect.turns - 1
+            : effect.turns;
+
+          if (newEffectTurns > 0) {
+            newEffects.push({ ...effect, turns: newEffectTurns });
+          }
+        }
+      }
+
       return {
         ...stateAfterDot,
         mp: newMp,
         cooldowns: { ...stateAfterDot.cooldowns },
-        effects: stateAfterDot.effects,
+        effects: newEffects,
         damageReduceEffect: damageReduceEffectCheck
           ? stateAfterDot.damageReduceEffect
           : false,
@@ -807,9 +839,27 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   shieldAmount: action?.shieldAmount,
                   effect: action.effect,
                   damageReduceRating: action.damageReduceRating,
+                  healOverTime: action.healOverTime,
+                  healing: action.healing,
                   invulnerable:
                     action.effect === 'invulnerability' ? true : false,
                 };
+
+                let removeDuplicateHotBoolean = false;
+                let hotToBeRemoved = null;
+                if (prev.effects.some(e => e.effect === 'healOverTime') && action.effect === 'healOverTime') {
+                  let hotEffectsArray = prev.effects.filter(e => e.effect === 'healOverTime');
+
+                  if (hotEffectsArray.find(e => e.name === newEffect.name)) {
+                    removeDuplicateHotBoolean = true;
+                    hotToBeRemoved = hotEffectsArray.find(e => e.name === newEffect.name);
+                  }
+                }
+
+                let modifiedEffects = [...prev.effects];
+                if (removeDuplicateHotBoolean) {
+                  modifiedEffects = modifiedEffects.filter(e => e !== hotToBeRemoved);
+                }
 
                 let newShieldAmount = action.shieldAmount ? action.shieldAmount : 0;
                 if (prev.shield) {
@@ -818,7 +868,33 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                 let filteredEffects = [];
                 if (action.effect === 'invulnerability') {
-                  filteredEffects = prev.effects.filter(e => !e.debuff || e.effect === 'pet');
+                  filteredEffects = modifiedEffects.effects.filter(e => !e.debuff || e.effect === 'pet');
+                } else {
+                  filteredEffects = modifiedEffects;
+                }
+
+                let newHp = Number;
+                if (action.healing) {
+                  if (prev.effects.some(e => e.effect === "healingReduction")) {
+                    newHp = prev.hp + (Math.floor(action.healing * (1 - prev.healingReductionEffect)));
+                  } else {
+                    newHp = prev.hp + action.healing;
+                  }
+                } else {
+                  newHp = prev.hp;
+                }
+
+                if (action.effect === 'consumeHots') {
+                  const hotEffectsArray = filteredEffects.filter((e) => e.effect === "healOverTime");
+                  const totalHealOverTime = hotEffectsArray.reduce((sum, obj) => sum + obj.healOverTime, 0);
+                  const finalHeal = totalHealOverTime * action.consumeMultiplier;
+
+                  if (prev.effects.some(e => e.effect === "healingReduction")) {
+                    newHp = prev.hp + (Math.floor(finalHeal * (1 - prev.healingReductionEffect)));
+                  } else {
+                    newHp += finalHeal;
+                  }
+                  filteredEffects = filteredEffects.filter((e) => e.effect !== "healOverTime");
                 }
 
                 if (prev.dead) {
@@ -837,13 +913,13 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   }
                 }
 
+                if (newHp > prev.maxHealth) newHp = prev.maxHealth;
+
                 return {
                   ...prev,
+                  hp: newHp,
                   cooldowns: { ...prev.cooldowns },
-                  effects:
-                    action.effect === 'invulnerability'
-                      ? [...filteredEffects, newEffect]
-                      : [...prev.effects, newEffect],
+                  effects: [...filteredEffects, newEffect],
                   damageReduceEffect: action.damageReduceRating ? calculatedDamageReduceRating : prev.damageReduceEffect,
                   invulnerable:
                     action.effect === 'invulnerability' ? true : false,
