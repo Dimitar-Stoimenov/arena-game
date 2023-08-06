@@ -1,5 +1,5 @@
 ---bugs:
-make innervate work.
+innervate shouldnt work on non mana users...
 
 --- gameplay
     

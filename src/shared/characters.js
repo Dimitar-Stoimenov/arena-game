@@ -975,17 +975,16 @@ const druidFeral = {
   },
   action4: {
     ref: 'action4',
-    name: 'Blind',
+    name: 'Ferocious Bite',
     type: 'debuff',
-    effect: 'cc',
+    effect: 'consumeComboPoints',
+    comboEffect: 'damage',
+    comboDamageArr: [0, 15, 22, 30, 39, 50],
     target: 'enemy',
     affectedCharacters: 1,
-    manaCost: 10,
-    effectTurns: 1,
-    effectImage: "/assets/blind.png",
-    cooldown: ccBaseCD,
-    dispellable: false,
-    description: 'CC target - not dispellable',
+    manaCost: 20,
+    cooldown: 0,
+    dispellable: false
   }
 };
 

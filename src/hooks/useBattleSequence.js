@@ -558,7 +558,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       };
     };
 
-    const debuffCaseReceiverSequence = prev => {
+    const debuffCaseReceiverSequence = (prev, comboPoints = 0) => {
       const isNotManaUser = prev.char.resource !== "mana";
 
       let newEffect = {
@@ -621,10 +621,18 @@ export const useBattleSequence = (sequence, allPlayers) => {
         }
       }
 
-
       let newState = null;
       if (action.damage > 0) {
         newState = damageCaseReceiverSequence(prev);
+      }
+
+      let doNotApplyEffect = false;
+
+      if (action.effect === "consumeComboPoints") {
+        if (action.comboEffect === "damage") {
+          newState = damageCaseReceiverSequence(prev, { damage: action.comboDamageArr[comboPoints], physical: true });
+          doNotApplyEffect = true;
+        }
       }
 
       let newHp = Number;
@@ -671,7 +679,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         return {
           ...newState,
           cooldowns: { ...newState.cooldowns },
-          effects: [...newState.effects, newEffect],
+          effects: doNotApplyEffect ? [...newState.effects] : [...newState.effects, newEffect],
           healingReductionEffect: action?.healingReductionRating ? action.healingReductionRating : prev.healingReductionEffect
         };
       } else {
@@ -692,7 +700,6 @@ export const useBattleSequence = (sequence, allPlayers) => {
           modifiedEffects = modifiedEffects.filter(e => e !== viperStingDebuffToBeRemoved);
         }
 
-        let doNotApplyEffect = false;
         if (newEffect.effect === 'viperSting' && isNotManaUser) {
           doNotApplyEffect = true;
         }
@@ -977,6 +984,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
             (async () => {
               setInSequence(true);
               // await wait(200);
+              let comboPoints = 0;
 
               if (callNextTurnBoolean) {
                 setAttacker(prev => {
@@ -997,21 +1005,24 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     }
                   }
 
+                  comboPoints = (prev?.comboPoints || 0);
+
                   return {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
                     hp: newHp,
                     mp: newMp,
                     effects: [...prev.effects],
-                    //SETTING PET TARGET
                     petTarget: action.name === 'Send Pet' ? receiverString : prev.petTarget,
-                    comboPoints: (prev?.comboPoints || 0) + (action?.comboGenerator ? 1 : 0)
+                    comboPoints: action.effect === "consumeComboPoints"
+                      ? 0
+                      : comboPoints + (action?.comboGenerator ? 1 : 0)
                   };
                 });
                 // await wait(200);
               }
 
-              setReceiver(prev => debuffCaseReceiverSequence(prev));
+              setReceiver(prev => debuffCaseReceiverSequence(prev, comboPoints));
               await wait(1000);
             })();
 
