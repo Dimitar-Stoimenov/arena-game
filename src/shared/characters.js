@@ -79,7 +79,7 @@ const mageFrost = {
     manaCost: baseManaCost.lowManaCost + 5,
     cooldown: 6,
     effect: 'invulnerability',
-    effectTurns: 2,
+    effectTurns: 1,
     effectImage: '/assets/iceblock.png',
     dispellable: false,
     //TODO: maybe add a slight heal on using Ice Block?

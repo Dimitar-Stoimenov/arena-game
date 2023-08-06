@@ -892,7 +892,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
                 let filteredEffects = [];
                 if (action.effect === 'invulnerability') {
-                  filteredEffects = modifiedEffects.effects.filter(e => !e.debuff || e.effect === 'pet');
+                  filteredEffects = modifiedEffects.filter(e => !e.debuff || e.effect === 'pet');
                 } else {
                   filteredEffects = modifiedEffects;
                 }
