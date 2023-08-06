@@ -602,7 +602,7 @@ const warlockDemon = {
     manaCost: baseManaCost.midManaCost,
     cooldown: 0,
     effect: 'damageOverTime',
-    damageOverTime: baseSpells.baseDamageOverTime,
+    damageOverTime: baseSpells.baseDamageOverTime - 1,
     effectTurns: 3,
     effectImage: '/assets/corruption.png',
     dispellable: true,
