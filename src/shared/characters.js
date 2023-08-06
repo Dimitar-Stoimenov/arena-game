@@ -930,7 +930,7 @@ const druidFeral = {
   spec: "Feral",
   specImg: '/assets/feral.png',
   resource: "energy",
-  maxHealth: baseHealth.midHealth + 10,
+  maxHealth: baseHealth.midHealth + 25,
   maxMana: 100,
   baseManaRegen: 20,
   action1: {

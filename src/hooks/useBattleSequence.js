@@ -650,6 +650,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
       if (prev.dead || newState?.dead) {
         return {
           ...prev,
+          hp: 0,
+          mana: 0,
           dead: true,
           effects: [],
         };
