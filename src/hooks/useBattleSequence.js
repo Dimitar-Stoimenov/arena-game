@@ -785,7 +785,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     ...prev,
                     cooldowns: { ...prev.cooldowns },
                     mp: newMp,
-                    effects: [...prev.effects]
+                    effects: [...prev.effects],
+                    comboPoints: (prev?.comboPoints || 0) + (action?.comboGenerator ? 1 : 0)
                   };
                 });
                 // await wait(200);
@@ -1002,8 +1003,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     hp: newHp,
                     mp: newMp,
                     effects: [...prev.effects],
-                    petTarget: action.name === 'Send Pet' ? receiverString : prev.petTarget,
                     //SETTING PET TARGET
+                    petTarget: action.name === 'Send Pet' ? receiverString : prev.petTarget,
+                    comboPoints: (prev?.comboPoints || 0) + (action?.comboGenerator ? 1 : 0)
                   };
                 });
                 // await wait(200);

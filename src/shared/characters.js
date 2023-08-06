@@ -923,6 +923,72 @@ const druidResto = {
   }
 };
 
+const druidFeral = {
+  id: 14,
+  charClass: "Druid",
+  img: '/assets/druid.png',
+  spec: "Feral",
+  specImg: '/assets/feral.png',
+  resource: "energy",
+  maxHealth: baseHealth.midHealth + 10,
+  maxMana: 100,
+  baseManaRegen: 20,
+  action1: {
+    ref: 'action1',
+    name: 'Basic Attack',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: basePhysical.oneHandPhysicalDamage - 3,
+    physical: true,
+    manaCost: 0,
+    cooldown: 0,
+  },
+  action2: {
+    ref: 'action2',
+    name: 'Rake',
+    type: 'debuff',
+    target: 'enemy',
+    affectedCharacters: 1,
+    manaCost: 60,
+    cooldown: 0,
+    effect: 'damageOverTime',
+    damageOverTime: baseSpells.baseDamageOverTime - 2,
+    damage: basePhysical.oneHandPhysicalDamage + 2,
+    physical: true,
+    effectTurns: 3,
+    effectImage: '/assets/rake.png',
+    dispellable: false,
+    comboGenerator: true
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Claw',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: basePhysical.oneHandPhysicalDamage + 2,
+    physical: true,
+    manaCost: 40,
+    cooldown: 0,
+    comboGenerator: true
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Blind',
+    type: 'debuff',
+    effect: 'cc',
+    target: 'enemy',
+    affectedCharacters: 1,
+    manaCost: 10,
+    effectTurns: 1,
+    effectImage: "/assets/blind.png",
+    cooldown: ccBaseCD,
+    dispellable: false,
+    description: 'CC target - not dispellable',
+  }
+};
+
 export const characters = {
   priestDisc,
   priestHoly,
@@ -936,5 +1002,6 @@ export const characters = {
   warlockDemon,
   warlockAffliction,
   rogueSub,
-  druidResto
+  druidResto,
+  druidFeral
 };
