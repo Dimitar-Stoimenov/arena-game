@@ -909,7 +909,7 @@ const druidResto = {
     manaCost: 0,
     effectTurns: 3,
     effectImage: '/assets/innervate.png',
-    cooldown: 10,
+    cooldown: 13,
     dispellable: true,
   }
 };
