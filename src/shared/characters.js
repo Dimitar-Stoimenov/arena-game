@@ -34,6 +34,8 @@ const baseManaCost = {
   midManaCost: 35,
   bigManaCost: 52,
 }; //15 diff ++
+const stunBaseCD = 4;
+const ccBaseCD = 4;
 
 const mageFrost = {
   id: 1,
@@ -94,7 +96,7 @@ const mageFrost = {
     manaCost: baseManaCost.lowManaCost + 5,
     effectTurns: 1,
     effectImage: '/assets/polymorph.png',
-    cooldown: 4,
+    cooldown: ccBaseCD,
     dispellable: true,
     description: 'CC target and restore 25% of their max health',
   },
@@ -254,7 +256,7 @@ const paladinRetri = {
     manaCost: baseManaCost.midManaCost - 3,
     effectTurns: 1,
     effectImage: '/assets/hoj.png',
-    cooldown: 3,
+    cooldown: stunBaseCD - 1, // lower cd because its dispellable
     dispellable: true,
   },
   action4: {
@@ -292,7 +294,7 @@ const paladinHoly = {
     manaCost: baseManaCost.midManaCost - 3,
     effectTurns: 1,
     effectImage: '/assets/hoj.png',
-    cooldown: 3,
+    cooldown: stunBaseCD - 1, // lower cd because its dispellable
     dispellable: true,
   },
   action2: {
@@ -370,7 +372,7 @@ const hunterBeast = {
     manaCost: baseManaCost.lowManaCost + 5,
     effectTurns: 1,
     effectImage: '/assets/intimidation.png',
-    cooldown: 4,
+    cooldown: stunBaseCD,
     dispellable: false,
   },
   action4: {
@@ -459,11 +461,11 @@ const hunterMarks = {
     effect: 'viperSting',
     effectTurns: 3,
     effectImage: '/assets/viper-sting.png',
-    poison: true,
     manaCost: baseManaCost.midManaCost,
     cooldown: 4,
     manaburn: baseSpells.lowSpellDamage - 1,
     dispellable: false,
+    poison: true,
     description: 'breaks cc, can be dispelled by cleanse only',
   },
   sendPet: {
@@ -516,7 +518,7 @@ const hunterSurv = {
     initialDamage: basePhysical.oneHandPhysicalDamage - 3,
     effectTurns: 1,
     effectImage: '/assets/scatter-shot.png',
-    cooldown: 4,
+    cooldown: ccBaseCD,
     dispellable: false,
     description: 'Can not be dispelled, breaks on damage',
   },
@@ -530,7 +532,7 @@ const hunterSurv = {
     manaCost: baseManaCost.lowManaCost + 5,
     effectTurns: 1,
     effectImage: '/assets/polymorph.png',
-    cooldown: 4,
+    cooldown: ccBaseCD - 1,
     dispellable: true,
     description: 'Dispellable',
   },
@@ -612,7 +614,7 @@ const warlockDemon = {
     manaCost: baseManaCost.lowManaCost + 5,
     effectTurns: 1,
     effectImage: '/assets/intimidation.png',
-    cooldown: 4,
+    cooldown: stunBaseCD,
     dispellable: false,
   },
   action4: {
@@ -697,7 +699,7 @@ const warlockAffliction = {
     effect: 'stun',
     effectTurns: 1,
     effectImage: '/assets/death-coil.png',
-    cooldown: 4,
+    cooldown: stunBaseCD,
     dispellable: true,
   },
   action4: {
@@ -784,7 +786,7 @@ const rogueSub = {
     manaCost: 10,
     effectTurns: 1,
     effectImage: "/assets/blind.png",
-    cooldown: 4,
+    cooldown: ccBaseCD,
     dispellable: false,
     description: 'CC target - not dispellable',
   }
@@ -844,7 +846,7 @@ const priestShadow = {
     manaCost: baseManaCost.midManaCost,
     effectTurns: 1,
     effectImage: '/assets/psychic-scream.png',
-    cooldown: 6,
+    cooldown: ccBaseCD + 2,
     dispellable: true,
   }
 };
