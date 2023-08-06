@@ -559,7 +559,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
     };
 
     const debuffCaseReceiverSequence = prev => {
-      const isNotManaUser = prev.char.charClass === "Rogue" || prev.char.charClass === "Warrior";
+      const isNotManaUser = prev.char.resource !== "mana";
 
       let newEffect = {
         type: action.type,
@@ -1153,18 +1153,19 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
 
               setReceiver(prev => {
-                let newStateAfterDamage = damageCaseReceiverSequence(prev);
                 let manaBurned = action.manaburn;
-                const isNotManaUser = prev.char.charClass === "Rogue" || prev.char.charClass === "Warrior";
+                const isNotManaUser = prev.char.resource !== "mana";
 
-                if (newStateAfterDamage.invulnerable === true || isNotManaUser) {
+                if (prev.invulnerable === true || isNotManaUser) {
                   manaBurned = 0;
                 }
 
-                let newMp = newStateAfterDamage.mp - Number(manaBurned);
+                let newMp = prev.mp - Number(manaBurned);
                 if (newMp < 0) {
                   newMp = 0;
                 }
+
+                let newStateAfterDamage = isNotManaUser ? { ...prev } : damageCaseReceiverSequence(prev);
 
                 if (newStateAfterDamage.dead) {
                   return {
