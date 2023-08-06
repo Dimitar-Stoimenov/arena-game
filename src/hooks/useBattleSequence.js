@@ -331,6 +331,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
         currentManaRegenMultiplier = 1;
       }
 
+      if (prev.char.resource !== "mana") {
+        currentManaRegenMultiplier = 1;
+      }
+
       if (!viperStingCheck) {
         if (prev.mp === prev.maxMana) {
           newMp = prev.mp;
