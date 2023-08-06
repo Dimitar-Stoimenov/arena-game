@@ -7,7 +7,7 @@ import {
 
 import styles from './styles.module.css';
 
-export const Battle = ({ 
+export const Battle = ({
   char1team1,
   char2team1,
   char3team1,
@@ -20,7 +20,7 @@ export const Battle = ({
   setChar1team2,
   setChar2team2,
   setChar3team2,
-  onGameEnd 
+  onGameEnd
 }) => {
   const [sequence, setSequence] = useState({});
 
@@ -189,6 +189,7 @@ export const Battle = ({
           petTarget={char1team1state.petTarget}
           damageReduceEffect={char1team1state.damageReduceEffect}
           actionDisabled={inSequence}
+          comboPoints={char1team1state.comboPoints}
         />
         <CharacterSummary
           character={char2team1state.char}
@@ -206,6 +207,7 @@ export const Battle = ({
           petTarget={char2team1state.petTarget}
           damageReduceEffect={char2team1state.damageReduceEffect}
           actionDisabled={inSequence}
+          comboPoints={char2team1state.comboPoints}
         />
         <CharacterSummary
           character={char3team1state.char}
@@ -223,6 +225,7 @@ export const Battle = ({
           petTarget={char3team1state.petTarget}
           damageReduceEffect={char3team1state.damageReduceEffect}
           actionDisabled={inSequence}
+          comboPoints={char3team1state.comboPoints}
         />
       </div>
       <div className={styles.team2}>
@@ -246,6 +249,7 @@ export const Battle = ({
           petTarget={char1team2state.petTarget}
           damageReduceEffect={char1team2state.damageReduceEffect}
           actionDisabled={inSequence}
+          comboPoints={char1team2state.comboPoints}
         />
         <CharacterSummary
           team2
@@ -264,6 +268,7 @@ export const Battle = ({
           petTarget={char2team2state.petTarget}
           damageReduceEffect={char2team2state.damageReduceEffect}
           actionDisabled={inSequence}
+          comboPoints={char2team2state.comboPoints}
         />
         <CharacterSummary
           team2
@@ -282,6 +287,7 @@ export const Battle = ({
           petTarget={char3team2state.petTarget}
           damageReduceEffect={char3team2state.damageReduceEffect}
           actionDisabled={inSequence}
+          comboPoints={char3team2state.comboPoints}
         />
       </div>
     </>

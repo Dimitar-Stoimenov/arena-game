@@ -20,7 +20,8 @@ export const CharacterSummaryWithoutMemo = ({
   characterNamesObject,
   shield,
   petTarget,
-  actionDisabled
+  actionDisabled,
+  comboPoints
 }) => {
   const {
     charClass,
@@ -35,6 +36,8 @@ export const CharacterSummaryWithoutMemo = ({
     action4,
     sendPet
   } = character;
+
+  const comboPointsVisibility = comboPoints > 0;
 
   return (
     <div className={!dead ? styles.wrapper : styles.disabled}>
@@ -51,6 +54,12 @@ export const CharacterSummaryWithoutMemo = ({
         {shield > 0 && <div className={styles.shieldBar}><Bar label="shield" value={shield} color={"#DCDCDC"} hideSlash={true} /></div>}
 
         <div className={styles.imgWrapper}>
+          <div className={styles.comboPoints} style={{ visibility: comboPointsVisibility ? "visible" : "hidden" }}>
+            <div className={styles.comboText}>
+              Combo Points: {comboPoints}
+            </div>
+          </div>
+
           <img className={styles.img} src={img} alt={charClass} />
         </div>
         <div className={styles.charParameters}>

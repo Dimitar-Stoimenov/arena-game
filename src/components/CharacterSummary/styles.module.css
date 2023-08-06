@@ -100,6 +100,17 @@
   overflow: hidden;
 }
 
+.comboPointsContainer {
+  position: absolute;
+}
+
+.comboText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+  font-size: 0.9em;
+}
+
 @media (max-width: 1600px) {
   .main {
     width: 22vw;
