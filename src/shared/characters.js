@@ -142,7 +142,7 @@ const priestHoly = {
     type: 'damageAndHeal',
     target: 'pseudoSelf',
     affectedCharacters: 6,
-    manaCost: baseManaCost.bigManaCost + 15,
+    manaCost: baseManaCost.bigManaCost + 8,
     damage: baseSpells.lowSpellDamage - 2,
     healing: baseHeals.smallHeal + 1,
     cooldown: 2,
