@@ -74,7 +74,7 @@ export const CharacterSummaryWithoutMemo = ({
           </div>
 
           <Bar label="HP" value={hp} maxValue={maxHealth} color={red} />
-          <Bar label="MP" value={mp} maxValue={maxMana} color={blue} />
+          <Bar label="MP" value={mp} maxValue={maxMana} color={resource === "mana" ? blue : "#E3DB42"} />
         </div>
       </div>
       <div className={styles.actions}>
