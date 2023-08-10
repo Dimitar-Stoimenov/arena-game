@@ -1,0 +1,24 @@
+.actionButton, .disabled {
+    border-radius: 5px;
+    border: 1px solid white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.cd {
+    position: absolute;
+    right: 50px;
+}
+
+@media (max-width: 1600px) {
+    .actionButton, .disabled {
+        font-size: 0.77em;
+        margin-top: 2.5px;
+        word-wrap: break-word;
+    }
+}

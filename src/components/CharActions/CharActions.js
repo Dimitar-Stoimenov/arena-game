@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import ActionButton from "../ActionButton/ActionButton";
 import styles from './styles.module.css';
 
 export const CharActions = ({
@@ -34,57 +35,65 @@ export const CharActions = ({
         style={{ backgroundColor: backgroundColor }}
       >
         {sendPet &&
-          <button
-            className={styles.actionButton}
+          <ActionButton
             onClick={() => actionHandler(sendPet)}
           >
             {sendPet.name}
-          </button>}
-        <button
-          className={
+          </ActionButton>
+        }
+
+        <ActionButton
+          cooldown={cooldowns.action1}
+          disabled={
             (action1.manaCost > mp || cooldowns.action1 !== 0) || (action1.type === 'petAction' && !petTarget)
-              ? styles.disabled
-              : styles.actionButton
+              ? true
+              : false
           }
           onClick={() => actionHandler(action1)}
         >
           {action1.name}
-        </button>
-        <button
-          className={
+        </ActionButton>
+
+        <ActionButton
+          cooldown={cooldowns.action2}
+          disabled={
             (action2.manaCost > mp || cooldowns.action2 !== 0) || (action2.type === 'petAction' && !petTarget)
-              ? styles.disabled
-              : styles.actionButton
+              ? true
+              : false
           }
           onClick={() => actionHandler(action2)}
         >
           {action2.name}
-        </button>
-        <button
-          className={
+        </ActionButton>
+
+        <ActionButton
+          cooldown={cooldowns.action3}
+          disabled={
             (action3.manaCost > mp || cooldowns.action3 !== 0) || (action3.type === 'petAction' && !petTarget)
-              ? styles.disabled
-              : styles.actionButton
+              ? true
+              : false
           }
           onClick={() => actionHandler(action3)}
         >
           {action3.name}
-        </button>
-        <button
-          className={
+        </ActionButton>
+
+        <ActionButton
+          cooldown={cooldowns.action4}
+          disabled={
             (action4.manaCost > mp || cooldowns.action4 !== 0) || (action4.type === 'petAction' && !petTarget)
-              ? styles.disabled
-              : styles.actionButton
+              ? true
+              : false
           }
           onClick={() => actionHandler(action4)}
         >
           {action4.name}
-        </button>
+        </ActionButton>
+
         {resource === "mana"
-          ? <button
-            className={styles.actionButton}
-            onClick={() =>
-              actionHandler({
+          ? <ActionButton
+            onClick={
+              () => actionHandler({
                 target: 'confirm',
                 affectedCharacters: 1,
                 type: 'skip',
@@ -93,7 +102,7 @@ export const CharActions = ({
             }
           >
             Skip Turn
-          </button>
+          </ActionButton>
           : null
         }
       </div>

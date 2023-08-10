@@ -113,13 +113,13 @@
 
 @media (max-width: 1600px) {
   .main {
-    width: 22vw;
+    width: 21.65vw;
   }
 
   .actions {
     overflow: hidden;
     border-radius: 10px;
 
-    width: 6.5vw;
+    width: 6.9vw;
   }
 }
