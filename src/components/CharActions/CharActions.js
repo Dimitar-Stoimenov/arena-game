@@ -16,7 +16,8 @@ export const CharActions = ({
   characterNamesObject,
   effects,
   petTarget,
-  charClass
+  charClass,
+  resource
 }) => {
   const [actionState, setActionState] = useState(null);
   const red = "#ba2e25";
@@ -79,7 +80,7 @@ export const CharActions = ({
         >
           {action4.name}
         </button>
-        {charClass !== "Rogue"
+        {resource === "mana"
           ? <button
             className={styles.actionButton}
             onClick={() =>

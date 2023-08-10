@@ -34,7 +34,8 @@ export const CharacterSummaryWithoutMemo = ({
     action2,
     action3,
     action4,
-    sendPet
+    sendPet,
+    resource
   } = character;
 
   const comboPointsVisibility = comboPoints > 0;
@@ -94,6 +95,7 @@ export const CharacterSummaryWithoutMemo = ({
             effects={effects}
             characterNamesObject={characterNamesObject}
             charClass={charClass}
+            resource={resource}
           />
         )}
       </div>
