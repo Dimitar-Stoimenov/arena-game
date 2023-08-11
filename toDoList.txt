@@ -3,7 +3,6 @@ when abilities can be cast on everyone, add an additional window, where the user
 
 --- gameplay
 *prot paladin should be supporting hero - basic attack + devotion aura + cleanse + blessing of freedom (immune to cc for 2 rounds buff)
-*buff devotion aura to last 5 rounds and cost very low mana
 
 --- visuals
 * Add hovers on ability buttons and effects (third party library)
