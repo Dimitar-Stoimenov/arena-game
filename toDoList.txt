@@ -1,7 +1,8 @@
 ---bugs:
-when abilities can be cast everyone, add an additional window, where the user chooses friendly or enemy target.
+when abilities can be cast on everyone, add an additional window, where the user chooses friendly or enemy target.
 
 --- gameplay
+also cleanse on holy paladin should maybe heal for a very small amount, something like 6-7 or so (after cleansing ofc)
     
 --- visuals
 * Add hovers on ability buttons and effects (third party library)
