@@ -989,6 +989,64 @@ const druidFeral = {
   }
 };
 
+const paladinProt = {
+  id: 15,
+  charClass: 'Paladin',
+  img: '/assets/paladin.png',
+  spec: 'Prot',
+  specImg: '/assets/prot-paladin.png',
+  resource: "mana",
+  maxHealth: baseHealth.highHealth,
+  maxMana: baseMana.lowMana - 10,
+  baseManaRegen: baseManaRegen - 5,
+  action1: {
+    ref: 'action1',
+    name: 'Basic Attack',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: basePhysical.physicalDamage - 2,
+    physical: true,
+    manaCost: 0,
+    cooldown: 0,
+  },
+  action2: {
+    ref: 'action2',
+    name: 'Hammer of Justice',
+    type: 'debuff',
+    effect: 'stun',
+    target: 'enemy',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.midManaCost - 3,
+    effectTurns: 1,
+    effectImage: '/assets/hoj.png',
+    cooldown: stunBaseCD - 1, // lower cd because its dispellable
+    dispellable: true,
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Cleanse',
+    type: 'dispel',
+    healing: baseHeals.baseHealOverTime - 1,
+    target: 'friendly',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.lowManaCost,
+    cooldown: 2,
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Blessing of Freedom',
+    type: 'buff',
+    target: 'friendly',
+    affectedCharacters: 1,
+    manaCost: baseManaCost.lowManaCost + 5,
+    effectTurns: 2,
+    effectImage: '/assets/blessing-of-freedom.jpg',
+    cooldown: 7,
+    dispellable: true,
+  },
+};
+
 export const characters = {
   priestDisc,
   priestHoly,
@@ -1003,5 +1061,6 @@ export const characters = {
   warlockAffliction,
   rogueSub,
   druidResto,
-  druidFeral
+  druidFeral,
+  paladinProt,
 };

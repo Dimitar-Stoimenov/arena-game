@@ -598,6 +598,12 @@ export const useBattleSequence = (sequence, allPlayers) => {
         unstableAfflictionStunDuration: action?.unstableAfflictionStunDuration,
       };
 
+      if (prev.effects.some(e => e.name === "Blessing of Freedom") && (action.effect === "stun" || action.effect === "cc")) {
+        return {
+          ...prev
+        }
+      }
+
       let removePetEffectBoolean = false;
       let effectToBeRemoved = null;
       if (prev.effects.some(e => e.effect === 'pet') && action.effect === 'pet') {
@@ -877,11 +883,9 @@ export const useBattleSequence = (sequence, allPlayers) => {
               }
 
               setReceiver(prev => {
-                let selfCastCheck = attackerString === receiverString;
-
                 let newEffect = {
                   type: action.type,
-                  turns: action.name === "Blessing of Protection" && selfCastCheck ? action.effectTurns + 1 : action.effectTurns,
+                  turns: action.effectTurns,
                   name: action.name,
                   image: action.effectImage,
                   buff: Boolean(action.type === 'buff'),
@@ -920,6 +924,8 @@ export const useBattleSequence = (sequence, allPlayers) => {
                 let filteredEffects = [];
                 if (action.effect === 'invulnerability') {
                   filteredEffects = modifiedEffects.filter(e => !e.debuff || e.effect === 'pet');
+                } else if (action.name === "Blessing of Freedom") {
+                  filteredEffects = modifiedEffects.filter(e => e.effect !== "stun" && e.effect !== "cc");
                 } else {
                   filteredEffects = modifiedEffects;
                 }
