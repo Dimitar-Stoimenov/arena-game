@@ -2,7 +2,8 @@
 when abilities can be cast on everyone, add an additional window, where the user chooses friendly or enemy target.
 
 --- gameplay
-*prot paladin should be supporting hero - basic attack + devotion aura + cleanse + blessing of freedom (immune to cc for 2 rounds buff)
+Change freezing trap to frost trap. Castable on one enemy, and reducing their physical damage by 20% for 2 turns. CD of 6 turns? Not dispellable.
+Frostbolt should also reduce physical damage, maybe by 10%? dispellable
 
 --- visuals
 * Add hovers on ability buttons and effects (third party library)
