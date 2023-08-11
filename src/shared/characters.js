@@ -322,6 +322,7 @@ const paladinHoly = {
     ref: 'action4',
     name: 'Cleanse',
     type: 'dispel',
+    healing: baseHeals.baseHealOverTime,
     target: 'friendly',
     affectedCharacters: 1,
     manaCost: baseManaCost.lowManaCost,

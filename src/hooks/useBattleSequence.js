@@ -473,7 +473,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
       };
     };
 
-    const cleanseCaseReceiverSequence = (prev, isCleanse = false) => {
+    const cleanseCaseReceiverSequence = (prev, isCleanse = false, healingAmount = 0) => {
       let newEffects = [];
 
       if (
@@ -500,6 +500,19 @@ export const useBattleSequence = (sequence, allPlayers) => {
         );
       } else {
         newEffects = prev.effects;
+      }
+
+      let newState = null;
+      if (isCleanse) {
+        newState = healCaseReceiverSequence({...prev, effects: newEffects}, { healing: healingAmount });
+      }
+
+      if (newState) {
+        return {
+          ...newState,
+          cooldowns: { ...newState.cooldowns },
+          effects: [...newState.effects],
+        }
       }
 
       return {
@@ -1110,7 +1123,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                     // await wait(200);
                   }
 
-                  setReceiver(prev => cleanseCaseReceiverSequence(prev, true));
+                  setReceiver(prev => cleanseCaseReceiverSequence(prev, true, action.healing));
                   await wait(1000);
                 })();
               }
