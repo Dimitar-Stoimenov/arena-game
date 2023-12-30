@@ -806,7 +806,7 @@ const priestShadow = {
   spec: 'Shadow',
   specImg: '/assets/shadow-priest.png',
   resource: "mana",
-  maxHealth: baseHealth.midHealth - 10,
+  maxHealth: baseHealth.midHealth - 20,
   maxMana: baseMana.midMana,
   baseManaRegen: baseManaRegen,
   action1: {
