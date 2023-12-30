@@ -20,10 +20,10 @@ const basePhysical = {
   physicalBigAbilityDamage: 35,
 }; //10 diff
 const baseHealth = {
-  lowHealth: 150,
+  lowHealth: 145,
   midHealth: 190,
   highHealth: 230,
-}; //40 diff
+};
 const baseMana = {
   lowMana: 160,
   midMana: 210,
@@ -44,7 +44,7 @@ const mageFrost = {
   spec: 'Frost',
   specImg: '/assets/frost-mage.png',
   resource: "mana",
-  maxHealth: baseHealth.lowHealth + 5,
+  maxHealth: baseHealth.lowHealth,
   maxMana: baseMana.highMana,
   baseManaRegen: baseManaRegen + 4,
   action1: {
@@ -165,7 +165,7 @@ const priestDisc = {
   spec: 'Disc',
   specImg: '/assets/disc-priest.png',
   resource: "mana",
-  maxHealth: baseHealth.midHealth - 10,
+  maxHealth: baseHealth.lowHealth + 10,
   maxMana: baseMana.midMana + 10,
   baseManaRegen: baseManaRegen + 2,
   action1: {
@@ -198,9 +198,9 @@ const priestDisc = {
     type: 'manaburn',
     target: 'enemy',
     affectedCharacters: 1,
-    manaCost: baseManaCost.midManaCost - 4,
+    manaCost: baseManaRegen * 2,
     damage: baseSpells.lowSpellDamage,
-    manaburn: baseManaCost.midManaCost - 4,
+    manaburn: baseManaRegen * 2 + 3,
     cooldown: 5,
   },
   action4: {
@@ -466,7 +466,7 @@ const hunterMarks = {
     effectImage: '/assets/viper-sting.png',
     manaCost: baseManaCost.midManaCost,
     cooldown: 4,
-    manaburn: baseSpells.lowSpellDamage - 1,
+    manaburn: baseManaRegen - 2,
     dispellable: false,
     poison: true,
     description: 'breaks cc, can be dispelled by cleanse only',
@@ -552,7 +552,7 @@ const hunterSurv = {
     poison: true,
     manaCost: baseManaCost.midManaCost,
     cooldown: 4,
-    manaburn: baseSpells.lowSpellDamage - 1,
+    manaburn: baseManaRegen - 2,
     dispellable: false,
     description: 'breaks cc, can be dispelled by cleanse only',
   },
@@ -581,7 +581,7 @@ const warlockDemon = {
   specImg: '/assets/demon-warlock.png',
   resource: "mana",
   petOwnerString: 'demon-warlock',
-  maxHealth: baseHealth.midHealth,
+  maxHealth: baseHealth.lowHealth + 20,
   maxMana: baseMana.midMana,
   baseManaRegen: baseManaRegen + 1,
   action1: {
@@ -931,7 +931,7 @@ const druidFeral = {
   spec: "Feral",
   specImg: '/assets/feral.png',
   resource: "energy",
-  maxHealth: baseHealth.midHealth + 25,
+  maxHealth: baseHealth.highHealth - 15,
   maxMana: 100,
   baseManaRegen: 20,
   action1: {
