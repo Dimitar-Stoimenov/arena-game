@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { wait } from 'shared';
+import { baseSpells, maxDotStacks, wait } from 'shared';
 
 export const useBattleSequence = (sequence, allPlayers) => {
   const [turn, setTurn] = useState((sequence.turn = 1));
@@ -493,11 +493,22 @@ export const useBattleSequence = (sequence, allPlayers) => {
 
         if (effectToBeRemoved.name === 'Unstable Affliction') {
           setAttacker(prev => cleansedUnstableAfflictionEffectSequence(prev, effectToBeRemoved));
-        };
+        }
 
         newEffects = prev.effects.filter(
           e => e !== effectToBeRemoved,
         );
+
+        if (effectToBeRemoved.poison && effectToBeRemoved.stacks > 1) {
+          const modifiedPoisonEffect = {
+            ...effectToBeRemoved, 
+            stacks: effectToBeRemoved.stacks - 1,
+            damageOverTime: (effectToBeRemoved.stacks - 1) * baseSpells.stackableDot
+          };
+
+          newEffects.push(modifiedPoisonEffect);
+        }
+
       } else {
         newEffects = prev.effects;
       }
@@ -588,6 +599,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
         dispellable: action.dispellable,
         effect: action.effect,
         damageOverTime: action.damageOverTime,
+        stacks: action?.stacks,
         damage: action.damage,
         poison: action.poison,
         physical: action.physical,
@@ -602,6 +614,10 @@ export const useBattleSequence = (sequence, allPlayers) => {
         return {
           ...prev
         }
+      }
+
+      if (action.stackable === true) {
+        action.stacks = 1;
       }
 
       let removePetEffectBoolean = false;
@@ -621,6 +637,11 @@ export const useBattleSequence = (sequence, allPlayers) => {
         if (dotEffectsArray.find(e => e.name === newEffect.name)) {
           removeDuplicateDotBoolean = true;
           dotToBeRemoved = dotEffectsArray.find(e => e.name === newEffect.name);
+
+          if (action.stackable === true) {
+            action.stacks = Math.min(dotToBeRemoved.stacks + 1, maxDotStacks);
+            action.damageOverTime = baseSpells.stackableDot * action.stacks;
+          }
         }
       }
 

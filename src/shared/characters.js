@@ -1,5 +1,7 @@
 const baseManaRegen = 14;
-const baseSpells = {
+export const maxDotStacks = 4;
+export const baseSpells = {
+  stackableDot: 4,
   baseDamageOverTime: 7,
   wandDamage: 9,
   lowSpellDamage: 14,
@@ -44,7 +46,7 @@ const mageFrost = {
   spec: 'Frost',
   specImg: '/assets/frost-mage.png',
   resource: "mana",
-  maxHealth: baseHealth.lowHealth,
+  maxHealth: baseHealth.lowHealth - 5,
   maxMana: baseMana.highMana,
   baseManaRegen: baseManaRegen + 4,
   action1: {
@@ -63,8 +65,8 @@ const mageFrost = {
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
-    damage: baseSpells.midSpellDamage + 5,
-    manaCost: baseManaCost.bigManaCost - 4,
+    damage: baseSpells.midSpellDamage + 6,
+    manaCost: baseManaCost.bigManaCost - 3,
     cooldown: 0,
     //TODO: add damage reducing effect to melee attacks (maybe effect: 'slow' property)?
     // effect: 'slow',
@@ -741,7 +743,7 @@ const rogueSub = {
   spec: "Subtlety",
   specImg: '/assets/subtlety.png',
   resource: "energy",
-  maxHealth: baseHealth.midHealth - 15,
+  maxHealth: baseHealth.midHealth - 20,
   maxMana: 100,
   baseManaRegen: 20,
   action1: {
@@ -778,7 +780,7 @@ const rogueSub = {
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
-    damage: basePhysical.physicalBigAbilityDamage - 5,
+    damage: basePhysical.physicalBigAbilityDamage - 3,
     physical: true,
     manaCost: 50,
     cooldown: 0,
@@ -913,7 +915,7 @@ const druidResto = {
     name: 'Innervate',
     type: 'buff',
     effect: 'manaRegen',
-    manaRegenMultiplier: 3.5,
+    manaRegenMultiplier: 3.3,
     target: 'friendly',
     affectedCharacters: 1,
     manaCost: 0,
@@ -1044,7 +1046,74 @@ const paladinProt = {
     effectImage: '/assets/blessing-of-freedom.jpg',
     cooldown: 7,
     dispellable: true,
+  }  
+};
+
+
+const rogueAssa = {
+  id: 16,
+  charClass: "Rogue",
+  img: '/assets/rogue.png',
+  spec: "Assassination",
+  specImg: '/assets/assassination.png',
+  resource: "energy",
+  maxHealth: baseHealth.midHealth - 20,
+  maxMana: 100,
+  baseManaRegen: 20,
+  action1: {
+    ref: 'action1',
+    name: 'Basic Attack',
+    type: 'damage',
+    target: 'enemy',
+    affectedCharacters: 1,
+    damage: basePhysical.oneHandPhysicalDamage - 3,
+    physical: true,
+    manaCost: 0,
+    cooldown: 0,
   },
+  action2: {
+    ref: 'action2',
+    name: 'Shiv',
+    type: 'debuff',
+    target: 'enemy',
+    affectedCharacters: 1,
+    physical: true,
+    manaCost: 30,
+    damage: basePhysical.oneHandPhysicalDamage - 6,
+    effect: 'damageOverTime',
+    damageOverTime: baseSpells.stackableDot, // do not add or remove, it is used in calculations
+    stackable: true,
+    poison: true,
+    effectTurns: 3,
+    effectImage: '/assets/deadly-poison.jpg',
+    cooldown: 0,
+    dispellable: false
+  },
+  action3: {
+    ref: 'action3',
+    name: 'Envenom',
+    // type: 'damage',
+    // target: 'enemy',
+    // affectedCharacters: 1,
+    // damage: basePhysical.physicalBigAbilityDamage - 3,
+    // physical: true,
+    // manaCost: 50,
+    // cooldown: 0,
+  },
+  action4: {
+    ref: 'action4',
+    name: 'Kidney Shot',
+    type: 'debuff',
+    effect: 'stun',
+    target: 'enemy',
+    affectedCharacters: 1,
+    manaCost: 25,
+    effectTurns: 1,
+    effectImage: "/assets/kidney.png",
+    cooldown: stunBaseCD,
+    dispellable: false,
+    description: 'stun - not dispellable',
+  }
 };
 
 export const characters = {
@@ -1060,6 +1129,7 @@ export const characters = {
   warlockDemon,
   warlockAffliction,
   rogueSub,
+  rogueAssa,
   druidResto,
   druidFeral,
   paladinProt,
