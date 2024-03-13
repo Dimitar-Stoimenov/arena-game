@@ -37,6 +37,7 @@ const baseManaCost = {
   bigManaCost: 52,
 }; //15 diff ++
 const stunBaseCD = 4;
+const petStunBaseCD = stunBaseCD + 1;
 const ccBaseCD = 4;
 
 const mageFrost = {
@@ -376,7 +377,7 @@ const hunterBeast = {
     manaCost: baseManaCost.lowManaCost + 5,
     effectTurns: 1,
     effectImage: '/assets/intimidation.png',
-    cooldown: stunBaseCD,
+    cooldown: petStunBaseCD,
     dispellable: false,
   },
   action4: {
@@ -621,7 +622,7 @@ const warlockDemon = {
     manaCost: baseManaCost.lowManaCost + 5,
     effectTurns: 1,
     effectImage: '/assets/intimidation.png',
-    cooldown: stunBaseCD,
+    cooldown: petStunBaseCD,
     dispellable: false,
   },
   action4: {
@@ -1129,7 +1130,7 @@ export const characters = {
   warlockDemon,
   warlockAffliction,
   rogueSub,
-  rogueAssa,
+  // rogueAssa,
   druidResto,
   druidFeral,
   paladinProt,
