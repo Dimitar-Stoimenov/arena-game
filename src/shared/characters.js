@@ -277,6 +277,7 @@ const paladinRetri = {
   },
 };
 
+// huge heals, very low mana.
 const paladinHoly = {
   id: 5,
   charClass: 'Paladin',
@@ -306,8 +307,8 @@ const paladinHoly = {
     type: 'heal',
     target: 'friendly',
     affectedCharacters: 1,
-    healing: baseHeals.bigHeal,
-    manaCost: baseManaCost.bigManaCost + 5,
+    healing: baseHeals.bigHeal + 7,
+    manaCost: baseManaCost.bigManaCost + 10,
     cooldown: 0,
   },
   action3: {
@@ -842,7 +843,7 @@ const priestShadow = {
     type: 'damage',
     target: 'enemy',
     affectedCharacters: 1,
-    damage: baseSpells.midSpellDamage + 5,
+    damage: baseSpells.midSpellDamage + 3,
     manaCost: baseManaCost.bigManaCost - 5,
     cooldown: 2,
   },
@@ -879,7 +880,7 @@ const druidResto = {
     effectTurns: 3,
     effectImage: '/assets/rejuvenation.png',
     target: 'friendly',
-    healOverTime: baseHeals.baseHealOverTime + 3,
+    healOverTime: baseHeals.baseHealOverTime + 4,
     affectedCharacters: 1,
     manaCost: baseManaCost.lowManaCost + 6,
     cooldown: 2,
@@ -893,10 +894,10 @@ const druidResto = {
     effectTurns: 3,
     effectImage: '/assets/regrowth.png',
     target: 'friendly',
-    healOverTime: baseHeals.baseHealOverTime,
-    healing: baseHeals.smallHeal,
+    healOverTime: baseHeals.baseHealOverTime + 1,
+    healing: baseHeals.smallHeal + 2,
     affectedCharacters: 1,
-    manaCost: baseManaCost.midManaCost + 5,
+    manaCost: baseManaCost.midManaCost + 7,
     cooldown: 0,
     dispellable: true
   },
@@ -905,10 +906,10 @@ const druidResto = {
     name: 'Swiftmend',
     type: 'buff',
     effect: 'consumeHots',
-    consumeMultiplier: 3,
+    consumeMultiplier: 2.7,
     target: 'friendly',
     affectedCharacters: 1,
-    manaCost: baseManaCost.midManaCost + 7,
+    manaCost: baseManaCost.midManaCost + 8,
     cooldown: 5,
   },
   action4: {
