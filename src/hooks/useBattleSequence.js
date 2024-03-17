@@ -967,7 +967,7 @@ export const useBattleSequence = (sequence, allPlayers) => {
                   doNotApplyEffect = true;
                   const hotEffectsArray = filteredEffects.filter((e) => e.effect === "healOverTime");
                   const totalHealOverTime = hotEffectsArray.reduce((sum, obj) => sum + obj.healOverTime, 0);
-                  const finalHeal = totalHealOverTime * action.consumeMultiplier;
+                  const finalHeal = Math.floor(totalHealOverTime * action.consumeMultiplier);
 
                   if (prev.effects.some(e => e.effect === "healingReduction")) {
                     newHp = prev.hp + (Math.floor(finalHeal * (1 - prev.healingReductionEffect)));
