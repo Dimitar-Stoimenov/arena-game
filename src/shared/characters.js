@@ -984,7 +984,7 @@ const druidFeral = {
     type: 'debuff',
     effect: 'consumeComboPoints',
     comboEffect: 'damage',
-    comboDamageArr: [0, 15, 22, 30, 39, 50],
+    comboDamageArr: [0, 14, 21, 31, 46, 65],
     target: 'enemy',
     affectedCharacters: 1,
     manaCost: 20,
